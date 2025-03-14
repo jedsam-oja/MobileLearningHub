@@ -16,12 +16,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/auth" component={AuthPage} />
-      <Route path="/dashboard">
-        {() => <ProtectedRoute path="/dashboard" component={Dashboard} />}
-      </Route>
-      <Route path="/profile-setup">
-        {() => <ProtectedRoute path="/profile-setup" component={ProfileSetup} />}
-      </Route>
+      <Route path="/dashboard" component={() => <ProtectedRoute path="/dashboard" component={Dashboard} />} />
+      <Route path="/profile-setup" component={() => <ProtectedRoute path="/profile-setup" component={ProfileSetup} />} />
       <Route component={NotFound} />
     </Switch>
   );
