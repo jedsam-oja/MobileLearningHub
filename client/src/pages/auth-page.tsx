@@ -8,7 +8,7 @@ import { Redirect } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 
@@ -57,6 +57,7 @@ export default function AuthPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
+      email: "",
       password: "",
     },
   });
@@ -165,6 +166,22 @@ export default function AuthPage() {
                             <FormControl>
                               <Input placeholder="Choose a username" {...field} />
                             </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={registerForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email (optional)</FormLabel>
+                            <FormControl>
+                              <Input type="email" placeholder="Your email address" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Adding an email will help with profile setup
+                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
