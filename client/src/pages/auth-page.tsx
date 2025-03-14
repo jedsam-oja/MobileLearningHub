@@ -19,6 +19,7 @@ const loginSchema = insertUserSchema.extend({
 });
 
 const registerSchema = loginSchema.extend({
+  email: z.string().email("Please enter a valid email address").optional(),
   password: z.string().min(6, "Password must be at least 6 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
@@ -33,7 +34,13 @@ export default function AuthPage() {
   
   // Redirect if already logged in
   if (user) {
-    return <Redirect to="/" />;
+    // If user is newly registered and profile is not complete,
+    // redirect to profile setup page
+    if (!user.isProfileComplete) {
+      return <Redirect to="/profile-setup" />;
+    }
+    // Otherwise, redirect to dashboard
+    return <Redirect to="/dashboard" />;
   }
   
   // Login form
