@@ -81,16 +81,10 @@ export default function MobileNav() {
                 </button>
               </div>
               <Link 
-                href="/login" 
-                className="w-full text-center bg-transparent border-2 border-accent text-accent rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:bg-accent hover:text-white mt-2"
-              >
-                Login
-              </Link>
-              <Link 
-                href="/register" 
+                href="/auth" 
                 className="w-full text-center bg-gradient-to-br from-accent to-primary border-none text-white rounded-lg px-5 py-2.5 font-medium transition-all duration-300 hover:shadow-lg"
               >
-                Register
+                Login / Register
               </Link>
             </div>
           </div>

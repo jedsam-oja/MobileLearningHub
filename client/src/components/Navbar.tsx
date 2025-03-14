@@ -63,20 +63,12 @@ export default function Navbar() {
               )}
             </button>
             
-            {/* Login Button */}
+            {/* Auth Button */}
             <Link 
-              href="/login" 
-              className="bg-transparent border-2 border-accent text-accent rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:bg-accent hover:text-white hover:-translate-y-0.5"
-            >
-              Login
-            </Link>
-            
-            {/* Register Button */}
-            <Link 
-              href="/register" 
+              href="/auth" 
               className="bg-gradient-to-br from-accent to-primary border-none text-white rounded-lg px-5 py-2.5 font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
             >
-              Register
+              Login / Register
             </Link>
           </div>
         </div>
