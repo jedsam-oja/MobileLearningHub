@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { 
   CalendarIcon, 
@@ -16,280 +16,185 @@ import {
 
 export default function Dashboard() {
   const { user, logoutMutation } = useAuth();
-
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
+  const [progress] = useState(65);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-4xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, {user?.username}</p>
+    <div className="container mx-auto p-8">
+      {/* Welcome Section */}
+      <div className="bg-gradient-to-r from-blue-500 to-teal-400 rounded-2xl p-8 text-white mb-8">
+        <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.username}!</h1>
+        <p className="mb-4 opacity-90">You're making great progress. Continue your medical journey.</p>
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <div className="flex justify-between mb-2">
+              <span>Weekly Study Goal</span>
+              <span>{progress}%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+          </div>
+          <Button variant="secondary">Continue Learning</Button>
         </div>
-        <Button variant="outline" onClick={handleLogout} disabled={logoutMutation.isPending}>
-          {logoutMutation.isPending ? "Logging out..." : "Logout"}
-        </Button>
       </div>
 
-      {/* Dashboard tabs */}
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="mb-8">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="courses">My Courses</TabsTrigger>
-          <TabsTrigger value="qa">Question Bank</TabsTrigger>
-          <TabsTrigger value="study">Study Tools</TabsTrigger>
-        </TabsList>
-
-        {/* Overview tab */}
-        <TabsContent value="overview">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Courses Enrolled</CardTitle>
-                <BookOpen className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">3</div>
-                <p className="text-xs text-muted-foreground">
-                  2 in progress, 1 completed
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Study Hours</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">28.5</div>
-                <p className="text-xs text-muted-foreground">
-                  +2.5 hours from last week
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Practice Questions</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">245</div>
-                <p className="text-xs text-muted-foreground">
-                  78% correct answers
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Next Study Session</CardTitle>
-                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">Today</div>
-                <p className="text-xs text-muted-foreground">
-                  Cardiology - 4:00 PM
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Current Progress</CardTitle>
-                <CardDescription>Your learning path completion</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium">Anatomy</div>
-                      <div className="text-sm text-muted-foreground">75%</div>
-                    </div>
-                    <Progress value={75} />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium">Physiology</div>
-                      <div className="text-sm text-muted-foreground">60%</div>
-                    </div>
-                    <Progress value={60} />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium">Pathology</div>
-                      <div className="text-sm text-muted-foreground">45%</div>
-                    </div>
-                    <Progress value={45} />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-medium">Pharmacology</div>
-                      <div className="text-sm text-muted-foreground">30%</div>
-                    </div>
-                    <Progress value={30} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Recommended Resources</CardTitle>
-                <CardDescription>Based on your study patterns</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2 rounded-lg">
-                      <Video className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold">Cardiology Basic Concepts</h4>
-                      <p className="text-sm text-muted-foreground">15 video lectures - 3.5 hours</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2 rounded-lg">
-                      <BookOpen className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold">Respiratory System MCQs</h4>
-                      <p className="text-sm text-muted-foreground">120 practice questions</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2 rounded-lg">
-                      <Headphones className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold">Neurology Review Podcast</h4>
-                      <p className="text-sm text-muted-foreground">6 episodes - 4.2 hours</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-2 rounded-lg">
-                      <Users className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold">Study Group: Pharmacology</h4>
-                      <p className="text-sm text-muted-foreground">Next session: Tomorrow, 5 PM</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Placeholder content for other tabs */}
-        <TabsContent value="courses">
-          <div className="text-center p-12">
-            <h3 className="text-xl font-medium mb-2">Your Course Content</h3>
-            <p className="text-muted-foreground mb-4">
-              This section will display your enrolled courses and track your progress.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-              {/* Sample course cards would go here */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle>Anatomy & Physiology</CardTitle>
-                  <CardDescription>Comprehensive course on human systems</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-2">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Progress</span>
-                      <span>75%</span>
-                    </div>
-                    <Progress value={75} />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    Last accessed: Yesterday
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle>Clinical Pathology</CardTitle>
-                  <CardDescription>Disease mechanisms and diagnostics</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-2">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Progress</span>
-                      <span>45%</span>
-                    </div>
-                    <Progress value={45} />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    Last accessed: 3 days ago
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle>Pharmacology Basics</CardTitle>
-                  <CardDescription>Drug actions and clinical applications</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-2">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Progress</span>
-                      <span>30%</span>
-                    </div>
-                    <Progress value={30} />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    Last accessed: Today
-                  </p>
-                </CardContent>
-              </Card>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-blue-100 rounded-xl">
+              <BookOpen className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">127</p>
+              <p className="text-gray-500">Questions Answered</p>
             </div>
           </div>
-        </TabsContent>
+        </Card>
 
-        <TabsContent value="qa">
-          <div className="text-center p-12">
-            <h3 className="text-xl font-medium mb-2">Question Bank</h3>
-            <p className="text-muted-foreground mb-4">
-              Practice with thousands of medical MCQs across all specialties.
-            </p>
-            <Button className="mt-4">Start Practice Session</Button>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="study">
-          <div className="text-center p-12">
-            <h3 className="text-xl font-medium mb-2">Study Tools</h3>
-            <p className="text-muted-foreground mb-4">
-              Access spaced repetition tools, flashcards, and more to optimize your learning.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Spaced Repetition</CardTitle>
-                  <CardDescription>Optimize memory retention with scientifically proven methods</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full">Start Session</Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Flashcards</CardTitle>
-                  <CardDescription>Create and review custom flashcards for quick study</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full">View Decks</Button>
-                </CardContent>
-              </Card>
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-green-100 rounded-xl">
+              <Clock className="h-6 w-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">14.5</p>
+              <p className="text-gray-500">Study Hours</p>
             </div>
           </div>
-        </TabsContent>
-      </Tabs>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-amber-100 rounded-xl">
+              <CheckCircle className="h-6 w-6 text-amber-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">85</p>
+              <p className="text-gray-500">Flashcards Reviewed</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-red-100 rounded-xl">
+              <BarChart2 className="h-6 w-6 text-red-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">93%</p>
+              <p className="text-gray-500">Average Score</p>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Learning Progress */}
+        <div className="lg:col-span-2">
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Continue Learning</h2>
+              <Button variant="link" className="text-sm">View All</Button>
+            </div>
+
+            {/* Course Cards */}
+            <div className="space-y-4">
+              <CourseCard 
+                title="Cardiovascular System"
+                progress={68}
+                videos={12}
+                questions={45}
+                duration="4h 30m"
+              />
+              <CourseCard 
+                title="Neuroanatomy Fundamentals"
+                progress={42}
+                videos={16}
+                questions={62}
+                duration="6h 15m"
+              />
+              <CourseCard 
+                title="Antibiotics & Antimicrobials"
+                progress={23}
+                videos={9}
+                questions={38}
+                duration="3h 45m"
+              />
+            </div>
+          </Card>
+        </div>
+
+        {/* Upcoming Sessions */}
+        <div>
+          <Card className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Upcoming Sessions</h2>
+              <Button variant="link" className="text-sm">View All</Button>
+            </div>
+
+            {/* Session Cards */}
+            <div className="space-y-4">
+              <SessionCard 
+                day="15"
+                month="Apr"
+                title="Cardiology Live Session"
+                time="10:00 - 11:30 AM"
+                instructor="Dr. Michael Chen"
+              />
+              <SessionCard 
+                day="17"
+                month="Apr"
+                title="Neurology Study Group"
+                time="2:00 - 3:30 PM"
+                participants={8}
+              />
+              <SessionCard 
+                day="20"
+                month="Apr"
+                title="Pharmacology Q&A"
+                time="4:00 - 5:00 PM"
+                instructor="Dr. Sarah Johnson"
+              />
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CourseCard({ title, progress, videos, questions, duration }) {
+  return (
+    <div className="flex gap-4 p-4 border rounded-xl hover:border-blue-500 transition-colors">
+      <div className="w-16 h-16 bg-gray-100 rounded-lg shrink-0" />
+      <div className="flex-1">
+        <h3 className="font-semibold mb-2">{title}</h3>
+        <div className="flex gap-4 text-sm text-gray-500 mb-3">
+          <span><Video className="inline h-4 w-4 mr-1" /> {videos} videos</span>
+          <span><BookOpen className="inline h-4 w-4 mr-1" /> {questions} questions</span>
+          <span><Clock className="inline h-4 w-4 mr-1" /> {duration}</span>
+        </div>
+        <Progress value={progress} className="h-1" />
+      </div>
+    </div>
+  );
+}
+
+function SessionCard({ day, month, title, time, instructor, participants }) {
+  return (
+    <div className="flex gap-4 p-4 border rounded-xl hover:border-blue-500 transition-colors">
+      <div className="w-12 h-12 bg-blue-500 text-white rounded-lg flex flex-col items-center justify-center">
+        <span className="text-lg font-bold">{day}</span>
+        <span className="text-xs">{month}</span>
+      </div>
+      <div>
+        <h3 className="font-semibold mb-1">{title}</h3>
+        <div className="text-sm text-gray-500">
+          <p><Clock className="inline h-4 w-4 mr-1" /> {time}</p>
+          {instructor && <p><Users className="inline h-4 w-4 mr-1" /> {instructor}</p>}
+          {participants && <p><Users className="inline h-4 w-4 mr-1" /> {participants} participants</p>}
+        </div>
+      </div>
     </div>
   );
 }
