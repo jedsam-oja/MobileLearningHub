@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnlineJacademy - Authentication</title>
+    <link rel="icon" type="image/x-icon" href="images/logo.png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Vendor CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #38A169;
+            --secondary-color: #4A5568;
+            --accent-color: #48BB78;
+            --background-light: #F7FAFC;
+            --text-light: #718096;
+            --card-shadow: 0 0 20px rgba(0,0,0,0.05);
+            --weak-color: #E53E3E;
+            --medium-color: #ECC94B;
+            --strong-color: #48BB78;
+            --very-strong-color: #38A169;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .auth-header {
+            padding: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .auth-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .auth-header h3 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .auth-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+
+        .btn {
+            padding: 12px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            border: none;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #3da066;
+        }
+
+        .social-login {
+            margin: 20px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .social-login::before,
+        .social-login::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .social-login::before {
+            left: 0;
+        }
+
+        .social-login::after {
+            right: 0;
+        }
+
+        .btn-google {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: var(--primary-color);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+        }
+
+        .auth-footer {
+            text-align: center;
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            color: var(--text-light);
+        }
+
+        .auth-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .form-floating {
+            position: relative;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #signupForm {
+            display: none;
+        }
+
+        /* Password strength meter styles */
+        .password-strength-meter {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 3px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-meter .strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .password-strength-text {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .password-criteria {
+            margin-top: 10px;
+            font-size: 0.75rem;
+        }
+
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+            color: var(--text-light);
+        }
+
+        .criteria-icon {
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+
+        .criteria-met {
+            color: var(--accent-color);
+        }
+
+        .criteria-unmet {
+            color: var(--text-light);
+        }
+
+        /* Strength colors */
+        .strength-weak .strength-bar {
+            background-color: var(--weak-color);
+            width: 25%;
+        }
+        
+        .strength-medium .strength-bar {
+            background-color: var(--medium-color);
+            width: 50%;
+        }
+        
+        .strength-strong .strength-bar {
+            background-color: var(--strong-color);
+            width: 75%;
+        }
+        
+        .strength-very-strong .strength-bar {
+            background-color: var(--very-strong-color);
+            width: 100%;
+        }
+
+        .strength-weak .password-strength-text {
+            color: var(--weak-color);
+        }
+        
+        .strength-medium .password-strength-text {
+            color: var(--medium-color);
+        }
+        
+        .strength-strong .password-strength-text {
+            color: var(--strong-color);
+        }
+        
+        .strength-very-strong .password-strength-text {
+            color: var(--very-strong-color);
+        }
+
+        /* Password match indicator */
+        .password-match-indicator {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .password-match {
+            color: var(--accent-color);
+        }
+
+        .password-mismatch {
+            color: var(--weak-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container fade-in">
+        <div class="auth-header">
+            <img src="images/logo.png" alt="Logo">
+            <h2>Welcome Back</h2>
+    <p>Sign in to continue to OnlineJacademy</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-body" novalidate>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="loginPassword" required>
+                    <i class="bi bi-eye password-toggle"></i>
+                    <div class="invalid-feedback">Password is required.</div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+                <a href="#" class="text-decoration-none" style="color: var(--accent-color)">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Log In</button>
+
+            <div class="social-login">
+                <span class="px-2 bg-white">or</span>
+            </div>
+
+            <button type="button" class="btn btn-google">
+                <img src="images/google.png" alt="Google" style="width: 18px;">
+                Continue with Google
+            </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="auth-body" novalidate>
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="signupName" required>
+                <div class="invalid-feedback">Please enter your name.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="signupEmail" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="signupPassword" required>
+                    <i class="bi bi-eye password-toggle"></i>
+                    <div class="invalid-feedback">Password must be at least 8 characters.</div>
+                </div>
+                
+                <!-- Password strength meter -->
+                <div class="password-strength-meter">
+                    <div class="strength-bar"></div>
+                </div>
+                <div class="password-strength-text">Password strength</div>
+                
+                <!-- Password criteria checklist -->
+                <div class="password-criteria">
+                    <div class="criteria-item" id="length-criteria">
+                        <span class="criteria-icon bi bi-x-circle"></span>
+                        <span>At least 8 characters</span>
+                    </div>
+                    <div class="criteria-item" id="lowercase-criteria">
+                        <span class="criteria-icon bi bi-x-circle"></span>
+                        <span>One lowercase letter</span>
+                    </div>
+                    <div class="criteria-item" id="uppercase-criteria">
+                        <span class="criteria-icon bi bi-x-circle"></span>
+                        <span>One uppercase letter</span>
+                    </div>
+                    <div class="criteria-item" id="number-criteria">
+                        <span class="criteria-icon bi bi-x-circle"></span>
+                        <span>One number</span>
+                    </div>
+                    <div class="criteria-item" id="special-criteria">
+                        <span class="criteria-icon bi bi-x-circle"></span>
+                        <span>One special character</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="confirmPassword" required>
+                    <i class="bi bi-eye password-toggle"></i>
+                    <div class="invalid-feedback">Passwords do not match.</div>
+                </div>
+                <div class="password-match-indicator" id="passwordMatchIndicator"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="signupButton">Sign Up</button>
+
+            <div class="social-login">
+                <span class="px-2 bg-white">or</span>
+            </div>
+
+            <button type="button" class="btn btn-google">
+                <img src="images/google.png" alt="Google" style="width: 18px;">
+                Sign up with Google
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p id="authToggleText">
+                Don't have an account? <a href="#" id="authToggleBtn">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Form toggle functionality
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const authToggleBtn = document.getElementById('authToggleBtn');
+        const authToggleText = document.getElementById('authToggleText');
+        let isLogin = true;
+
+        authToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isLogin = !isLogin;
+            
+            if (isLogin) {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                authToggleBtn.textContent = 'Sign up';
+                authToggleText.innerHTML = 'Don\'t have an account? <a href="#" id="authToggleBtn">Sign up</a>';
+                // Re-bind the toggle button since we replaced its HTML
+                document.getElementById('authToggleBtn').addEventListener('click', authToggleBtn.onclick);
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                authToggleBtn.textContent = 'Log in';
+                authToggleText.innerHTML = 'Already have an account? <a href="#" id="authToggleBtn">Log in</a>';
+                // Re-bind the toggle button since we replaced its HTML
+                document.getElementById('authToggleBtn').addEventListener('click', authToggleBtn.onclick);
+            }
+        });
+
+        // Password visibility toggle
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                const input = e.target.previousElementSibling;
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                e.target.classList.toggle('bi-eye');
+                e.target.classList.toggle('bi-eye-slash');
+            });
+        });
+
+        // Password strength evaluation
+        const passwordInput = document.getElementById('signupPassword');
+        const strengthMeter = document.querySelector('.password-strength-meter');
+        const strengthBar = document.querySelector('.strength-bar');
+        const strengthText = document.querySelector('.password-strength-text');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordMatchIndicator = document.getElementById('passwordMatchIndicator');
+        const signupButton = document.getElementById('signupButton');
+
+        // Password criteria elements
+        const lengthCriteria = document.getElementById('length-criteria');
+        const lowercaseCriteria = document.getElementById('lowercase-criteria');
+        const uppercaseCriteria = document.getElementById('uppercase-criteria');
+        const numberCriteria = document.getElementById('number-criteria');
+        const specialCriteria = document.getElementById('special-criteria');
+
+        // Initial state - disable signup button
+        signupButton.disabled = true;
+
+        // Function to update criteria status
+        function updateCriteriaStatus(element, isMet) {
+            const icon = element.querySelector('.criteria-icon');
+            
+            if (isMet) {
+                icon.classList.remove('bi-x-circle');
+                icon.classList.add('bi-check-circle');
+                element.classList.add('criteria-met');
+                element.classList.remove('criteria-unmet');
+            } else {
+                icon.classList.remove('bi-check-circle');
+                icon.classList.add('bi-x-circle');
+                element.classList.remove('criteria-met');
+                element.classList.add('criteria-unmet');
+            }
+        }
+
+        // Function to evaluate password strength
+        function evaluatePasswordStrength(password) {
+            // Reset all classes
+            strengthMeter.classList.remove('strength-weak', 'strength-medium', 'strength-strong', 'strength-very-strong');
+            
+            if (!password) {
+                strengthText.textContent = 'Password strength';
+                return 0;
+            }
+
+            // Check criteria
+            const hasLength = password.length >= 8;
+            const hasLowercase = /[a-z]/.test(password);
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+            // Update criteria visuals
+            updateCriteriaStatus(lengthCriteria, hasLength);
+            updateCriteriaStatus(lowercaseCriteria, hasLowercase);
+            updateCriteriaStatus(uppercaseCriteria, hasUppercase);
+            updateCriteriaStatus(numberCriteria, hasNumber);
+            updateCriteriaStatus(specialCriteria, hasSpecial);
+
+            // Calculate score
+            let score = 0;
+            if (hasLength) score++;
+            if (hasLowercase) score++;
+            if (hasUppercase) score++;
+            if (hasNumber) score++;
+            if (hasSpecial) score++;
+
+            // Set strength meter class and text based on score
+            if (score === 0 || score === 1) {
+                strengthMeter.classList.add('strength-weak');
+                strengthText.textContent = 'Weak';
+            } else if (score === 2) {
+                strengthMeter.classList.add('strength-medium');
+                strengthText.textContent = 'Medium';
+            } else if (score === 3 || score === 4) {
+                strengthMeter.classList.add('strength-strong');
+                strengthText.textContent = 'Strong';
+            } else if (score === 5) {
+                strengthMeter.classList.add('strength-very-strong');
+                strengthText.textContent = 'Very Strong';
+            }
+
+            return score;
+        }
+
+        // Function to check if passwords match
+        function checkPasswordsMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (!confirmPassword) {
+                passwordMatchIndicator.textContent = '';
+                passwordMatchIndicator.classList.remove('password-match', 'password-mismatch');
+                return false;
+            }
+            
+            if (password === confirmPassword) {
+                passwordMatchIndicator.textContent = 'Passwords match';
+                passwordMatchIndicator.classList.add('password-match');
+                passwordMatchIndicator.classList.remove('password-mismatch');
+                return true;
+            } else {
+                passwordMatchIndicator.textContent = 'Passwords do not match';
+                passwordMatchIndicator.classList.add('password-mismatch');
+                passwordMatchIndicator.classList.remove('password-match');
+                return false;
+            }
+        }
+
+        // Function to check if signup form is valid
+        function checkSignupFormValidity() {
+            const nameValid = document.getElementById('signupName').value.trim() !== '';
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('signupEmail').value);
+            const passwordScore = evaluatePasswordStrength(passwordInput.value);
+            const passwordsMatch = checkPasswordsMatch();
+            
+            // Enable button only if all conditions are met
+            signupButton.disabled = !(nameValid && emailValid && passwordScore >= 3 && passwordsMatch);
+        }
+
+        // Event listeners for real-time password evaluation
+        passwordInput.addEventListener('input', () => {
+            evaluatePasswordStrength(passwordInput.value);
+            if (confirmPasswordInput.value) {
+                checkPasswordsMatch();
+            }
+            checkSignupFormValidity();
+        });
+
+        confirmPasswordInput.addEventListener('input', () => {
+            checkPasswordsMatch();
+            checkSignupFormValidity();
+        });
+
+        // Event listeners for other form fields
+        document.getElementById('signupName').addEventListener('input', checkSignupFormValidity);
+        document.getElementById('signupEmail').addEventListener('input', checkSignupFormValidity);
+
+        // Form validation
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!form.checkValidity()) {
+                    e.stopPropagation();
+                    form.classList.add('was-validated');
+                } else {
+                    // If form is valid, redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        });
+
+        // Google Authentication
+        document.querySelectorAll('.btn-google').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Implement Google OAuth here
+                console.log('Google authentication clicked');
+            });
+        });
+
+        // Initialize password strength meter
+        evaluatePasswordStrength('');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - Profile Setup</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    /* Dashboard Content */
+    .dashboard-content {
+      padding: 30px;
+    }
+
+    /* Stepwise Form */
+    .form-container {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .form-container {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .form-subtitle {
+      color: var(--text-light);
+    }
+
+    .form-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .form-steps::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border-color);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .step {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .step {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .step.active {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+    }
+
+    .step.completed {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+    }
+
+    .step-progress {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 2px;
+      background: var(--accent-color);
+      transform: translateY(-50%);
+      z-index: 1;
+      transition: width 0.3s ease;
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .form-control {
+      width: 100%;
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 15px;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .form-control {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      outline: none;
+    }
+
+    .form-select {
+      width: 100%;
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 15px;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234A5568' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+    }
+
+    [data-theme="dark"] .form-select {
+      box-shadow: var(--neumorphic-dark);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0AEC0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    }
+
+    .form-select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      outline: none;
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .form-check-input {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 2px solid var(--border-color);
+      background: var(--card-bg);
+      appearance: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-check-input:checked {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .form-check-label {
+      cursor: pointer;
+    }
+
+    .btn {
+      height: 50px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 10px rgba(56, 178, 172, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(56, 178, 172, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .btn-secondary {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+
+    .form-hint {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 5px;
+    }
+
+    .form-error {
+      color: #DC2626;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    /* Select2 Custom Styling */
+    .select2-container {
+      width: 100% !important;
+    }
+
+    .select2-container--default .select2-selection--single,
+    .select2-container--default .select2-selection--multiple {
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .select2-container--default .select2-selection--single,
+    [data-theme="dark"] .select2-container--default .select2-selection--multiple {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: var(--text-dark);
+      line-height: 48px;
+      padding-left: 15px;
+      padding-right: 30px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 48px;
+      right: 10px;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+      min-height: 50px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+      padding: 5px 15px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: rgba(56, 178, 172, 0.1);
+      border: 1px solid var(--accent-color);
+      border-radius: 20px;
+      padding: 2px 10px;
+      color: var(--accent-color);
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+      color: var(--accent-color);
+      margin-right: 5px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+      background-color: var(--accent-color);
+    }
+
+    .select2-dropdown {
+      border-color: var(--border-color);
+      background-color: var(--card-bg);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+    .select2-search__field {
+      border-radius: 5px;
+      border-color: var(--border-color);
+      color: var(--text-dark);
+      background-color: var(--card-bg);
+    }
+
+    .select2-search__field:focus {
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    /* Custom Radio Buttons */
+    .radio-card-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .radio-card {
+      flex: 1;
+      min-width: 120px;
+      position: relative;
+    }
+
+    .radio-card-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-card-label {
+      display: block;
+      padding: 15px;
+      text-align: center;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .radio-card-label {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .radio-card-input:checked + .radio-card-label {
+      border-color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+    }
+
+    .radio-card-icon {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--text-light);
+      transition: all 0.3s ease;
+    }
+
+    .radio-card-input:checked + .radio-card-label .radio-card-icon {
+      color: var(--accent-color);
+    }
+
+    .radio-card-text {
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .radio-card-input:checked + .radio-card-label .radio-card-text {
+      color: var(--accent-color);
+    }
+
+    /* Success Animation */
+    .success-animation {
+      text-align: center;
+      display: none;
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: block;
+      stroke-width: 2;
+      stroke: #fff;
+      stroke-miterlimit: 10;
+      margin: 0 auto 30px;
+      box-shadow: inset 0px 0px 0px var(--accent-color);
+      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+
+    .checkmark__circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 2;
+      stroke-miterlimit: 10;
+      stroke: var(--accent-color);
+      fill: none;
+      animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .checkmark__check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    @keyframes stroke {
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes scale {
+      0%, 100% {
+        transform: none;
+      }
+      50% {
+        transform: scale3d(1.1, 1.1, 1);
+      }
+    }
+
+    @keyframes fill {
+      100% {
+        box-shadow: inset 0px 0px 0px 30px var(--accent-color);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 30px 20px;
+      }
+      
+      .form-title {
+        font-size: 1.5rem;
+      }
+      
+      .radio-card {
+        min-width: 100%;
+      }
+      
+      .form-buttons {
+        flex-direction: column-reverse;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-content">
+        <div class="form-container">
+          <div class="form-header">
+            <h2 class="form-title">Complete Your Profile</h2>
+            <p class="form-subtitle">Let's get to know you better to personalize your learning experience</p>
+          </div>
+          
+          <div class="form-steps">
+            <div class="step active" data-step="1">1</div>
+            <div class="step" data-step="2">2</div>
+            <div class="step" data-step="3">3</div>
+            <div class="step" data-step="4">4</div>
+            <div class="step-progress" style="width: 0%"></div>
+          </div>
+          
+          <form id="profileForm">
+            <!-- Step 1: Educational Background -->
+            <div class="step-content active" data-step="1">
+              <h3 class="mb-4">Educational Background</h3>
+              
+              <div class="form-group">
+                <label class="form-label">Educational Level</label>
+                <div class="radio-card-group">
+                  <div class="radio-card">
+                    <input type="radio" name="educationLevel" id="undergraduate" class="radio-card-input" value="undergraduate" checked>
+                    <label for="undergraduate" class="radio-card-label">
+                      <i class="bi bi-mortarboard radio-card-icon"></i>
+                      <span class="radio-card-text">Undergraduate</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="educationLevel" id="postgraduate" class="radio-card-input" value="postgraduate">
+                    <label for="postgraduate" class="radio-card-label">
+                      <i class="bi bi-award radio-card-icon"></i>
+                      <span class="radio-card-text">Postgraduate</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="educationLevel" id="professional" class="radio-card-input" value="professional">
+                    <label for="professional" class="radio-card-label">
+                      <i class="bi bi-briefcase radio-card-icon"></i>
+                      <span class="radio-card-text">Professional</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="institution">Institution/University</label>
+                <input type="text" id="institution" class="form-control" placeholder="Enter your institution name">
+                <div class="form-error" id="institution-error">Please enter your institution name</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="program">Program of Study</label>
+                <select id="program" class="form-select program-select">
+                  <option value="">Select your program</option>
+                  <optgroup label="Medical Programs">
+                    <option value="MBCHB">MBCHB (Bachelor of Medicine and Surgery)</option>
+                    <option value="BMS">BMS (Biomedical Sciences)</option>
+                    <option value="Nursing">Nursing Science</option>
+                    <option value="Pharmacy">Pharmacy</option>
+                    <option value="Dentistry">Dentistry</option>
+                    <option value="Physiotherapy">Physiotherapy</option>
+                    <option value="PublicHealth">Public Health</option>
+                  </optgroup>
+                  <optgroup label="Allied Health Programs">
+                    <option value="MedicalLab">Medical Laboratory Science</option>
+                    <option value="Radiography">Radiography</option>
+                    <option value="Nutrition">Nutrition and Dietetics</option>
+                    <option value="OccupationalTherapy">Occupational Therapy</option>
+                    <option value="Optometry">Optometry</option>
+                  </optgroup>
+                  <option value="Other">Other (Please specify)</option>
+                </select>
+                <div class="form-error" id="program-error">Please select your program</div>
+              </div>
+              
+              <div class="form-group" id="otherProgramGroup" style="display: none;">
+                <label class="form-label" for="otherProgram">Specify Program</label>
+                <input type="text" id="otherProgram" class="form-control" placeholder="Enter your program name">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="yearOfStudy">Year of Study</label>
+                <select id="yearOfStudy" class="form-select">
+                  <option value="">Select your year</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
+                  <option value="5">5th Year</option>
+                  <option value="6">6th Year</option>
+                  <option value="Resident">Resident/Postgraduate</option>
+                  <option value="Professional">Working Professional</option>
+                </select>
+                <div class="form-error" id="yearOfStudy-error">Please select your year of study</div>
+              </div>
+              
+              <div class="form-buttons">
+                <div></div> <!-- Empty div for spacing -->
+                <button type="button" class="btn btn-primary next-step" data-step="1">Continue <i class="bi bi-arrow-right ms-2"></i></button>
+              </div>
+            </div>
+            
+            <!-- Step 2: Location & Demographics -->
+            <div class="step-content" data-step="2">
+              <h3 class="mb-4">Location & Demographics</h3>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label" for="country">Country</label>
+                    <select id="country" class="form-select country-select">
+                      <option value="">Select your country</option>
+                      <option value="Nigeria">Nigeria</option>
+                      <option value="Ghana">Ghana</option>
+                      <option value="Kenya">Kenya</option>
+                      <option value="South Africa">South Africa</option>
+                      <option value="Ethiopia">Ethiopia</option>
+                      <option value="Egypt">Egypt</option>
+                      <option value="Tanzania">Tanzania</option>
+                      <option value="Uganda">Uganda</option>
+                      <option value="Other">Other Countries</option>
+                    </select>
+                    <div class="form-error" id="country-error">Please select your country</div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label" for="city">City</label>
+                    <input type="text" id="city" class="form-control" placeholder="Enter your city">
+                    <div class="form-error" id="city-error">Please enter your city</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Preferred Language</label>
+                <select id="language" class="form-select language-select" multiple="multiple">
+                  <option value="English">English</option>
+                  <option value="French">French</option>
+                  <option value="Arabic">Arabic</option>
+                  <option value="Swahili">Swahili</option>
+                  <option value="Yoruba">Yoruba</option>
+                  <option value="Igbo">Igbo</option>
+                  <option value="Hausa">Hausa</option>
+                  <option value="Amharic">Amharic</option>
+                  <option value="Zulu">Zulu</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div class="form-hint">Select all that apply</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Time Zone</label>
+                <select id="timezone" class="form-select">
+                  <option value="">Select your time zone</option>
+                  <option value="GMT">GMT (Greenwich Mean Time)</option>
+                  <option value="GMT+1">GMT+1 (West African Time)</option>
+                  <option value="GMT+2">GMT+2 (Central African Time)</option>
+                  <option value="GMT+3">GMT+3 (East African Time)</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div class="form-hint">This helps us schedule live sessions at convenient times</div>
+              </div>
+              
+              <div class="form-buttons">
+                <button type="button" class="btn btn-secondary prev-step" data-step="2"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <button type="button" class="btn btn-primary next-step" data-step="2">Continue <i class="bi bi-arrow-right ms-2"></i></button>
+              </div>
+            </div>
+            
+            <!-- Step 3: Learning Preferences -->
+            <div class="step-content" data-step="3">
+              <h3 class="mb-4">Learning Preferences</h3>
+              
+              <div class="form-group">
+                <label class="form-label">Preferred Learning Style</label>
+                <div class="radio-card-group">
+                  <div class="radio-card">
+                    <input type="radio" name="learningStyle" id="visual" class="radio-card-input" value="visual" checked>
+                    <label for="visual" class="radio-card-label">
+                      <i class="bi bi-eye radio-card-icon"></i>
+                      <span class="radio-card-text">Visual</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="learningStyle" id="auditory" class="radio-card-input" value="auditory">
+                    <label for="auditory" class="radio-card-label">
+                      <i class="bi bi-ear radio-card-icon"></i>
+                      <span class="radio-card-text">Auditory</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="learningStyle" id="reading" class="radio-card-input" value="reading">
+                    <label for="reading" class="radio-card-label">
+                      <i class="bi bi-book radio-card-icon"></i>
+                      <span class="radio-card-text">Reading</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="learningStyle" id="kinesthetic" class="radio-card-input" value="kinesthetic">
+                    <label for="kinesthetic" class="radio-card-label">
+                      <i class="bi bi-hand-index-thumb radio-card-icon"></i>
+                      <span class="radio-card-text">Hands-on</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Areas of Interest</label>
+                <select id="interests" class="form-select interests-select" multiple="multiple">
+                  <option value="Anatomy">Anatomy</option>
+                  <option value="Physiology">Physiology</option>
+                  <option value="Biochemistry">Biochemistry</option>
+                  <option value="Pathology">Pathology</option>
+                  <option value="Pharmacology">Pharmacology</option>
+                  <option value="Microbiology">Microbiology</option>
+                  <option value="Immunology">Immunology</option>
+                  <option value="Cardiology">Cardiology</option>
+                  <option value="Neurology">Neurology</option>
+                  <option value="Endocrinology">Endocrinology</option>
+                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="Surgery">Surgery</option>
+                  <option value="ObGyn">Obstetrics & Gynecology</option>
+                  <option value="Psychiatry">Psychiatry</option>
+                  <option value="PublicHealth">Public Health</option>
+                  <option value="Research">Medical Research</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div class="form-hint">Select all that apply</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Study Schedule Preference</label>
+                <div class="radio-card-group">
+                  <div class="radio-card">
+                    <input type="radio" name="studySchedule" id="morning" class="radio-card-input" value="morning">
+                    <label for="morning" class="radio-card-label">
+                      <i class="bi bi-sunrise radio-card-icon"></i>
+                      <span class="radio-card-text">Morning</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="studySchedule" id="afternoon" class="radio-card-input" value="afternoon">
+                    <label for="afternoon" class="radio-card-label">
+                      <i class="bi bi-sun radio-card-icon"></i>
+                      <span class="radio-card-text">Afternoon</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="studySchedule" id="evening" class="radio-card-input" value="evening" checked>
+                    <label for="evening" class="radio-card-label">
+                      <i class="bi bi-moon-stars radio-card-icon"></i>
+                      <span class="radio-card-text">Evening</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="studySchedule" id="flexible" class="radio-card-input" value="flexible">
+                    <label for="flexible" class="radio-card-label">
+                      <i class="bi bi-clock-history radio-card-icon"></i>
+                      <span class="radio-card-text">Flexible</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Weekly Study Hours</label>
+                <select id="studyHours" class="form-select">
+                  <option value="">Select average hours</option>
+                  <option value="0-5">0-5 hours</option>
+                  <option value="5-10">5-10 hours</option>
+                  <option value="10-15">10-15 hours</option>
+                  <option value="15-20">15-20 hours</option>
+                  <option value="20+">More than 20 hours</option>
+                </select>
+              </div>
+              
+              <div class="form-buttons">
+                <button type="button" class="btn btn-secondary prev-step" data-step="3"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <button type="button" class="btn btn-primary next-step" data-step="3">Continue <i class="bi bi-arrow-right ms-2"></i></button>
+              </div>
+            </div>
+            
+            <!-- Step 4: Goals & Objectives -->
+            <div class="step-content" data-step="4">
+              <h3 class="mb-4">Goals & Objectives</h3>
+              
+              <div class="form-group">
+                <label class="form-label">Primary Goal</label>
+                <div class="radio-card-group">
+                  <div class="radio-card">
+                    <input type="radio" name="primaryGoal" id="examPrep" class="radio-card-input" value="examPrep" checked>
+                    <label for="examPrep" class="radio-card-label">
+                      <i class="bi bi-journal-check radio-card-icon"></i>
+                      <span class="radio-card-text">Exam Preparation</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="primaryGoal" id="clinicalSkills" class="radio-card-input" value="clinicalSkills">
+                    <label for="clinicalSkills" class="radio-card-label">
+                      <i class="bi bi-heart-pulse radio-card-icon"></i>
+                      <span class="radio-card-text">Clinical Skills</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="primaryGoal" id="researchSkills" class="radio-card-input" value="researchSkills">
+                    <label for="researchSkills" class="radio-card-label">
+                      <i class="bi bi-graph-up radio-card-icon"></i>
+                      <span class="radio-card-text">Research Skills</span>
+                    </label>
+                  </div>
+                  <div class="radio-card">
+                    <input type="radio" name="primaryGoal" id="careerDev" class="radio-card-input" value="careerDev">
+                    <label for="careerDev" class="radio-card-label">
+                      <i class="bi bi-briefcase radio-card-icon"></i>
+                      <span class="radio-card-text">Career Development</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Upcoming Exams</label>
+                <select id="exams" class="form-select exams-select" multiple="multiple">
+                  <option value="None">None at the moment</option>
+                  <option value="MBBS">MBBS/MBCHB Finals</option>
+                  <option value="USMLE">USMLE Step 1</option>
+                  <option value="USMLE2">USMLE Step 2</option>
+                  <option value="PLAB">PLAB</option>
+                  <option value="MCCQE">MCCQE</option>
+                  <option value="AMC">AMC</option>
+                  <option value="Residency">Residency Entrance Exam</option>
+                  <option value="Nursing">Nursing Council Exam</option>
+                  <option value="Pharmacy">Pharmacy Council Exam</option>
+                  <option value="Other">Other</option>
+                </select>
+                <div class="form-hint">Select all that apply</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="targetDate">Target Completion Date</label>
+                <input type="date" id="targetDate" class="form-control">
+                <div class="form-hint">When do you aim to achieve your primary goal?</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="additionalInfo">Additional Information</label>
+                <textarea id="additionalInfo" class="form-control" rows="4" placeholder="Tell us more about your specific learning needs or any other information that would help us personalize your experience"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="joinCommunity" checked>
+                  <label class="form-check-label" for="joinCommunity">
+                    Join study groups and connect with peers in similar programs
+                  </label>
+                </div>
+                
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="receiveUpdates" checked>
+                  <label class="form-check-label" for="receiveUpdates">
+                    Receive updates about new courses, resources, and events relevant to my field
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-buttons">
+                <button type="button" class="btn btn-secondary prev-step" data-step="4"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                <button type="button" class="btn btn-primary" id="submitForm">Complete Setup <i class="bi bi-check-circle ms-2"></i></button>
+              </div>
+            </div>
+            
+            <!-- Success Message -->
+            <div class="success-animation" id="successMessage">
+              <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+              </svg>
+              <h3>Profile Setup Complete!</h3>
+              <p class="mb-4">Your profile has been successfully set up. We've personalized your dashboard based on your preferences.</p>
+              <a href="dashboard.html" class="btn btn-primary">Go to Dashboard <i class="bi bi-arrow-right ms-2"></i></a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+      
+      // Update Select2 dropdown styling
+      updateSelect2Theme();
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Initialize Select2
+    $(document).ready(function() {
+      $('.program-select').select2({
+        placeholder: "Select your program",
+        allowClear: true
+      });
+      
+      $('.country-select').select2({
+        placeholder: "Select your country",
+        allowClear: true
+      });
+      
+      $('.language-select').select2({
+        placeholder: "Select preferred languages",
+        allowClear: true
+      });
+      
+      $('.interests-select').select2({
+        placeholder: "Select areas of interest",
+        allowClear: true
+      });
+      
+      $('.exams-select').select2({
+        placeholder: "Select upcoming exams",
+        allowClear: true
+      });
+      
+      updateSelect2Theme();
+    });
+
+    // Update Select2 theme based on current theme
+    function updateSelect2Theme() {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      
+      $('.select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple').css({
+        'background': isDark ? 'var(--card-bg)' : 'var(--card-bg)',
+        'color': isDark ? 'var(--text-dark)' : 'var(--text-dark)',
+        'border-color': isDark ? 'var(--border-color)' : 'var(--border-color)'
+      });
+      
+      $('.select2-dropdown').css({
+        'background': isDark ? 'var(--card-bg)' : 'var(--card-bg)',
+        'color': isDark ? 'var(--text-dark)' : 'var(--text-dark)',
+        'border-color': isDark ? 'var(--border-color)' : 'var(--border-color)'
+      });
+      
+      $('.select2-container--default .select2-results__option').css({
+        'background': isDark ? 'var(--card-bg)' : 'var(--card-bg)',
+        'color': isDark ? 'var(--text-dark)' : 'var(--text-dark)'
+      });
+    }
+
+    // Show/hide other program input
+    $('#program').on('change', function() {
+      if ($(this).val() === 'Other') {
+        $('#otherProgramGroup').slideDown();
+      } else {
+        $('#otherProgramGroup').slideUp();
+      }
+    });
+
+    // Multi-step form navigation
+    const totalSteps = 4;
+    let currentStep = 1;
+
+    // Update progress bar
+    function updateProgress() {
+      const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+      $('.step-progress').css('width', `${progressPercentage}%`);
+    }
+
+    // Next step button click
+    $('.next-step').on('click', function() {
+      const step = parseInt($(this).data('step'));
+      
+      // Validate current step
+      if (!validateStep(step)) {
+        return;
+      }
+      
+      // Hide current step
+      $(`.step-content[data-step="${step}"]`).removeClass('active');
+      
+      // Update step indicator
+      $(`.step[data-step="${step}"]`).addClass('completed');
+      $(`.step[data-step="${step + 1}"]`).addClass('active');
+      
+      // Show next step
+      $(`.step-content[data-step="${step + 1}"]`).addClass('active');
+      
+      // Update current step
+      currentStep = step + 1;
+      
+      // Update progress bar
+      updateProgress();
+      
+      // Scroll to top of form
+      scrollToTop();
+    });
+
+    // Previous step button click
+    $('.prev-step').on('click', function() {
+      const step = parseInt($(this).data('step'));
+      
+      // Hide current step
+      $(`.step-content[data-step="${step}"]`).removeClass('active');
+      
+      // Update step indicator
+      $(`.step[data-step="${step}"]`).removeClass('active');
+      $(`.step[data-step="${step - 1}"]`).removeClass('completed').addClass('active');
+      
+      // Show previous step
+      $(`.step-content[data-step="${step - 1}"]`).addClass('active');
+      
+      // Update current step
+      currentStep = step - 1;
+      
+      // Update progress bar
+      updateProgress();
+      
+      // Scroll to top of form
+      scrollToTop();
+    });
+
+    // Submit form
+    $('#submitForm').on('click', function() {
+      // Validate final step
+      if (!validateStep(4)) {
+        return;
+      }
+      
+      // Hide form content
+      $('.step-content').removeClass('active');
+      $('.form-steps').hide();
+      
+      // Show success message
+      $('#successMessage').css('display', 'block');
+      
+      // Scroll to top of form
+      scrollToTop();
+      
+      // Save form data (in a real application, this would send data to the server)
+      saveFormData();
+    });
+
+    // Validate step
+    function validateStep(step) {
+      let isValid = true;
+      
+      // Reset all error messages
+      $('.form-error').hide();
+      
+      // Validation rules based on step
+      if (step === 1) {
+        // Validate institution
+        if ($('#institution').val().trim() === '') {
+          $('#institution-error').show();
+          isValid = false;
+        }
+        
+        // Validate program
+        if ($('#program').val() === '') {
+          $('#program-error').show();
+          isValid = false;
+        }
+        
+        // Validate year of study
+        if ($('#yearOfStudy').val() === '') {
+          $('#yearOfStudy-error').show();
+          isValid = false;
+        }
+      }
+      else if (step === 2) {
+        // Validate country
+        if ($('#country').val() === '') {
+          $('#country-error').show();
+          isValid = false;
+        }
+        
+        // Validate city
+        if ($('#city').val().trim() === '') {
+          $('#city-error').show();
+          isValid = false;
+        }
+      }
+      
+      return isValid;
+    }
+
+    // Save form data
+    function saveFormData() {
+      // In a real application, this would send the data to the server
+      const formData = {
+        // Educational Background
+        educationLevel: $('input[name="educationLevel"]:checked').val(),
+        institution: $('#institution').val(),
+        program: $('#program').val() === 'Other' ? $('#otherProgram').val() : $('#program').val(),
+        yearOfStudy: $('#yearOfStudy').val(),
+        
+        // Location & Demographics
+        country: $('#country').val(),
+        city: $('#city').val(),
+        languages: $('#language').val(),
+        timezone: $('#timezone').val(),
+        
+        // Learning Preferences
+        learningStyle: $('input[name="learningStyle"]:checked').val(),
+        interests: $('#interests').val(),
+        studySchedule: $('input[name="studySchedule"]:checked').val(),
+        studyHours: $('#studyHours').val(),
+        
+        // Goals & Objectives
+        primaryGoal: $('input[name="primaryGoal"]:checked').val(),
+        exams: $('#exams').val(),
+        targetDate: $('#targetDate').val(),
+        additionalInfo: $('#additionalInfo').val(),
+        joinCommunity: $('#joinCommunity').is(':checked'),
+        receiveUpdates: $('#receiveUpdates').is(':checked')
+      };
+      
+      // For demonstration, log the data to console
+      console.log('Form Data:', formData);
+      
+      // In a real application, you would send this data to the server
+      // using AJAX or form submission
+    }
+
+    // Scroll to top of form container
+    function scrollToTop() {
+      $('.form-container').get(0).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

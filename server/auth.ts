@@ -65,6 +65,13 @@ export function setupAuth(app: Express) {
     if (existingUser) {
       return res.status(400).send("Username already exists");
     }
+    
+    if (req.body.email) {
+      const existingEmail = await storage.getUserByEmail(req.body.email);
+      if (existingEmail) {
+        return res.status(400).send("Email already exists");
+      }
+    }
 
     const user = await storage.createUser({
       ...req.body,
@@ -91,5 +98,16 @@ export function setupAuth(app: Express) {
   app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     res.json(req.user);
+  });
+  
+  app.post("/api/user/profile", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const updatedUser = await storage.updateUserProfile(req.user!.id, req.body);
+      res.json(updatedUser);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
   });
 }
