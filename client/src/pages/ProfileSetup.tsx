@@ -332,3 +332,164 @@ export default function ProfileSetup() {
     </div>
   );
 }
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/hooks/use-auth';
+import { useLocation } from 'wouter';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useToast } from '@/components/ui/use-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+
+const profileSchema = z.object({
+  educationLevel: z.enum(['undergraduate', 'postgraduate', 'professional']),
+  institution: z.string().min(1, 'Institution is required'),
+  program: z.string().min(1, 'Program is required'),
+  yearOfStudy: z.string().min(1, 'Year of study is required'),
+  country: z.string().min(1, 'Country is required'),
+  city: z.string().min(1, 'City is required'),
+  language: z.array(z.string()).min(1, 'Select at least one language'),
+  timezone: z.string().min(1, 'Timezone is required'),
+  learningStyle: z.enum(['visual', 'auditory', 'reading', 'kinesthetic']),
+  interests: z.array(z.string()).min(1, 'Select at least one interest'),
+  studySchedule: z.enum(['morning', 'afternoon', 'evening', 'flexible']),
+  studyHours: z.string().min(1, 'Study hours is required'),
+  primaryGoal: z.enum(['examPrep', 'clinicalSkills', 'researchSkills', 'careerDev']),
+  exams: z.array(z.string()),
+  targetDate: z.string().optional(),
+  additionalInfo: z.string().optional(),
+  joinCommunity: z.boolean(),
+  receiveUpdates: z.boolean()
+});
+
+type ProfileInputs = z.infer<typeof profileSchema>;
+
+export default function ProfileSetup() {
+  const [step, setStep] = useState(1);
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Form state
+  const form = useForm<ProfileInputs>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      educationLevel: 'undergraduate',
+      learningStyle: 'visual',
+      studySchedule: 'flexible',
+      primaryGoal: 'examPrep',
+      joinCommunity: true,
+      receiveUpdates: true
+    }
+  });
+
+  // Profile update mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data: ProfileInputs) => {
+      const res = await apiRequest('POST', '/api/user/profile', data);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      toast({
+        title: 'Profile updated',
+        description: 'Your profile has been successfully updated',
+      });
+      setLocation('/dashboard');
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Update failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Submit handler
+  const onSubmit = (data: ProfileInputs) => {
+    updateProfileMutation.mutate(data);
+  };
+
+  // Navigation between steps
+  const nextStep = () => {
+    if (step < 4) {
+      setStep(step + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <Card className="max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle>Complete Your Profile</CardTitle>
+          <CardDescription>Let's personalize your learning experience</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-8">
+            <div className="flex justify-between relative">
+              {[1, 2, 3, 4].map((num) => (
+                <div
+                  key={num}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 relative z-10 bg-background
+                    ${step === num ? 'border-primary text-primary' : 
+                      step > num ? 'border-primary bg-primary text-white' : 'border-muted'}`}
+                >
+                  {num}
+                </div>
+              ))}
+              <div 
+                className="absolute top-1/2 left-0 w-full h-0.5 bg-muted -z-10"
+                style={{ transform: 'translateY(-50%)' }}
+              />
+              <div 
+                className="absolute top-1/2 left-0 h-0.5 bg-primary -z-10 transition-all"
+                style={{ 
+                  transform: 'translateY(-50%)',
+                  width: `${((step - 1) / 3) * 100}%`
+                }}
+              />
+            </div>
+          </div>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Step content here - Add your form fields based on the current step */}
+              
+              <div className="flex justify-between mt-6">
+                {step > 1 && (
+                  <Button type="button" variant="outline" onClick={prevStep}>
+                    Previous
+                  </Button>
+                )}
+                {step < 4 ? (
+                  <Button type="button" onClick={nextStep} className="ml-auto">
+                    Next
+                  </Button>
+                ) : (
+                  <Button type="submit" className="ml-auto">
+                    Complete Setup
+                  </Button>
+                )}
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

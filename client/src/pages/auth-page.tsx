@@ -34,13 +34,9 @@ export default function AuthPage() {
   
   // Redirect if already logged in
   if (user) {
-    // If user is newly registered and profile is not complete,
-    // redirect to profile setup page
-    if (!user.isProfileComplete) {
-      return <Redirect to="/profile-setup" />;
-    }
-    // Otherwise, redirect to dashboard
-    return <Redirect to="/dashboard" />;
+    return !user.isProfileComplete ? 
+      <Redirect to="/profile-setup" /> : 
+      <Redirect to="/dashboard" />;
   }
   
   // Login form
