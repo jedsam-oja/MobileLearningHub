@@ -13,32 +13,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ ok: true });
   });
 
-  // Profile update route
-  app.post("/api/user/profile", async (req: Request, res: Response) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).send("Unauthorized");
-    }
-
-    try {
-      // Validate request body against schema
-      const profileData = updateProfileSchema.parse(req.body);
-      
-      // Mark profile as complete if this is the final step
-      const finalUpdate = { 
-        ...profileData,
-        // Set profile as complete if this is the final step (updating bio)
-        ...(profileData.bio !== undefined && { isProfileComplete: true })
-      };
-
-      // Update user profile
-      const updatedUser = await storage.updateUserProfile(req.user!.id, finalUpdate);
-      
-      // Return updated user
-      res.json(updatedUser);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
-    }
-  });
+  // Profile update endpoint is defined in auth.ts
 
   const httpServer = createServer(app);
 

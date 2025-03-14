@@ -101,10 +101,16 @@ export function setupAuth(app: Express) {
   });
   
   app.post("/api/user/profile", async (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
     
     try {
-      const updatedUser = await storage.updateUserProfile(req.user!.id, req.body);
+      // Mark profile as complete if this is the final step (updating bio)
+      const finalUpdate = { 
+        ...req.body,
+        ...(req.body.bio !== undefined && { isProfileComplete: true })
+      };
+      
+      const updatedUser = await storage.updateUserProfile(req.user!.id, finalUpdate);
       res.json(updatedUser);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
