@@ -5,6 +5,8 @@ import StudyTools from "@/components/StudyTools";
 import FeaturedCourses from "@/components/FeaturedCourses";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
+import HowItWorks from "@/components/HowItWorks";
+import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
 import { useEffect } from "react";
@@ -72,7 +74,9 @@ export default function Home() {
         <HeroSection />
         <StudyTools />
         <FeaturedCourses />
+        <HowItWorks />
         <Testimonials />
+        <FAQ />
         <CTASection />
       </main>
       
