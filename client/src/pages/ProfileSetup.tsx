@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useLocation } from 'wouter';
@@ -13,7 +14,6 @@ import * as z from 'zod';
 import { Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
-
 const profileSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   email: z.string().email('Invalid email address'),
@@ -26,7 +26,7 @@ const profileSchema = z.object({
 type ProfileInputs = z.infer<typeof profileSchema>;
 
 export default function ProfileSetup() {
-  const [step, setStep] = useState(1); //This line is retained because it's used in the edited component.
+  const [step, setStep] = useState(1);
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -70,7 +70,6 @@ export default function ProfileSetup() {
     updateProfileMutation.mutate(data);
   };
 
-  // Redirect if profile is already complete
   useEffect(() => {
     if (user?.isProfileComplete) {
       setLocation('/dashboard');
@@ -104,7 +103,6 @@ export default function ProfileSetup() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="email"
@@ -112,13 +110,12 @@ export default function ProfileSetup() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="doctor@hospital.com" {...field} />
+                      <Input type="email" placeholder="john@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="specialization"
@@ -126,13 +123,12 @@ export default function ProfileSetup() {
                   <FormItem>
                     <FormLabel>Specialization</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your medical specialization" {...field} />
+                      <Input placeholder="e.g. Cardiology" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="institute"
@@ -140,13 +136,12 @@ export default function ProfileSetup() {
                   <FormItem>
                     <FormLabel>Institute</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your medical school/institution" {...field} />
+                      <Input placeholder="Medical School Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="graduationYear"
@@ -154,13 +149,12 @@ export default function ProfileSetup() {
                   <FormItem>
                     <FormLabel>Graduation Year</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="Expected graduation year" {...field} />
+                      <Input type="number" placeholder="2024" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="bio"
@@ -174,20 +168,15 @@ export default function ProfileSetup() {
                   </FormItem>
                 )}
               />
-
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full"
                 disabled={updateProfileMutation.isPending}
               >
-                {updateProfileMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  "Complete Profile"
+                {updateProfileMutation.isPending && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
+                Complete Profile
               </Button>
             </form>
           </Form>
