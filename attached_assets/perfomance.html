@@ -1,0 +1,3583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - Performance Tracking</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Dashboard Content */
+    .dashboard-content {
+      padding: 30px;
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Performance Tracking Page Specific Styles */
+    .page-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+    }
+
+    .performance-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    [data-theme="dark"] .performance-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .performance-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--text-dark);
+    }
+
+    .period-selector {
+      display: flex;
+      gap: 5px;
+      background: var(--background-light);
+      border-radius: 20px;
+      padding: 5px;
+      border: 1px solid var(--border-color);
+    }
+
+    .period-option {
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-light);
+    }
+
+    .period-option.active {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .chart-container {
+      height: 300px;
+      width: 100%;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: var(--background-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: scale(1.05);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--accent-color);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    .progress-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .progress-item {
+      margin-bottom: 20px;
+    }
+
+    .progress-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .progress-title {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .progress-value {
+      font-weight: 600;
+      color: var(--accent-color);
+    }
+
+    .progress-bar-container {
+      height: 8px;
+      background: var(--background-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+
+    .subject-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .subject-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .subject-item:last-child {
+      border-bottom: none;
+    }
+
+    .subject-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .subject-info {
+      flex: 1;
+    }
+
+    .subject-name {
+      font-weight: 500;
+      margin-bottom: 3px;
+      color: var(--text-dark);
+    }
+
+    .subject-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subject-progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--background-light);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .subject-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .subject-progress-text {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .subject-grade {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-left: 15px;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .achievement-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      border-radius: 12px;
+      background: var(--background-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .achievement-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .achievement-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 24px;
+      color: white;
+      background: var(--gradient-primary);
+    }
+
+    .achievement-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      color: var(--text-dark);
+    }
+
+    .achievement-date {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .activity-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-timeline {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 15px;
+    }
+
+    .activity-date {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+
+    .activity-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      margin: 5px 0;
+    }
+
+    .activity-line {
+      flex: 1;
+      width: 2px;
+      background: var(--border-color);
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: var(--text-dark);
+    }
+
+    .activity-details {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .recommendation-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .recommendation-item {
+      display: flex;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .recommendation-item:last-child {
+      border-bottom: none;
+    }
+
+    .recommendation-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .recommendation-content {
+      flex: 1;
+    }
+
+    .recommendation-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: var(--text-dark);
+    }
+
+    .recommendation-description {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    .recommendation-action {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      background: var(--accent-color);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .recommendation-action:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    .tab-navigation {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .tab-navigation {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .tab-item {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-item.active {
+      color: var(--accent-color);
+      border-bottom-color: var(--accent-color);
+    }
+
+    .tab-item:hover:not(.active) {
+      background: rgba(56, 178, 172, 0.05);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .streak-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--gradient-primary);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .streak-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .streak-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .streak-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .streak-count {
+      font-size: 2.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .streak-icon {
+      font-size: 2rem;
+    }
+
+    .calendar-container {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .calendar-day {
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .calendar-date {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+      color: var(--text-dark);
+    }
+
+    .calendar-date.active {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
+    .calendar-date.partial {
+      background: rgba(56, 178, 172, 0.2);
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .calendar-date.empty {
+      border-color: transparent;
+      background: transparent;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .achievement-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .dashboard-content {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tab-item {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .dashboard-content {
+        padding: 15px;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+      
+      .calendar-container,
+      .calendar-header {
+        gap: 5px;
+      }
+      
+      .calendar-date {
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .donut-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+    }
+
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .donut-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1;
+    }
+
+    .donut-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="OnlineJacademy Logo">
+          <span class="logo-text">OnlineJacademy</span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Your Cardiology live session starts in 30 minutes</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">You completed the Anatomy quiz with 92% score</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Sarah invited you to join Neurology study group</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-content">
+        <h1 class="page-title">Performance Tracking</h1>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+          <div class="tab-item active" data-tab="overview">Overview</div>
+          <div class="tab-item" data-tab="academic">Academic Performance</div>
+          <div class="tab-item" data-tab="engagement">Engagement</div>
+          <div class="tab-item" data-tab="achievements">Achievements</div>
+        </div>
+        
+        <!-- Overview Tab -->
+        <div class="tab-content active" id="overview">
+          <!-- Study Streak Card -->
+          <div class="streak-card">
+            <div class="streak-info">
+              <div class="streak-title">Current Study Streak</div>
+              <div class="streak-subtitle">Keep up the good work!</div>
+            </div>
+            <div class="streak-count">
+              <span>14</span>
+              <div class="streak-icon">
+                <i class="bi bi-fire"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <!-- Performance Summary -->
+            <div class="col-lg-8">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Performance Summary</h2>
+                  <div class="period-selector">
+                    <div class="period-option">Week</div>
+                    <div class="period-option active">Month</div>
+                    <div class="period-option">Year</div>
+                  </div>
+                </div>
+                <div class="chart-container" id="performanceSummaryChart"></div>
+              </div>
+            </div>
+            
+            <!-- Key Metrics -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Key Metrics</h2>
+                </div>
+                <div class="stat-grid">
+                  <div class="stat-item">
+                    <div class="stat-value">93%</div>
+                    <div class="stat-label">Average Score</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">42.5</div>
+                    <div class="stat-label">Study Hours</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">347</div>
+                    <div class="stat-label">Questions Answered</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">86%</div>
+                    <div class="stat-label">Completion Rate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Study Activity -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Study Activity</h2>
+                </div>
+                <div class="donut-container">
+                  <div id="activityDonutChart"></div>
+                  <div class="donut-center">
+                    <div class="donut-value">24.5h</div>
+                    <div class="donut-label">This Week</div>
+                  </div>
+                </div>
+                <ul class="progress-list mt-4">
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Video Lectures</span>
+                      <span class="progress-value">8.5h</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 35%; background: #4F46E5;"></div>
+                    </div>
+                  </li>
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Practice Questions</span>
+                      <span class="progress-value">6.2h</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 25%; background: #059669;"></div>
+                    </div>
+                  </li>
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Reading Material</span>
+                      <span class="progress-value">5.8h</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 24%; background: #D97706;"></div>
+                    </div>
+                  </li>
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Flashcards</span>
+                      <span class="progress-value">4.0h</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 16%; background: #DC2626;"></div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Subject Progress -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Subject Progress</h2>
+                </div>
+                <ul class="subject-list">
+                  <li class="subject-item">
+                    <div class="subject-icon" style="background: #4F46E5;">
+                      <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <div class="subject-info">
+                      <div class="subject-name">Cardiovascular System</div>
+                      <div class="subject-progress">
+                        <div class="subject-progress-bar">
+                          <div class="subject-progress-fill" style="width: 78%; background: #4F46E5;"></div>
+                        </div>
+                        <div class="subject-progress-text">78%</div>
+                      </div>
+                    </div>
+                    <div class="subject-grade" style="background: #059669;">
+                      A
+                    </div>
+                  </li>
+                  <li class="subject-item">
+                    <div class="subject-icon" style="background: #059669;">
+                      <i class="bi bi-brain"></i>
+                    </div>
+                    <div class="subject-info">
+                      <div class="subject-name">Neuroanatomy</div>
+                      <div class="subject-progress">
+                        <div class="subject-progress-bar">
+                          <div class="subject-progress-fill" style="width: 65%; background: #059669;"></div>
+                        </div>
+                        <div class="subject-progress-text">65%</div>
+                      </div>
+                    </div>
+                    <div class="subject-grade" style="background: #059669;">
+                      A-
+                    </div>
+                  </li>
+                  <li class="subject-item">
+                    <div class="subject-icon" style="background: #D97706;">
+                      <i class="bi bi-capsule"></i>
+                    </div>
+                    <div class="subject-info">
+                      <div class="subject-name">Pharmacology</div>
+                      <div class="subject-progress">
+                        <div class="subject-progress-bar">
+                          <div class="subject-progress-fill" style="width: 42%; background: #D97706;"></div>
+                        </div>
+                        <div class="subject-progress-text">42%</div>
+                      </div>
+                    </div>
+                    <div class="subject-grade" style="background: #0EA5E9;">
+                      B+
+                    </div>
+                  </li>
+                  <li class="subject-item">
+                    <div class="subject-icon" style="background: #DC2626;">
+                      <i class="bi bi-lungs"></i>
+                    </div>
+                    <div class="subject-info">
+                      <div class="subject-name">Respiratory System</div>
+                      <div class="subject-progress">
+                        <div class="subject-progress-bar">
+                          <div class="subject-progress-fill" style="width: 36%; background: #DC2626;"></div>
+                        </div>
+                        <div class="subject-progress-text">36%</div>
+                      </div>
+                    </div>
+                    <div class="subject-grade" style="background: #0EA5E9;">
+                      B
+                    </div>
+                  </li>
+                  <li class="subject-item">
+                    <div class="subject-icon" style="background: #0EA5E9;">
+                      <i class="bi bi-droplet"></i>
+                    </div>
+                    <div class="subject-info">
+                      <div class="subject-name">Hematology</div>
+                      <div class="subject-progress">
+                        <div class="subject-progress-bar">
+                          <div class="subject-progress-fill" style="width: 28%; background: #0EA5E9;"></div>
+                        </div>
+                        <div class="subject-progress-text">28%</div>
+                      </div>
+                    </div>
+                    <div class="subject-grade" style="background: #D97706;">
+                      B-
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Study Calendar -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Study Calendar</h2>
+                  <span class="text-muted">April 2023</span>
+                </div>
+                <div class="calendar-header">
+                  <div class="calendar-day">Sun</div>
+                  <div class="calendar-day">Mon</div>
+                  <div class="calendar-day">Tue</div>
+                  <div class="calendar-day">Wed</div>
+                  <div class="calendar-day">Thu</div>
+                  <div class="calendar-day">Fri</div>
+                  <div class="calendar-day">Sat</div>
+                </div>
+                <div class="calendar-container">
+                  <div class="calendar-date empty"></div>
+                  <div class="calendar-date empty"></div>
+                  <div class="calendar-date empty"></div>
+                  <div class="calendar-date empty"></div>
+                  <div class="calendar-date empty"></div>
+                  <div class="calendar-date">1</div>
+                  <div class="calendar-date active">2</div>
+                  <div class="calendar-date active">3</div>
+                  <div class="calendar-date active">4</div>
+                  <div class="calendar-date active">5</div>
+                  <div class="calendar-date active">6</div>
+                  <div class="calendar-date active">7</div>
+                  <div class="calendar-date active">8</div>
+                  <div class="calendar-date active">9</div>
+                  <div class="calendar-date active">10</div>
+                  <div class="calendar-date active">11</div>
+                  <div class="calendar-date active">12</div>
+                  <div class="calendar-date active">13</div>
+                  <div class="calendar-date active">14</div>
+                  <div class="calendar-date active">15</div>
+                  <div class="calendar-date active">16</div>
+                  <div class="calendar-date active">17</div>
+                  <div class="calendar-date partial">18</div>
+                  <div class="calendar-date">19</div>
+                  <div class="calendar-date">20</div>
+                  <div class="calendar-date">21</div>
+                  <div class="calendar-date">22</div>
+                  <div class="calendar-date">23</div>
+                  <div class="calendar-date">24</div>
+                  <div class="calendar-date">25</div>
+                  <div class="calendar-date">26</div>
+                  <div class="calendar-date">27</div>
+                  <div class="calendar-date">28</div>
+                  <div class="calendar-date">29</div>
+                  <div class="calendar-date">30</div>
+                </div>
+                <div class="mt-3">
+                  <div class="d-flex align-items-center mb-2">
+                    <div style="width: 15px; height: 15px; border-radius: 50%; background: var(--accent-color); margin-right: 10px;"></div>
+                    <span class="small">Completed daily goal</span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div style="width: 15px; height: 15px; border-radius: 50%; background: rgba(56, 178, 172, 0.2); border: 1px solid var(--accent-color); margin-right: 10px;"></div>
+                    <span class="small">Partial completion</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Recent Achievements -->
+            <div class="col-lg-6">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Recent Achievements</h2>
+                  <a href="#" class="text-decoration-none" style="color: var(--accent-color);">View All</a>
+                </div>
+                <div class="achievement-grid">
+                  <div class="achievement-item">
+                    <div class="achievement-icon">
+                      <i class="bi bi-trophy"></i>
+                    </div>
+                    <div class="achievement-title">Perfect Score</div>
+                    <div class="achievement-date">Apr 15, 2023</div>
+                  </div>
+                  <div class="achievement-item">
+                    <div class="achievement-icon">
+                      <i class="bi bi-lightning"></i>
+                    </div>
+                    <div class="achievement-title">14-Day Streak</div>
+                    <div class="achievement-date">Apr 17, 2023</div>
+                  </div>
+                  <div class="achievement-item">
+                    <div class="achievement-icon">
+                      <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="achievement-title">40+ Study Hours</div>
+                    <div class="achievement-date">Apr 14, 2023</div>
+                  </div>
+                  <div class="achievement-item">
+                    <div class="achievement-icon">
+                      <i class="bi bi-journal-check"></i>
+                    </div>
+                    <div class="achievement-title">300+ Questions</div>
+                    <div class="achievement-date">Apr 10, 2023</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Personalized Recommendations -->
+            <div class="col-lg-6">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Personalized Recommendations</h2>
+                </div>
+                <ul class="recommendation-list">
+                  <li class="recommendation-item">
+                    <div class="recommendation-icon" style="background: #4F46E5;">
+                      <i class="bi bi-play-circle"></i>
+                    </div>
+                    <div class="recommendation-content">
+                      <div class="recommendation-title">Respiratory System - Advanced Concepts</div>
+                      <div class="recommendation-description">Based on your recent quiz performance, we recommend this video lecture to strengthen your understanding.</div>
+                      <a href="#" class="recommendation-action">Watch Now</a>
+                    </div>
+                  </li>
+                  <li class="recommendation-item">
+                    <div class="recommendation-icon" style="background: #059669;">
+                      <i class="bi bi-journal-check"></i>
+                    </div>
+                    <div class="recommendation-content">
+                      <div class="recommendation-title">Pharmacology Practice Questions</div>
+                      <div class="recommendation-description">Improve your pharmacology scores with these targeted practice questions.</div>
+                      <a href="#" class="recommendation-action">Start Practice</a>
+                    </div>
+                  </li>
+                  <li class="recommendation-item">
+                    <div class="recommendation-icon" style="background: #D97706;">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="recommendation-content">
+                      <div class="recommendation-title">Join Hematology Study Group</div>
+                      <div class="recommendation-description">Connect with peers to improve your understanding of hematology concepts.</div>
+                      <a href="#" class="recommendation-action">Join Group</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Academic Performance Tab -->
+        <div class="tab-content" id="academic">
+          <div class="row">
+            <!-- Score Trends -->
+            <div class="col-lg-8">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Score Trends</h2>
+                  <div class="period-selector">
+                    <div class="period-option">Week</div>
+                    <div class="period-option active">Month</div>
+                    <div class="period-option">Year</div>
+                  </div>
+                </div>
+                <div class="chart-container" id="scoreTrendsChart"></div>
+              </div>
+            </div>
+            
+            <!-- Performance by Subject -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Performance by Subject</h2>
+                </div>
+                <div class="chart-container" id="subjectPerformanceChart"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Question Analysis -->
+            <div class="col-lg-6">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Question Analysis</h2>
+                </div>
+                <div class="chart-container" id="questionAnalysisChart"></div>
+                <div class="mt-3">
+                  <div class="d-flex justify-content-between mb-3">
+                    <div>
+                      <h6 class="mb-1">Total Questions Attempted</h6>
+                      <p class="mb-0 text-muted">Last 30 days</p>
+                    </div>
+                    <div class="text-end">
+                      <h3 class="mb-0" style="color: var(--accent-color);">347</h3>
+                    </div>
+                  </div>
+                  <div class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Correct Answers</span>
+                      <span class="progress-value">285 (82%)</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 82%; background: #059669;"></div>
+                    </div>
+                  </div>
+                  <div class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Incorrect Answers</span>
+                      <span class="progress-value">62 (18%)</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 18%; background: #DC2626;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Skill Gap Analysis -->
+            <div class="col-lg-6">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Skill Gap Analysis</h2>
+                </div>
+                <div class="chart-container" id="skillGapChart"></div>
+                <div class="mt-3">
+                  <h6 class="mb-3">Areas for Improvement</h6>
+                  <ul class="list-unstyled">
+                    <li class="d-flex align-items-center mb-3">
+                      <i class="bi bi-exclamation-triangle me-2" style="color: #DC2626;"></i>
+                      <div>
+                        <strong>Pharmacology - Drug Interactions</strong>
+                        <p class="mb-0 text-muted small">67% accuracy - Review recommended</p>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-center mb-3">
+                      <i class="bi bi-exclamation-triangle me-2" style="color: #DC2626;"></i>
+                      <div>
+                        <strong>Respiratory - Pulmonary Function Tests</strong>
+                        <p class="mb-0 text-muted small">71% accuracy - Review recommended</p>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-center">
+                      <i class="bi bi-exclamation-triangle me-2" style="color: #D97706;"></i>
+                      <div>
+                        <strong>Hematology - Coagulation Disorders</strong>
+                        <p class="mb-0 text-muted small">75% accuracy - Practice recommended</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Quiz Performance -->
+            <div class="col-lg-12">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Recent Quiz Performance</h2>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Quiz</th>
+                        <th>Date</th>
+                        <th>Score</th>
+                        <th>Time Spent</th>
+                        <th>Accuracy</th>
+                        <th>Class Average</th>
+                        <th>Percentile</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Cardiovascular System - Final</td>
+                        <td>Apr 16, 2023</td>
+                        <td>92%</td>
+                        <td>45 min</td>
+                        <td>
+                          <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" style="width: 92%;"></div>
+                          </div>
+                        </td>
+                        <td>84%</td>
+                        <td>94th</td>
+                      </tr>
+                      <tr>
+                        <td>Neuroanatomy - Brain Stem</td>
+                        <td>Apr 14, 2023</td>
+                        <td>88%</td>
+                        <td>38 min</td>
+                        <td>
+                          <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" style="width: 88%;"></div>
+                          </div>
+                        </td>
+                        <td>79%</td>
+                        <td>87th</td>
+                      </tr>
+                      <tr>
+                        <td>Pharmacology - Antibiotics</td>
+                        <td>Apr 10, 2023</td>
+                        <td>85%</td>
+                        <td>52 min</td>
+                        <td>
+                          <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" style="width: 85%;"></div>
+                          </div>
+                        </td>
+                        <td>82%</td>
+                        <td>76th</td>
+                      </tr>
+                      <tr>
+                        <td>Respiratory System - Mechanics</td>
+                        <td>Apr 8, 2023</td>
+                        <td>78%</td>
+                        <td>47 min</td>
+                        <td>
+                          <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-warning" style="width: 78%;"></div>
+                          </div>
+                        </td>
+                        <td>75%</td>
+                        <td>62nd</td>
+                      </tr>
+                      <tr>
+                        <td>Hematology - Blood Cells</td>
+                        <td>Apr 5, 2023</td>
+                        <td>81%</td>
+                        <td>40 min</td>
+                        <td>
+                          <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" style="width: 81%;"></div>
+                          </div>
+                        </td>
+                        <td>77%</td>
+                        <td>70th</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Engagement Tab -->
+        <div class="tab-content" id="engagement">
+          <div class="row">
+            <!-- Time Spent Trends -->
+            <div class="col-lg-8">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Time Spent Trends</h2>
+                  <div class="period-selector">
+                    <div class="period-option">Week</div>
+                    <div class="period-option active">Month</div>
+                    <div class="period-option">Year</div>
+                  </div>
+                </div>
+                <div class="chart-container" id="timeSpentTrendsChart"></div>
+              </div>
+            </div>
+            
+            <!-- Engagement Metrics -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Engagement Metrics</h2>
+                </div>
+                <div class="donut-container">
+                  <div id="engagementDonutChart"></div>
+                  <div class="donut-center">
+                    <div class="donut-value">85%</div>
+                    <div class="donut-label">Engagement</div>
+                  </div>
+                </div>
+                <ul class="progress-list mt-4">
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Content Completion</span>
+                      <span class="progress-value">92%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 92%; background: #4F46E5;"></div>
+                    </div>
+                  </li>
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Participation</span>
+                      <span class="progress-value">78%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 78%; background: #059669;"></div>
+                    </div>
+                  </li>
+                  <li class="progress-item">
+                    <div class="progress-header">
+                      <span class="progress-title">Consistency</span>
+                      <span class="progress-value">86%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                      <div class="progress-bar-fill" style="width: 86%; background: #D97706;"></div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Resource Utilization -->
+            <div class="col-lg-6">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Resource Utilization</h2>
+                </div>
+                <div class="chart-container" id="resourceUtilizationChart"></div>
+                <div class="mt-3">
+                  <h6 class="mb-3">Most Used Resources</h6>
+                  <ul class="list-unstyled">
+                    <li class="d-flex align-items-center justify-content-between mb-3">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-play-circle me-2" style="color: #4F46E5;"></i>
+                        <span>Video Lectures</span>
+                      </div>
+                      <span class="badge" style="background: #4F46E5;">32%</span>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mb-3">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-journal-check me-2" style="color: #059669;"></i>
+                        <span>Practice Questions</span>
+                      </div>
+                      <span class="badge" style="background: #059669;">28%</span>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mb-3">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-book me-2" style="color: #D97706;"></i>
+                        <span>Reading Materials</span>
+                      </div>
+                      <span class="badge" style="background: #D97706;">22%</span>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-card-list me-2" style="color: #DC2626;"></i>
+                        <span>Flashcards</span>
+                      </div>
+                      <span class="badge" style="background: #DC2626;">18%</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Activity Timeline -->
+            <div class="col-lg-6">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Activity Timeline</h2>
+                </div>
+                <ul class="activity-list">
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Today</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Completed Cardiovascular Quiz</div>
+                      <div class="activity-details">Scored 92% in 45 minutes</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Today</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Watched 3 Video Lectures</div>
+                      <div class="activity-details">Neuroanatomy: Brain Stem Series</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Yesterday</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Reviewed Pharmacology Flashcards</div>
+                      <div class="activity-details">85 cards in 40 minutes</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Yesterday</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Participated in Neurology Study Group</div>
+                      <div class="activity-details">Discussed case studies for 1 hour</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Apr 15</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Completed Practice Questions</div>
+                      <div class="activity-details">42 Respiratory System questions</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Apr 15</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Downloaded Study Materials</div>
+                      <div class="activity-details">Hematology PDF notes</div>
+                    </div>
+                  </li>
+                  <li class="activity-item">
+                    <div class="activity-timeline">
+                      <div class="activity-date">Apr 14</div>
+                      <div class="activity-dot"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">Attended Live Session</div>
+                      <div class="activity-details">Cardiology with Dr. Michael Chen</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Weekly Study Schedule -->
+            <div class="col-lg-12">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Weekly Study Schedule</h2>
+                  <a href="#" class="text-decoration-none" style="color: var(--accent-color);">Optimize Schedule</a>
+                </div>
+                <div class="chart-container" id="weeklyScheduleChart"></div>
+                <div class="mt-3">
+                  <div class="d-flex justify-content-between mb-3">
+                    <div>
+                      <h6 class="mb-1">Weekly Study Hours</h6>
+                      <p class="mb-0 text-muted">Current week</p>
+                    </div>
+                    <div class="text-end">
+                      <h3 class="mb-0" style="color: var(--accent-color);">24.5h</h3>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h6 class="mb-2">Peak Productivity Times</h6>
+                      <ul class="list-unstyled">
+                        <li class="d-flex align-items-center mb-2">
+                          <i class="bi bi-check-circle-fill me-2" style="color: #059669;"></i>
+                          <span>Morning (8AM - 11AM)</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                          <i class="bi bi-check-circle-fill me-2" style="color: #059669;"></i>
+                          <span>Evening (7PM - 10PM)</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-md-6">
+                      <h6 class="mb-2">Most Productive Days</h6>
+                      <ul class="list-unstyled">
+                        <li class="d-flex align-items-center mb-2">
+                          <i class="bi bi-check-circle-fill me-2" style="color: #059669;"></i>
+                          <span>Tuesday (5.2h)</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                          <i class="bi bi-check-circle-fill me-2" style="color: #059669;"></i>
+                          <span>Saturday (4.8h)</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Achievements Tab -->
+        <div class="tab-content" id="achievements">
+          <div class="row">
+            <!-- Achievement Summary -->
+            <div class="col-lg-4">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Achievement Summary</h2>
+                </div>
+                <div class="text-center mb-4">
+                  <div class="donut-container">
+                    <div id="achievementDonutChart"></div>
+                    <div class="donut-center">
+                      <div class="donut-value">24/40</div>
+                      <div class="donut-label">Unlocked</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <div class="text-center">
+                    <h3 class="mb-1" style="color: var(--accent-color);">8</h3>
+                    <p class="mb-0 text-muted small">Academic</p>
+                  </div>
+                  <div class="text-center">
+                    <h3 class="mb-1" style="color: var(--accent-color);">6</h3>
+                    <p class="mb-0 text-muted small">Engagement</p>
+                  </div>
+                  <div class="text-center">
+                    <h3 class="mb-1" style="color: var(--accent-color);">10</h3>
+                    <p class="mb-0 text-muted small">Milestone</p>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <h6 class="mb-3">Next Achievements</h6>
+                  <ul class="list-unstyled">
+                    <li class="d-flex align-items-center mb-3">
+                      <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(56, 178, 172, 0.1); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                        <i class="bi bi-graph-up" style="color: var(--accent-color);"></i>
+                      </div>
+                      <div>
+                        <strong>Perfect Week</strong>
+                        <div class="progress mt-1" style="height: 5px;">
+                          <div class="progress-bar bg-success" style="width: 85%;"></div>
+                        </div>
+                        <p class="mb-0 text-muted small mt-1">6/7 days completed</p>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-center mb-3">
+                      <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(56, 178, 172, 0.1); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                        <i class="bi bi-lightning" style="color: var(--accent-color);"></i>
+                      </div>
+                      <div>
+                        <strong>21-Day Streak</strong>
+                        <div class="progress mt-1" style="height: 5px;">
+                          <div class="progress-bar bg-success" style="width: 67%;"></div>
+                        </div>
+                        <p class="mb-0 text-muted small mt-1">14/21 days completed</p>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-center">
+                      <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(56, 178, 172, 0.1); display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                        <i class="bi bi-trophy" style="color: var(--accent-color);"></i>
+                      </div>
+                      <div>
+                        <strong>Quiz Master</strong>
+                        <div class="progress mt-1" style="height: 5px;">
+                          <div class="progress-bar bg-success" style="width: 40%;"></div>
+                        </div>
+                        <p class="mb-0 text-muted small mt-1">4/10 perfect scores</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Achievement Showcase -->
+            <div class="col-lg-8">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Achievement Showcase</h2>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-secondary">All</button>
+                    <button class="btn btn-sm btn-outline-secondary active">Academic</button>
+                    <button class="btn btn-sm btn-outline-secondary">Engagement</button>
+                    <button class="btn btn-sm btn-outline-secondary">Milestone</button>
+                  </div>
+                </div>
+                <div class="row g-3 mt-2">
+                  <div class="col-md-4">
+                    <div class="card h-100 pulse" style="border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
+                      <div class="card-body text-center">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                          <i class="bi bi-trophy fs-3 text-white"></i>
+                        </div>
+                        <h5 class="card-title">Perfect Score</h5>
+                        <p class="card-text text-muted small">Achieved 100% on a quiz</p>
+                        <span class="badge bg-success">Earned Apr 15</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card h-100" style="border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
+                      <div class="card-body text-center">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                          <i class="bi bi-lightning fs-3 text-white"></i>
+                        </div>
+                        <h5 class="card-title">14-Day Streak</h5>
+                        <p class="card-text text-muted small">Studied for 14 consecutive days</p>
+                        <span class="badge bg-success">Earned Apr 17</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card h-100" style="border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
+                      <div class="card-body text-center">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                          <i class="bi bi-clock-history fs-3 text-white"></i>
+                        </div>
+                        <h5 class="card-title">40+ Study Hours</h5>
+                        <p class="card-text text-muted small">Accumulated over 40 study hours</p>
+                        <span class="badge bg-success">Earned Apr 14</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card h-100" style="border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
+                      <div class="card-body text-center">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                          <i class="bi bi-journal-check fs-3 text-white"></i>
+                        </div>
+                        <h5 class="card-title">300+ Questions</h5>
+                        <p class="card-text text-muted small">Completed over 300 practice questions</p>
+                        <span class="badge bg-success">Earned Apr 10</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card h-100" style="border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
+                      <div class="card-body text-center">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                          <i class="bi bi-award fs-3 text-white"></i>
+                        </div>
+                        <h5 class="card-title">Top Performer</h5>
+                        <p class="card-text text-muted small">Ranked in the top 10% of students</p>
+                        <span class="badge bg-success">Earned Apr 8</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card h-100" style="border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
+                      <div class="card-body text-center">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                          <i class="bi bi-people fs-3 text-white"></i>
+                        </div>
+                        <h5 class="card-title">Team Player</h5>
+                        <p class="card-text text-muted small">Participated in 5 study groups</p>
+                        <span class="badge bg-success">Earned Apr 5</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center mt-4">
+                  <button class="btn btn-outline-secondary">Load More Achievements</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <!-- Leaderboard -->
+            <div class="col-lg-12">
+              <div class="performance-card">
+                <div class="card-header">
+                  <h2 class="card-title">Class Leaderboard</h2>
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="leaderboardDropdown" data-bs-toggle="dropdown">
+                      This Month
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">This Week</a></li>
+                      <li><a class="dropdown-item" href="#">This Month</a></li>
+                      <li><a class="dropdown-item" href="#">All Time</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Rank</th>
+                        <th>Student</th>
+                        <th>Points</th>
+                        <th>Achievements</th>
+                        <th>Study Hours</th>
+                        <th>Avg. Score</th>
+                        <th>Streak</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: #DC2626; color: white; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                              <i class="bi bi-trophy"></i>
+                            </div>
+                            <span>Sarah Johnson</span>
+                          </div>
+                        </td>
+                        <td>1,245</td>
+                        <td>28</td>
+                        <td>48.5</td>
+                        <td>95%</td>
+                        <td>21 days</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: #D97706; color: white; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                              <i class="bi bi-trophy"></i>
+                            </div>
+                            <span>Michael Chen</span>
+                          </div>
+                        </td>
+                        <td>1,180</td>
+                        <td>26</td>
+                        <td>45.2</td>
+                        <td>94%</td>
+                        <td>18 days</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: #0EA5E9; color: white; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                              <i class="bi bi-trophy"></i>
+                            </div>
+                            <span>Jessica Williams</span>
+                          </div>
+                        </td>
+                        <td>1,120</td>
+                        <td>25</td>
+                        <td>44.8</td>
+                        <td>93%</td>
+                        <td>16 days</td>
+                      </tr>
+                      <tr style="background: rgba(56, 178, 172, 0.1);">
+                        <td>4</td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--accent-color); color: white; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                              <span style="font-size: 0.8rem;">You</span>
+                            </div>
+                            <span>Jedidiah Samson</span>
+                          </div>
+                        </td>
+                        <td>1,085</td>
+                        <td>24</td>
+                        <td>42.5</td>
+                        <td>93%</td>
+                        <td>14 days</td>
+                      </tr>
+                      <tr>
+                        <td>5</td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--text-light); color: white; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                              <span style="font-size: 0.8rem;">5</span>
+                            </div>
+                            <span>David Park</span>
+                          </div>
+                        </td>
+                        <td>980</td>
+                        <td>22</td>
+                        <td>40.1</td>
+                        <td>91%</td>
+                        <td>12 days</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+      
+      // Update all charts with new theme
+      updateChartsTheme();
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // Tab Navigation
+    const tabItems = document.querySelectorAll('.tab-item');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const tabId = item.getAttribute('data-tab');
+        
+        // Remove active class from all tabs and contents
+        tabItems.forEach(tab => tab.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        item.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+        
+        // Reinitialize charts in the active tab
+        initializeCharts();
+      });
+    });
+
+    // Period selector functionality
+    const periodOptions = document.querySelectorAll('.period-option');
+    
+    periodOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove active class from all options in the same selector
+        const parentSelector = option.closest('.period-selector');
+        parentSelector.querySelectorAll('.period-option').forEach(opt => {
+          opt.classList.remove('active');
+        });
+        
+        // Add active class to clicked option
+        option.classList.add('active');
+        
+        // Here you would typically update the chart data based on the selected period
+        // For demo purposes, we're just reinitializing the charts
+        initializeCharts();
+      });
+    });
+
+    // Initialize all charts
+    function initializeCharts() {
+      // Performance Summary Chart
+      if (document.getElementById('performanceSummaryChart')) {
+        const performanceSummaryChart = new ApexCharts(document.getElementById('performanceSummaryChart'), {
+          series: [{
+            name: 'Quiz Scores',
+            type: 'line',
+            data: [85, 92, 88, 95, 78, 82, 90, 87, 93, 89, 94, 91]
+          }, {
+            name: 'Study Hours',
+            type: 'area',
+            data: [12.5, 15.2, 13.8, 16.1, 10.5, 11.9, 14.8, 15.2, 16.6, 14.7, 15.3, 14.9]
+          }],
+          chart: {
+            height: 300,
+            type: 'line',
+            toolbar: {
+              show: false
+            },
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          stroke: {
+            curve: 'smooth',
+            width: [3, 2]
+          },
+          fill: {
+            type: ['solid', 'gradient'],
+            gradient: {
+              shadeIntensity: 1,
+              opacityFrom: 0.7,
+              opacityTo: 0.2,
+              stops: [0, 90, 100]
+            }
+          },
+          markers: {
+            size: 4,
+            strokeWidth: 0,
+            hover: {
+              size: 6
+            }
+          },
+          colors: ['#38B2AC', '#4F46E5'],
+          dataLabels: {
+            enabled: false
+          },
+          grid: {
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+          },
+          xaxis: {
+            categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10', 'Week 11', 'Week 12'],
+            labels: {
+              rotate: 0
+            }
+          },
+          yaxis: [
+            {
+              title: {
+                text: 'Quiz Scores (%)'
+              },
+              min: 70,
+              max: 100
+            },
+            {
+              opposite: true,
+              title: {
+                text: 'Study Hours'
+              },
+              min: 0,
+              max: 20
+            }
+          ],
+          legend: {
+            position: 'top',
+            horizontalAlign: 'right'
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+          }
+        });
+        
+        performanceSummaryChart.render();
+        window.performanceSummaryChart = performanceSummaryChart;
+      }
+
+      // Activity Donut Chart
+      if (document.getElementById('activityDonutChart')) {
+        const activityDonutChart = new ApexCharts(document.getElementById('activityDonutChart'), {
+          series: [35, 25, 24, 16],
+          chart: {
+            type: 'donut',
+            height: 150,
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          labels: ['Video Lectures', 'Practice Questions', 'Reading Material', 'Flashcards'],
+          colors: ['#4F46E5', '#059669', '#D97706', '#DC2626'],
+          legend: {
+            show: false
+          },
+          dataLabels: {
+            enabled: false
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '70%'
+              }
+            }
+          },
+          stroke: {
+            width: 0
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+          }
+        });
+        
+        activityDonutChart.render();
+        window.activityDonutChart = activityDonutChart;
+      }
+
+      // Score Trends Chart
+      if (document.getElementById('scoreTrendsChart')) {
+        const scoreTrendsChart = new ApexCharts(document.getElementById('scoreTrendsChart'), {
+          series: [{
+            name: 'Quiz Scores',
+            data: [85, 92, 88, 95, 78, 82, 90, 87, 93, 89, 94, 91, 86, 89, 92]
+          }],
+          chart: {
+            type: 'line',
+            height: 300,
+            toolbar: {
+              show: false
+            },
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            curve: 'smooth',
+            width: 3
+          },
+          colors: ['#38B2AC'],
+          markers: {
+            size: 5,
+            strokeWidth: 0,
+            hover: {
+              size: 7
+            }
+          },
+          grid: {
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+          },
+          xaxis: {
+            categories: ['Apr 1', 'Apr 3', 'Apr 5', 'Apr 7', 'Apr 8', 'Apr 10', 'Apr 12', 'Apr 14', 'Apr 16', 'Apr 17', 'Apr 18', 'Apr 19', 'Apr 21', 'Apr 23', 'Apr 25'],
+            labels: {
+              rotate: 0
+            }
+          },
+          yaxis: {
+            title: {
+              text: 'Quiz Scores (%)'
+            },
+            min: 70,
+            max: 100
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+          }
+        });
+        
+        scoreTrendsChart.render();
+        window.scoreTrendsChart = scoreTrendsChart;
+      }
+
+      // Subject Performance Chart
+      if (document.getElementById('subjectPerformanceChart')) {
+        const subjectPerformanceChart = new ApexCharts(document.getElementById('subjectPerformanceChart'), {
+          series: [{
+            name: 'Score',
+            data: [92, 88, 85, 78, 81]
+          }],
+          chart: {
+            type: 'bar',
+            height: 300,
+            toolbar: {
+              show: false
+            },
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          plotOptions: {
+            bar: {
+              horizontal: true,
+              barHeight: '70%',
+              distributed: true,
+              dataLabels: {
+                position: 'bottom'
+              },
+            }
+          },
+          colors: ['#4F46E5', '#059669', '#D97706', '#DC2626', '#0EA5E9'],
+          dataLabels: {
+            enabled: true,
+            textAnchor: 'start',
+            style: {
+              colors: ['#fff']
+            },
+            formatter: function (val) {
+              return val + '%';
+            },
+            offsetX: 0,
+            dropShadow: {
+              enabled: true
+            }
+          },
+          grid: {
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+          },
+          xaxis: {
+            categories: ['Cardiovascular', 'Neuroanatomy', 'Pharmacology', 'Respiratory', 'Hematology'],
+            labels: {
+              formatter: function (val) {
+                return val + '%';
+              }
+            },
+            max: 100
+          },
+          yaxis: {
+            labels: {
+              show: true
+            }
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+          }
+        });
+        
+        subjectPerformanceChart.render();
+        window.subjectPerformanceChart = subjectPerformanceChart;
+      }
+
+      // Question Analysis Chart
+      if (document.getElementById('questionAnalysisChart')) {
+        const questionAnalysisChart = new ApexCharts(document.getElementById('questionAnalysisChart'), {
+          series: [82, 18],
+          chart: {
+            type: 'donut',
+            height: 200,
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          labels: ['Correct', 'Incorrect'],
+          colors: ['#059669', '#DC2626'],
+          legend: {
+            position: 'bottom'
+          },
+          dataLabels: {
+            enabled: true,
+            formatter: function (val) {
+              return val + '%';
+            }
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: '70%',
+                labels: {
+                  show: true,
+                  total: {
+                    show: true,
+                    label: 'Total',
+                    formatter: function () {
+                      return '347';
+                    }
+                  }
+                }
+              }
+            }
+          },
+          stroke: {
+            width: 0
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+          }
+        });
+        
+        questionAnalysisChart.render();
+        window.questionAnalysisChart = questionAnalysisChart;
+      }
+
+      // Skill Gap Chart
+      if (document.getElementById('skillGapChart')) {
+        const skillGapChart = new ApexCharts(document.getElementById('skillGapChart'), {
+          series: [{
+            name: 'Accuracy',
+            data: [92, 88, 85, 78, 81, 67, 71, 75]
+          }],
+          chart: {
+            type: 'radar',
+            height: 200,
+            toolbar: {
+              show: false
+            },
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          colors: ['#38B2AC'],
+          markers: {
+            size: 4,
+            colors: ['#38B2AC'],
+            strokeColor: '#fff',
+            strokeWidth: 2,
+          },
+          fill: {
+            opacity: 0.2
+          },
+          stroke: {
+            width: 2
+          },
+          grid: {
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+          },
+          xaxis: {
+            categories: ['Cardio', 'Neuro', 'Pharma', 'Resp', 'Hemato', 'Drug Int', 'Pulm Tests', 'Coag'],
+            labels: {
+              show: true,
+              style: {
+                fontSize: '10px'
+              }
+            }
+          },
+          yaxis: {
+            show: false,
+            min: 0,
+            max: 100
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+            y: {
+              formatter: function(val) {
+                return val + '%';
+              }
+            }
+          }
+        });
+        
+        skillGapChart.render();
+        window.skillGapChart = skillGapChart;
+      }
+
+      // Time Spent Trends Chart
+      if (document.getElementById('timeSpentTrendsChart')) {
+        const timeSpentTrendsChart = new ApexCharts(document.getElementById('timeSpentTrendsChart'), {
+          series: [{
+            name: 'Study Hours',
+            data: [3.5, 4.2, 3.8, 5.1, 2.5, 3.9, 4.8, 3.2, 4.6, 3.7, 4.3, 3.9, 5.2, 4.8, 3.5, 4.0, 2.8, 3.5, 4.2, 3.8, 4.5, 3.2, 2.5, 3.0, 4.2, 3.8, 5.1, 4.5, 3.9, 4.8]
+          }],
+          chart: {
+            type: 'area',
+            height: 300,
+            toolbar: {
+              show: false
+            },
+            fontFamily: 'Inter, sans-serif',
+            foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            curve: 'smooth',
+            width: 2
+          },
+          colors: ['#4F46E5'],
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              opacityFrom: 0.7,
+              opacityTo: 0.2,
+              stops: [0, 90, 100]
+            }
+          },
+          grid: {
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+          },
+          xaxis: {
+            categories: Array.from({length: 30}, (_, i) => `Apr ${i + 1}`),
+            labels: {
+              rotate: 0,
+              style: {
+                fontSize: '10px'
+              }
+            }
+          },
+          yaxis: {
+            title: {
+              text: 'Study Hours'
+            },
+            min: 0,
+            max: 6
+          },
+          tooltip: {
+            theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+            y: {
+              formatter: function(val) {
+                return val + ' hours';
+              }
+            }
+          }
+        });
+        
+        timeSpentTrendsChart.render();
+        window.timeSpentTrendsChart = timeSpentTrendsChart;
+      }
+    // Engagement Donut Chart
+          if (document.getElementById('engagementDonutChart')) {
+            const engagementDonutChart = new ApexCharts(document.getElementById('engagementDonutChart'), {
+              series: [85],
+              chart: {
+                type: 'radialBar',
+                height: 150,
+                fontFamily: 'Inter, sans-serif',
+                foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+              },
+              plotOptions: {
+                radialBar: {
+                  hollow: {
+                    size: '70%',
+                  },
+                  dataLabels: {
+                    name: {
+                      show: false,
+                    },
+                    value: {
+                      show: true,
+                      fontSize: '22px',
+                      fontWeight: 600,
+                      offsetY: 8,
+                      formatter: function (val) {
+                        return val + '%';
+                      }
+                    }
+                  }
+                }
+              },
+              colors: ['#38B2AC'],
+              stroke: {
+                lineCap: 'round'
+              },
+              tooltip: {
+                theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+              }
+            });
+
+            engagementDonutChart.render();
+            window.engagementDonutChart = engagementDonutChart;
+          }
+
+          // Resource Utilization Chart
+          if (document.getElementById('resourceUtilizationChart')) {
+            const resourceUtilizationChart = new ApexCharts(document.getElementById('resourceUtilizationChart'), {
+              series: [32, 28, 22, 18],
+              chart: {
+                type: 'pie',
+                height: 200,
+                fontFamily: 'Inter, sans-serif',
+                foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+              },
+              labels: ['Video Lectures', 'Practice Questions', 'Reading Materials', 'Flashcards'],
+              colors: ['#4F46E5', '#059669', '#D97706', '#DC2626'],
+              legend: {
+                position: 'bottom'
+              },
+              dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                  return val + '%';
+                }
+              },
+              stroke: {
+                width: 0
+              },
+              tooltip: {
+                theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+              }
+            });
+
+            resourceUtilizationChart.render();
+            window.resourceUtilizationChart = resourceUtilizationChart;
+          }
+
+          // Weekly Schedule Chart
+          if (document.getElementById('weeklyScheduleChart')) {
+            const weeklyScheduleChart = new ApexCharts(document.getElementById('weeklyScheduleChart'), {
+              series: [{
+                name: 'Study Hours',
+                data: [5.2, 4.8, 3.5, 4.0, 2.8, 3.5, 4.2]
+              }],
+              chart: {
+                type: 'bar',
+                height: 300,
+                toolbar: {
+                  show: false
+                },
+                fontFamily: 'Inter, sans-serif',
+                foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+              },
+              plotOptions: {
+                bar: {
+                  borderRadius: 4,
+                  horizontal: false,
+                  columnWidth: '55%',
+                }
+              },
+              dataLabels: {
+                enabled: false
+              },
+              stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+              },
+              colors: ['#38B2AC'],
+              xaxis: {
+                categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                labels: {
+                  rotate: 0
+                }
+              },
+              yaxis: {
+                title: {
+                  text: 'Study Hours'
+                },
+                min: 0,
+                max: 6
+              },
+              fill: {
+                opacity: 1
+              },
+              tooltip: {
+                theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+                y: {
+                  formatter: function (val) {
+                    return val + ' hours';
+                  }
+                }
+              }
+            });
+
+            weeklyScheduleChart.render();
+            window.weeklyScheduleChart = weeklyScheduleChart;
+          }
+
+          // Achievement Donut Chart
+          if (document.getElementById('achievementDonutChart')) {
+            const achievementDonutChart = new ApexCharts(document.getElementById('achievementDonutChart'), {
+              series: [60],
+              chart: {
+                type: 'radialBar',
+                height: 150,
+                fontFamily: 'Inter, sans-serif',
+                foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+              },
+              plotOptions: {
+                radialBar: {
+                  hollow: {
+                    size: '70%',
+                  },
+                  dataLabels: {
+                    name: {
+                      show: false,
+                    },
+                    value: {
+                      show: true,
+                      fontSize: '22px',
+                      fontWeight: 600,
+                      offsetY: 8,
+                      formatter: function (val) {
+                        return val + '%';
+                      }
+                    }
+                  }
+                }
+              },
+              colors: ['#38B2AC'],
+              stroke: {
+                lineCap: 'round'
+              },
+              tooltip: {
+                theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+              }
+            });
+
+            achievementDonutChart.render();
+            window.achievementDonutChart = achievementDonutChart;
+          }
+        }
+
+        // Update all charts when theme changes
+        function updateChartsTheme() {
+          const charts = [
+            window.performanceSummaryChart,
+            window.activityDonutChart,
+            window.scoreTrendsChart,
+            window.subjectPerformanceChart,
+            window.questionAnalysisChart,
+            window.skillGapChart,
+            window.timeSpentTrendsChart,
+            window.engagementDonutChart,
+            window.resourceUtilizationChart,
+            window.weeklyScheduleChart,
+            window.achievementDonutChart
+          ];
+
+          charts.forEach(chart => {
+            if (chart) {
+              chart.updateOptions({
+                tooltip: {
+                  theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+                }
+              });
+            }
+          });
+        }
+
+        // Initialize charts on page load
+        initializeCharts();
+
+        // Reinitialize charts when tab changes
+        document.querySelectorAll('.tab-item').forEach(tab => {
+          tab.addEventListener('click', initializeCharts);
+        });
+      </script>
+    </body>
+    </html>

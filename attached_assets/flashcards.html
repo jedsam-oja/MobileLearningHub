@@ -1,0 +1,2890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - Flashcards</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Flashcard Page Specific Styles */
+    .flashcard-container {
+      padding: 30px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .page-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--text-dark);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .btn-primary {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--accent-color);
+      color: var(--accent-color);
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .btn-outline {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .btn-outline:hover {
+      background: rgba(56, 178, 172, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .flashcard-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .filter-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      padding: 8px 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .filter-item {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .filter-item:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .filter-item.active {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
+    .search-filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .flashcard-search {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+
+    .flashcard-search input {
+      width: 100%;
+      height: 50px;
+      border-radius: 25px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 50px 0 25px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .flashcard-search input {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .flashcard-search input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .flashcard-search i {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      font-size: 1.2rem;
+    }
+
+    .filter-dropdown {
+      position: relative;
+    }
+
+    .filter-btn {
+      height: 50px;
+      border-radius: 25px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 25px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .filter-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-color);
+    }
+
+    .filter-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 100;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    .filter-dropdown-menu.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .filter-option {
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-option:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .filter-option.active {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .deck-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      position: relative;
+    }
+
+    [data-theme="dark"] .deck-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .deck-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .deck-card-header {
+      height: 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deck-card-header img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: all 0.3s ease;
+    }
+
+    .deck-card:hover .deck-card-header img {
+      transform: scale(1.05);
+    }
+
+    .deck-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      padding: 20px;
+      color: white;
+    }
+
+    .deck-category {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+      opacity: 0.8;
+    }
+
+    .deck-card-body {
+      padding: 20px;
+    }
+
+    .deck-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+    }
+
+    .deck-stats {
+      display: flex;
+      gap: 15px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 15px;
+    }
+
+    .deck-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .deck-progress {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .deck-progress-value {
+      height: 100%;
+      background: var(--accent-color);
+    }
+
+    .deck-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .deck-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .deck-action-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .deck-study-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: var(--accent-color);
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .deck-study-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .bookmark-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .bookmark-icon.active {
+      color: #F59E0B;
+    }
+
+    .bookmark-icon:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    /* Reminder Section */
+    .reminder-section {
+      margin-bottom: 30px;
+    }
+
+    .reminder-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .reminder-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .reminder-action {
+      color: var(--accent-color);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reminder-action:hover {
+      color: var(--accent-hover);
+    }
+
+    .reminder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .reminder-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    [data-theme="dark"] .reminder-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .reminder-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .reminder-card-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .reminder-deck {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .reminder-date {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .reminder-message {
+      color: var(--text-dark);
+      margin-bottom: 15px;
+      flex: 1;
+    }
+
+    .reminder-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .reminder-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reminder-btn.primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .reminder-btn.primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .reminder-btn.secondary {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .reminder-btn.secondary:hover {
+      background: rgba(56, 178, 172, 0.2);
+    }
+
+    /* Study Mode Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .modal-backdrop.show .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .study-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .study-option {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .study-option {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .study-option:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-3px);
+    }
+
+    .study-option-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 15px;
+      transition: all 0.3s ease;
+    }
+
+    .study-option:hover .study-option-icon {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .study-option-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .study-option-desc {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* Create Flashcard Modal */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      outline: none;
+    }
+
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    }
+
+    /* Flashcard Study Modal */
+    .flashcard-study-container {
+      position: relative;
+      min-height: 300px;
+      perspective: 1000px;
+    }
+
+    .flashcard {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      cursor: pointer;
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+      box-shadow: var(--neumorphic-light);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .flashcard-front, 
+    [data-theme="dark"] .flashcard-back {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .flashcard-back {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-text {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .flashcard-hint {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .flashcard-footer {
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .flashcard-counter {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .flashcard-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .control-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .control-btn.prev {
+      color: var(--text-light);
+    }
+
+    .control-btn.flip {
+      color: #F59E0B;
+      font-size: 24px;
+    }
+
+    .control-btn.next {
+      color: var(--accent-color);
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar-study {
+      height: 100%;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .confidence-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .confidence-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .confidence-btn.low {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+    }
+
+    .confidence-btn.low:hover {
+      background: rgba(220, 38, 38, 0.2);
+    }
+
+    .confidence-btn.medium {
+      background: rgba(245, 158, 11, 0.1);
+      color: #F59E0B;
+    }
+
+    .confidence-btn.medium:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    .confidence-btn.high {
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+    }
+
+    .confidence-btn.high:hover {
+      background: rgba(5, 150, 105, 0.2);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .empty-state-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+
+    .empty-state-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .empty-state-desc {
+      color: var(--text-light);
+      margin-bottom: 20px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .flashcard-container {
+        padding: 20px;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+      
+      .action-buttons {
+        flex-wrap: wrap;
+      }
+      
+      .flashcard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+      
+      .reminder-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .study-options {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .flashcard {
+        height: 250px;
+      }
+      
+      .flashcard-text {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .flashcard-container {
+        padding: 15px;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .action-buttons {
+        width: 100%;
+      }
+      
+      .btn-primary, .btn-outline {
+        flex: 1;
+        text-align: center;
+      }
+      
+      .search-filters {
+        flex-direction: column;
+      }
+      
+      .flashcard-search {
+        width: 100%;
+      }
+      
+      .filter-dropdown {
+        width: 100%;
+      }
+      
+      .filter-btn {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .filter-dropdown-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+      }
+      
+      .study-options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="OnlineJacademy Logo">
+          <span class="logo-text"></span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item active">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Your Cardiology live session starts in 30 minutes</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">You completed the Anatomy quiz with 92% score</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Sarah invited you to join Neurology study group</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="flashcard-container">
+        <!-- Page Header -->
+        <div class="page-header">
+          <h1 class="page-title">Flashcards</h1>
+          <div class="action-buttons">
+            <button class="btn btn-outline" id="importBtn">
+              <i class="bi bi-download"></i> Import Cards
+            </button>
+            <button class="btn btn-primary" id="createDeckBtn">
+              <i class="bi bi-plus-lg"></i> Create New Deck
+            </button>
+          </div>
+        </div>
+        
+        <!-- Reminders Section -->
+        <div class="reminder-section">
+          <div class="reminder-header">
+            <h2 class="reminder-title">Study Reminders</h2>
+            <div class="reminder-action" id="manageRemindersBtn">
+              <i class="bi bi-gear"></i> Manage Reminders
+            </div>
+          </div>
+          
+          <div class="reminder-grid">
+            <div class="reminder-card">
+              <div class="reminder-card-header">
+                <div class="reminder-deck">Cardiovascular System</div>
+                <div class="reminder-date">Today, 7:00 PM</div>
+              </div>
+              <div class="reminder-message">Time to review your Cardiovascular flashcards. You have 28 cards due for review today.</div>
+              <div class="reminder-buttons">
+                <div class="reminder-btn primary">Study Now</div>
+                <div class="reminder-btn secondary">Reschedule</div>
+              </div>
+            </div>
+            
+            <div class="reminder-card">
+              <div class="reminder-card-header">
+                <div class="reminder-deck">Neuroanatomy</div>
+                <div class="reminder-date">Tomorrow, 10:00 AM</div>
+              </div>
+              <div class="reminder-message">Your Neuroanatomy deck needs attention. 15 cards are due for review tomorrow.</div>
+              <div class="reminder-buttons">
+                <div class="reminder-btn primary">Study Now</div>
+                <div class="reminder-btn secondary">Reschedule</div>
+              </div>
+            </div>
+            
+            <div class="reminder-card">
+              <div class="reminder-card-header">
+                <div class="reminder-deck">Pharmacology</div>
+                <div class="reminder-date">Apr 18, 3:00 PM</div>
+              </div>
+              <div class="reminder-message">Don't forget to review Antibiotics & Antimicrobials. You have 42 cards due for review.</div>
+              <div class="reminder-buttons">
+                <div class="reminder-btn primary">Study Now</div>
+                <div class="reminder-btn secondary">Reschedule</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Filters and Search -->
+        <div class="flashcard-filters">
+          <div class="filter-item active">All Decks</div>
+          <div class="filter-item">Recent</div>
+          <div class="filter-item">Favorites</div>
+          <div class="filter-item">Due Today</div>
+          <div class="filter-item">Anatomy</div>
+          <div class="filter-item">Physiology</div>
+          <div class="filter-item">Pathology</div>
+          <div class="filter-item">Pharmacology</div>
+        </div>
+        
+        <div class="search-filters">
+          <div class="flashcard-search">
+            <input type="text" placeholder="Search flashcards or decks...">
+            <i class="bi bi-search"></i>
+          </div>
+          
+          <div class="filter-dropdown">
+            <div class="filter-btn" id="sortFilterBtn">
+              <span>Sort By: Recent</span>
+              <i class="bi bi-chevron-down"></i>
+            </div>
+            
+            <div class="filter-dropdown-menu" id="sortFilterMenu">
+              <div class="filter-option active">Recent</div>
+              <div class="filter-option">Name (A-Z)</div>
+              <div class="filter-option">Name (Z-A)</div>
+              <div class="filter-option">Most Cards</div>
+              <div class="filter-option">Progress (High-Low)</div>
+              <div class="filter-option">Progress (Low-High)</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Flashcard Decks Grid -->
+        <div class="flashcard-grid">
+          <!-- Cardiovascular System Deck -->
+          <div class="deck-card" data-deck="cardiovascular">
+            <div class="bookmark-icon">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\anatomy.jpg" alt="Cardiovascular System">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Anatomy</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Cardiovascular System</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 68 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 28 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 65%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="cardiovascular">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Neuroanatomy Deck -->
+          <div class="deck-card" data-deck="neuroanatomy">
+            <div class="bookmark-icon active">
+              <i class="bi bi-bookmark-fill"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\neurology.jpg" alt="Neuroanatomy">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Anatomy</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Neuroanatomy</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 42 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 15 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 42%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="neuroanatomy">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Antibiotics & Antimicrobials Deck -->
+          <div class="deck-card" data-deck="antibiotics">
+            <div class="bookmark-icon">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\pharmacology.jpg" alt="Antibiotics">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Pharmacology</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Antibiotics & Antimicrobials</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 56 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 42 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 23%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="antibiotics">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Respiratory System Deck -->
+          <div class="deck-card" data-deck="respiratory">
+            <div class="bookmark-icon">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\Respiratory System.jpeg" alt="Respiratory System">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Physiology</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Respiratory System</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 38 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 12 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 78%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="respiratory">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Endocrine System Deck -->
+          <div class="deck-card" data-deck="endocrine">
+            <div class="bookmark-icon active">
+              <i class="bi bi-bookmark-fill"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\endocrine.jpeg" alt="Endocrine System">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Physiology</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Endocrine System</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 45 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 8 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 52%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="endocrine">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Immunology Deck -->
+          <div class="deck-card" data-deck="immunology">
+            <div class="bookmark-icon">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\immune.jpeg" alt="Immunology">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Pathology</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Immunology</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 32 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 5 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 35%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="immunology">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Gastrointestinal System Deck -->
+          <div class="deck-card" data-deck="gastrointestinal">
+            <div class="bookmark-icon">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\git.jpeg" alt="Gastrointestinal System">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Anatomy</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Gastrointestinal System</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 50 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 18 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 45%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="gastrointestinal">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Musculoskeletal System Deck -->
+          <div class="deck-card" data-deck="musculoskeletal">
+            <div class="bookmark-icon">
+              <i class="bi bi-bookmark"></i>
+            </div>
+            <div class="deck-card-header">
+              <img src="\images\system.jpeg" alt="Musculoskeletal System">
+              <div class="deck-card-overlay">
+                <div class="deck-category">Anatomy</div>
+              </div>
+            </div>
+            <div class="deck-card-body">
+              <h3 class="deck-title">Musculoskeletal System</h3>
+              <div class="deck-stats">
+                <div class="deck-stat">
+                  <i class="bi bi-card-list"></i> 62 cards
+                </div>
+                <div class="deck-stat">
+                  <i class="bi bi-calendar-check"></i> 22 due
+                </div>
+              </div>
+              <div class="deck-progress">
+                <div class="deck-progress-value" style="width: 58%;"></div>
+              </div>
+              <div class="deck-actions">
+                <div class="deck-action-btn">
+                  <i class="bi bi-pencil"></i>
+                </div>
+                <div class="deck-study-btn" data-deck="musculoskeletal">
+                  <i class="bi bi-play-fill"></i> Study Now
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Study Mode Modal -->
+  <div class="modal-backdrop" id="studyModeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Choose Study Mode</h3>
+        <div class="modal-close" id="closeStudyModeModal">
+          <i class="bi bi-x-lg"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="study-options">
+          <div class="study-option" data-mode="classic">
+            <div class="study-option-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="study-option-title">Classic</div>
+            <div class="study-option-desc">Review cards in order</div>
+          </div>
+          
+          <div class="study-option" data-mode="spaced">
+            <div class="study-option-icon">
+              <i class="bi bi-graph-up"></i>
+            </div>
+            <div class="study-option-title">Spaced Repetition</div>
+            <div class="study-option-desc">Smart review algorithm</div>
+          </div>
+          
+          <div class="study-option" data-mode="quiz">
+            <div class="study-option-icon">
+              <i class="bi bi-check2-circle"></i>
+            </div>
+            <div class="study-option-title">Quiz Mode</div>
+            <div class="study-option-desc">Test your knowledge</div>
+          </div>
+          
+          <div class="study-option" data-mode="shuffle">
+            <div class="study-option-icon">
+              <i class="bi bi-shuffle"></i>
+            </div>
+            <div class="study-option-title">Shuffle</div>
+            <div class="study-option-desc">Random order review</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Create Flashcard Deck Modal -->
+  <div class="modal-backdrop" id="createDeckModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Flashcard Deck</h3>
+        <div class="modal-close" id="closeCreateDeckModal">
+          <i class="bi bi-x-lg"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Deck Title</label>
+          <input type="text" class="form-control" placeholder="Enter deck title">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-control">
+            <option>Select a category</option>
+            <option>Anatomy</option>
+            <option>Physiology</option>
+            <option>Pathology</option>
+            <option>Pharmacology</option>
+            <option>Biochemistry</option>
+            <option>Microbiology</option>
+            <option>Immunology</option>
+            <option>Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Description (optional)</label>
+          <textarea class="form-control" placeholder="Enter deck description"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Cover Image</label>
+          <input type="file" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancelCreateDeck">Cancel</button>
+        <button class="btn btn-primary">Create Deck</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Flashcard Study Modal -->
+  <div class="modal-backdrop" id="flashcardStudyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Studying: Cardiovascular System</h3>
+        <div class="modal-close" id="closeFlashcardStudyModal">
+          <i class="bi bi-x-lg"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="progress-container">
+          <div class="progress-bar-study" style="width: 20%;"></div>
+        </div>
+        
+        <div class="flashcard-study-container">
+          <div class="flashcard" id="currentFlashcard">
+            <div class="flashcard-front">
+              <div class="flashcard-text">What are the four chambers of the heart?</div>
+              <div class="flashcard-hint">Tap to reveal answer</div>
+              <div class="flashcard-footer">
+                <div class="flashcard-counter">Card 1 of 5</div>
+              </div>
+            </div>
+            <div class="flashcard-back">
+              <div class="flashcard-text">The four chambers of the heart are: Right Atrium, Right Ventricle, Left Atrium, and Left Ventricle.</div>
+              <div class="flashcard-footer">
+                <div class="flashcard-counter">Card 1 of 5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="confidence-buttons">
+          <div class="confidence-btn low">
+            <i class="bi bi-emoji-frown"></i> Again
+          </div>
+          <div class="confidence-btn medium">
+            <i class="bi bi-emoji-neutral"></i> Hard
+          </div>
+          <div class="confidence-btn high">
+            <i class="bi bi-emoji-smile"></i> Easy
+          </div>
+        </div>
+        
+        <div class="flashcard-controls">
+          <div class="control-btn prev">
+            <i class="bi bi-chevron-left"></i>
+          </div>
+          <div class="control-btn flip">
+            <i class="bi bi-arrow-repeat"></i>
+          </div>
+          <div class="control-btn next">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+      
+      // Also close filter dropdowns
+      document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+    });
+
+    // Sort Filter Dropdown Toggle
+    const sortFilterBtn = document.getElementById('sortFilterBtn');
+    const sortFilterMenu = document.getElementById('sortFilterMenu');
+    
+    sortFilterBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sortFilterMenu.classList.toggle('show');
+    });
+
+    // Filter options click handler
+    const filterOptions = document.querySelectorAll('.filter-option');
+    filterOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove active class from all options
+        filterOptions.forEach(opt => opt.classList.remove('active'));
+        
+        // Add active class to clicked option
+        option.classList.add('active');
+        
+        // Update button text
+        sortFilterBtn.querySelector('span').textContent = `Sort By: ${option.textContent}`;
+        
+        // Close dropdown
+        sortFilterMenu.classList.remove('show');
+      });
+    });
+
+    // Filter items click handler
+    const filterItems = document.querySelectorAll('.filter-item');
+    filterItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // Remove active class from all items
+        filterItems.forEach(fi => fi.classList.remove('active'));
+        
+        // Add active class to clicked item
+        item.classList.add('active');
+      });
+    });
+
+    // Bookmark toggle
+    const bookmarkIcons = document.querySelectorAll('.bookmark-icon');
+    bookmarkIcons.forEach(icon => {
+      icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        icon.classList.toggle('active');
+        
+        if (icon.classList.contains('active')) {
+          icon.innerHTML = '<i class="bi bi-bookmark-fill"></i>';
+        } else {
+          icon.innerHTML = '<i class="bi bi-bookmark"></i>';
+        }
+      });
+    });
+
+    // Study Button Click Handler
+    const studyButtons = document.querySelectorAll('.deck-study-btn');
+    const studyModeModal = document.getElementById('studyModeModal');
+    const closeStudyModeModal = document.getElementById('closeStudyModeModal');
+    
+    studyButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        studyModeModal.classList.add('show');
+        
+        // Set current deck name in modal title
+        const deckName = btn.closest('.deck-card').querySelector('.deck-title').textContent;
+        document.querySelector('#studyModeModal .modal-title').textContent = `Choose Study Mode: ${deckName}`;
+      });
+    });
+    
+    closeStudyModeModal.addEventListener('click', () => {
+      studyModeModal.classList.remove('show');
+    });
+
+    // Study Options Click Handler
+    const studyOptions = document.querySelectorAll('.study-option');
+    const flashcardStudyModal = document.getElementById('flashcardStudyModal');
+    
+    studyOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        studyModeModal.classList.remove('show');
+        flashcardStudyModal.classList.add('show');
+        
+        // Set study mode in modal title
+        const deckName = document.querySelector('#studyModeModal .modal-title').textContent.replace('Choose Study Mode: ', '');
+        const mode = option.getAttribute('data-mode');
+        document.querySelector('#flashcardStudyModal .modal-title').textContent = `Studying: ${deckName} (${mode})`;
+      });
+    });
+
+    // Close Flashcard Study Modal
+    const closeFlashcardStudyModal = document.getElementById('closeFlashcardStudyModal');
+    closeFlashcardStudyModal.addEventListener('click', () => {
+      flashcardStudyModal.classList.remove('show');
+    });
+
+    // Flashcard Flip
+    const flashcard = document.getElementById('currentFlashcard');
+    const flipBtn = document.querySelector('.control-btn.flip');
+    
+    flashcard.addEventListener('click', () => {
+      flashcard.classList.toggle('flipped');
+    });
+    
+    flipBtn.addEventListener('click', () => {
+      flashcard.classList.toggle('flipped');
+    });
+
+    // Create Deck Modal
+    const createDeckBtn = document.getElementById('createDeckBtn');
+    const createDeckModal = document.getElementById('createDeckModal');
+    const closeCreateDeckModal = document.getElementById('closeCreateDeckModal');
+    const cancelCreateDeck = document.getElementById('cancelCreateDeck');
+    
+    createDeckBtn.addEventListener('click', () => {
+      createDeckModal.classList.add('show');
+    });
+    
+    closeCreateDeckModal.addEventListener('click', () => {
+      createDeckModal.classList.remove('show');
+    });
+    
+    cancelCreateDeck.addEventListener('click', () => {
+      createDeckModal.classList.remove('show');
+    });
+
+    // Prevent closing modals when clicking inside them
+    document.querySelectorAll('.modal-content').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    // Close modals when clicking on backdrop
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+      backdrop.addEventListener('click', () => {
+        backdrop.classList.remove('show');
+      });
+    });
+
+    // Reminder buttons handler
+    document.querySelectorAll('.reminder-btn.primary').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Get the deck name
+        const deckName = btn.closest('.reminder-card').querySelector('.reminder-deck').textContent;
+        
+        // Show flashcard study modal
+        flashcardStudyModal.classList.add('show');
+        document.querySelector('#flashcardStudyModal .modal-title').textContent = `Studying: ${deckName}`;
+      });
+    });
+
+    // Handle next and previous buttons in flashcard study
+    const nextBtn = document.querySelector('.control-btn.next');
+    const prevBtn = document.querySelector('.control-btn.prev');
+    let currentCardIndex = 0;
+    const totalCards = 5; // For demo purposes
+    
+    nextBtn.addEventListener('click', () => {
+      if (currentCardIndex < totalCards - 1) {
+        currentCardIndex++;
+        updateCardCounter();
+        updateProgressBar();
+        // Reset card to front side
+        flashcard.classList.remove('flipped');
+      }
+    });
+    
+    prevBtn.addEventListener('click', () => {
+      if (currentCardIndex > 0) {
+        currentCardIndex--;
+        updateCardCounter();
+        updateProgressBar();
+        // Reset card to front side
+        flashcard.classList.remove('flipped');
+      }
+    });
+    
+    function updateCardCounter() {
+      document.querySelectorAll('.flashcard-counter').forEach(counter => {
+        counter.textContent = `Card ${currentCardIndex + 1} of ${totalCards}`;
+      });
+    }
+    
+    function updateProgressBar() {
+      const progressBar = document.querySelector('.progress-bar-study');
+      const progressPercentage = ((currentCardIndex + 1) / totalCards) * 100;
+      progressBar.style.width = `${progressPercentage}%`;
+    }
+
+    // Confidence buttons handler
+    document.querySelectorAll('.confidence-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (currentCardIndex < totalCards - 1) {
+          currentCardIndex++;
+          updateCardCounter();
+          updateProgressBar();
+          // Reset card to front side
+          flashcard.classList.remove('flipped');
+        } else {
+          // We've reached the end of the deck
+          flashcardStudyModal.classList.remove('show');
+          // Show completion message (could be a separate modal in a real app)
+          alert('Congratulations! You have completed this deck.');
+        }
+      });
+    });
+
+    // Deck card click handler (open edit mode in real app)
+    document.querySelectorAll('.deck-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Ignore if clicking on buttons or bookmark icon
+        if (!e.target.closest('.deck-study-btn') && !e.target.closest('.deck-action-btn') && !e.target.closest('.bookmark-icon')) {
+          const deckName = card.querySelector('.deck-title').textContent;
+          alert(`Opening deck: ${deckName} for editing`);
+        }
+      });
+    });
+
+    // Deck action button (edit) handler
+    document.querySelectorAll('.deck-action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const deckName = btn.closest('.deck-card').querySelector('.deck-title').textContent;
+        alert(`Opening deck: ${deckName} for editing`);
+      });
+    });
+
+    // Manage reminders button
+    document.getElementById('manageRemindersBtn').addEventListener('click', () => {
+      alert('Opening reminder settings');
+    });
+
+    // Import button
+    document.getElementById('importBtn').addEventListener('click', () => {
+      alert('Opening import wizard');
+    });
+  </script>
+</body>
+</html>

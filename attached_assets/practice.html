@@ -1,0 +1,2958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTutorials - Question Session</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+
+    <style>
+    :root {
+        --primary-color: #2B6CB0;
+        --secondary-color: #4A5568;
+        --accent-color: #38B2AC;
+        --accent-hover: #319795;
+        --background-light: #F7FAFC;
+        --background-dark: #1A202C;
+        --text-light: #718096;
+        --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        --card-bg: white;
+        --text-dark: #2D3748;
+        --border-color: #E2E8F0;
+        --card-radius: 16px;
+        --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+        --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+        --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+        --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+        --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+        --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+        --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+        --sidebar-width: 280px;
+        --sidebar-collapsed-width: 80px;
+        --header-height: 70px;
+        --transition-speed: 0.3s;
+        --correct-color: #059669;
+        --incorrect-color: #DC2626;
+        --neutral-color: #6B7280;
+        --warning-color: #F59E0B;
+        --info-color: #3B82F6;
+        --exam-timer-color: #F97316;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+        --primary-color: #4299E1;
+        --secondary-color: #A0AEC0;
+        --accent-color: #4FD1C5;
+        --accent-hover: #38B2AC;
+        --background-light: #1A202C;
+        --text-light: #A0AEC0;
+        --card-bg: #2D3748;
+        --text-dark: #E2E8F0;
+        --border-color: #4A5568;
+        --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        --correct-color: #10B981;
+        --incorrect-color: #EF4444;
+        --neutral-color: #9CA3AF;
+        --warning-color: #FBBF24;
+        --info-color: #60A5FA;
+        --exam-timer-color: #FB923C;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--background-light);
+        color: var(--text-dark);
+        transition: all 0.3s ease;
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.02;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .main-content {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+        transition: margin-left var(--transition-speed) ease;
+        padding-top: var(--header-height);
+        min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+        .main-content {
+            margin-left: 0;
+        }
+        .sidebar-collapsed .main-content {
+            margin-left: 0;
+        }
+    }
+
+    /* Header */
+    .header {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: var(--sidebar-width);
+        height: var(--header-height);
+        background: var(--card-bg);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        padding: 0 30px;
+        z-index: 100;
+        transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+        left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+        .header {
+            left: 0;
+        }
+        .sidebar-collapsed .header {
+            left: 0;
+        }
+    }
+
+    .session-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .session-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: white;
+    }
+
+    .practice-icon {
+        background: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+    }
+
+    .exam-icon {
+        background: linear-gradient(135deg, #ED8936 0%, #DD6B20 100%);
+    }
+
+    .session-title {
+        font-weight: 600;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    .session-subtitle {
+        color: var(--text-light);
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .header-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .progress-container {
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+    }
+
+    .progress-bar-container {
+        height: 6px;
+        background: var(--border-color);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--accent-color);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .exam-mode .progress-bar-fill {
+        background: #ED8936;
+    }
+
+    .timer-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        border-radius: 20px;
+        background: rgba(249, 115, 22, 0.1);
+        color: var(--exam-timer-color);
+    }
+
+    .timer-icon {
+        font-size: 16px;
+    }
+
+    .timer-value {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--card-bg);
+        color: var(--text-light);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+        background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    @media (min-width: 576px) {
+        .user-info {
+            display: block;
+        }
+    }
+
+    .user-info h6 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .user-info p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--card-bg);
+        z-index: 200;
+        transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+        width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+        .sidebar {
+            transform: translateX(-100%);
+            box-shadow: none;
+        }
+        .sidebar.active {
+            transform: translateX(0);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+    }
+
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        height: var(--header-height);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-container img {
+        width: 35px;
+        height: 35px;
+        transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+        transform: rotate(10deg);
+    }
+
+    .logo-text {
+        font-weight: 600;
+        font-size: 18px;
+        white-space: nowrap;
+        transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+        opacity: 0;
+        width: 0;
+    }
+
+    .toggle-sidebar-btn {
+        margin-left: auto;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--card-bg);
+        color: var(--text-light);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .sidebar-menu {
+        padding: 20px 0;
+    }
+
+    .menu-label {
+        padding: 10px 20px;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--text-light);
+        font-weight: 600;
+        letter-spacing: 1px;
+        transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .menu-item {
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-dark);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+        padding: 12px 0;
+        justify-content: center;
+    }
+
+    .menu-item:hover {
+        background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+        color: var(--accent-color);
+        background: rgba(56, 178, 172, 0.1);
+        border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .menu-text {
+        flex: 1;
+        white-space: nowrap;
+        transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-text {
+        opacity: 0;
+        width: 0;
+    }
+
+    .menu-arrow {
+        transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+        opacity: 0;
+        width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+        transform: rotate(90deg);
+    }
+
+    .submenu {
+        padding-left: 34px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+        padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+        max-height: 500px;
+    }
+
+    .submenu-item {
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-dark);
+        font-weight: 400;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+        padding: 10px 0;
+        justify-content: center;
+    }
+
+    .submenu-item:hover {
+        color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+        color: var(--accent-color);
+    }
+
+    .submenu-icon {
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+    }
+
+    .submenu-text {
+        transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+        opacity: 0;
+        width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+        position: absolute;
+        left: 70px;
+        background: var(--card-bg);
+        color: var(--text-dark);
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+        background: var(--accent-hover);
+        transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+        .mobile-sidebar-toggle {
+            display: flex;
+        }
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 200px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        padding: 15px;
+        z-index: 1000;
+        display: none;
+        margin-top: 10px;
+        border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        color: var(--text-dark);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+        background: rgba(56, 178, 172, 0.1);
+        color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+        height: 1px;
+        background: var(--border-color);
+        margin: 10px 0;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+        opacity: 0.3;
+    }
+
+    .rain-drop {
+        position: absolute;
+        width: 2px;
+        height: 15px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+        border-radius: 0 0 5px 5px;
+        opacity: 0.6;
+        animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+        0% {
+            transform: translateY(-100vh);
+        }
+        100% {
+            transform: translateY(100vh);
+        }
+    }
+
+    /* Question Session Specific Styles */
+    .question-session-content {
+        padding: 30px;
+    }
+
+    .question-container {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: var(--neumorphic-light);
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    [data-theme="dark"] .question-container {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .question-number {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--text-dark);
+    }
+
+    .question-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .question-action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--card-bg);
+        color: var(--text-light);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .question-action-btn {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .question-action-btn:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .question-bookmark.active {
+        background: var(--warning-color);
+        color: white;
+        border-color: var(--warning-color);
+    }
+
+    .question-flag.active {
+        background: var(--incorrect-color);
+        color: white;
+        border-color: var(--incorrect-color);
+    }
+
+    .question-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        color: var(--text-dark);
+    }
+
+    .question-image {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto 25px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .question-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .option-item {
+        padding: 15px 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: var(--card-bg);
+        box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .option-item {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .option-item:hover {
+        border-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    .option-marker {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .option-text {
+        flex: 1;
+    }
+
+    .option-item.selected {
+        border-color: var(--accent-color);
+    }
+
+    .option-item.selected .option-marker {
+        background: var(--accent-color);
+        color: white;
+        border-color: var(--accent-color);
+    }
+
+    .option-item.correct {
+        border-color: var(--correct-color);
+        background: rgba(5, 150, 105, 0.05);
+    }
+
+    .option-item.correct .option-marker {
+        background: var(--correct-color);
+        color: white;
+        border-color: var(--correct-color);
+    }
+
+    .option-item.incorrect {
+        border-color: var(--incorrect-color);
+        background: rgba(220, 38, 38, 0.05);
+    }
+
+    .option-item.incorrect .option-marker {
+        background: var(--incorrect-color);
+        color: white;
+        border-color: var(--incorrect-color);
+    }
+
+    .option-status {
+        position: absolute;
+        right: 15px;
+        font-size: 18px;
+    }
+
+    .correct-icon {
+        color: var(--correct-color);
+    }
+
+    .incorrect-icon {
+        color: var(--incorrect-color);
+    }
+
+    .explanation-container {
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: rgba(56, 178, 172, 0.05);
+        display: none;
+    }
+
+    .explanation-container.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .explanation-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--accent-color);
+    }
+
+    .explanation-content {
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .explanation-resources {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .resource-card {
+        flex: 1;
+        min-width: 200px;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        background: var(--card-bg);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    .resource-card:hover {
+        border-color: var(--accent-color);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .resource-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .notes-icon {
+        background: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
+    }
+
+    .video-icon {
+        background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+    }
+
+    .flashcard-icon {
+        background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+    }
+
+    .resource-info {
+        flex: 1;
+    }
+
+    .resource-title {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 3px;
+    }
+
+    .resource-description {
+        color: var(--text-light);
+        font-size: 0.8rem;
+    }
+
+    .video-container {
+        margin-top: 20px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        padding-top: 56.25%; /* 16:9 aspect ratio */
+    }
+
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .nav-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .prev-btn {
+        background: transparent;
+        color: var(--text-light);
+        border: 1px solid var(--border-color);
+    }
+
+    .prev-btn:hover {
+        background: var(--border-color);
+        color: var(--text-dark);
+    }
+
+    .next-btn {
+        background: var(--accent-color);
+        color: white;
+        border: none;
+    }
+
+    .next-btn:hover {
+        background: var(--accent-hover);
+    }
+
+    .exam-mode .next-btn {
+        background: #ED8936;
+    }
+
+    .exam-mode .next-btn:hover {
+        background: #DD6B20;
+    }
+
+    .finish-btn {
+        background: var(--correct-color);
+        color: white;
+        border: none;
+    }
+
+    .finish-btn:hover {
+        background: #047857;
+    }
+
+    /* Question Navigation Panel */
+    .question-nav-panel {
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: var(--neumorphic-light);
+        border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .question-nav-panel {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .panel-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    .question-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        gap: 10px;
+    }
+
+    .question-grid-item {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .question-grid-item:hover {
+        border-color: var(--accent-color);
+    }
+
+    .question-grid-item.current {
+        background: var(--accent-color);
+        color: white;
+        border-color: var(--accent-color);
+    }
+
+    .exam-mode .question-grid-item.current {
+        background: #ED8936;
+        border-color: #ED8936;
+    }
+
+    .question-grid-item.answered {
+        background: rgba(56, 178, 172, 0.1);
+        border-color: var(--accent-color);
+    }
+
+    .question-grid-item.correct {
+        background: rgba(5, 150, 105, 0.1);
+        border-color: var(--correct-color);
+    }
+
+    .question-grid-item.incorrect {
+        background: rgba(220, 38, 38, 0.1);
+        border-color: var(--incorrect-color);
+    }
+
+    .question-grid-item.flagged::after {
+        content: '';
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 10px;
+        height: 10px;
+        background: var(--incorrect-color);
+        border-radius: 50%;
+    }
+
+    .question-grid-item.bookmarked::after {
+        content: '';
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 10px;
+        height: 10px;
+        background: var(--warning-color);
+        border-radius: 50%;
+    }
+
+    .legend-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+    }
+
+    .legend-current {
+        background: var(--accent-color);
+    }
+
+    .exam-mode .legend-current {
+        background: #ED8936;
+    }
+
+    .legend-answered {
+        background: rgba(56, 178, 172, 0.1);
+        border: 1px solid var(--accent-color);
+    }
+
+    .legend-correct {
+        background: rgba(5, 150, 105, 0.1);
+        border: 1px solid var(--correct-color);
+    }
+
+    .legend-incorrect {
+        background: rgba(220, 38, 38, 0.1);
+        border: 1px solid var(--incorrect-color);
+    }
+
+    .legend-flagged {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+    }
+
+    .legend-flagged::after {
+        content: '';
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 8px;
+        height: 8px;
+        background: var(--incorrect-color);
+        border-radius: 50%;
+    }
+
+    .legend-bookmarked {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+    }
+
+    .legend-bookmarked::after {
+        content: '';
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 8px;
+        height: 8px;
+        background: var(--warning-color);
+        border-radius: 50%;
+    }
+
+    /* Exam Completion Modal */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-container {
+        width: 90%;
+        max-width: 600px;
+        background: var(--card-bg);
+        border-radius: var(--card-radius);
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-container {
+        transform: translateY(0);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+
+    .modal-close {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--card-bg);
+        color: var(--text-light);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .exam-summary {
+        margin-bottom: 25px;
+    }
+
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .summary-card {
+        padding: 15px;
+        border-radius: 12px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        text-align: center;
+        box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .summary-card {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .summary-value {
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+
+    .summary-label {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    .score-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid var(--border-color);
+        text-align: center;
+        box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .score-card {
+        box-shadow: var(--neumorphic-dark);
+    }
+
+    .score-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .score-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: white;
+        background: conic-gradient(var(--accent-color) 0%, var(--accent-color) 80%, #E2E8F0 80%, #E2E8F0 100%);
+        position: relative;
+    }
+
+    .score-circle::before {
+        content: '';
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: var(--card-bg);
+    }
+
+    .score-value {
+        position: relative;
+        z-index: 1;
+    }
+
+    .score-message {
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .score-description {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .modal-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .review-btn {
+        background: rgba(56, 178, 172, 0.1);
+        color: var(--accent-color);
+        border: 1px solid var(--accent-color);
+    }
+
+    .review-btn:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .dashboard-btn {
+        background: var(--accent-color);
+        color: white;
+        border: none;
+    }
+
+    .dashboard-btn:hover {
+        background: var(--accent-hover);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .question-session-content {
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            padding: 0 20px;
+        }
+
+        .progress-container {
+            display: none;
+        }
+
+        .question-container {
+            padding: 20px;
+        }
+
+        .explanation-resources {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .question-session-content {
+            padding: 15px;
+        }
+
+        .session-subtitle {
+            display: none;
+        }
+
+        .timer-container {
+            padding: 5px 10px;
+        }
+
+        .timer-value {
+            font-size: 12px;
+        }
+
+        .question-container {
+            padding: 15px;
+        }
+
+        .question-text {
+            font-size: 1rem;
+        }
+
+        .option-item {
+            padding: 12px 15px;
+        }
+
+        .navigation-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .modal-container {
+            padding: 20px;
+        }
+
+        .summary-cards {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.3s ease forwards;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .timer-warning {
+        animation: pulse 1s infinite;
+        color: var(--incorrect-color);
+    }
+    </style>
+</head>
+<body>
+    <!-- Rain Animation for Dark Mode -->
+    <div class="rain" id="rainAnimation"></div>
+
+    <div class="dashboard-container" id="dashboardContainer">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-container">
+                    <img src="https://picsum.photos/id/237/100/100" alt="MedTutorials Logo">
+                    <span class="logo-text">MedTutorials</span>
+                </a>
+                <button class="toggle-sidebar-btn" id="toggleSidebar">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label">Main</div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-grid-1x2"></i>
+                    </div>
+                    <div class="menu-text">Dashboard</div>
+                    <div class="menu-tooltip">Dashboard</div>
+                </div>
+
+                <div class="menu-item active">
+                    <div class="menu-icon">
+                        <i class="bi bi-journal-bookmark"></i>
+                    </div>
+                    <div class="menu-text">Learning Resources</div>
+                    <div class="menu-arrow">
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                    <div class="menu-tooltip">Learning Resources</div>
+                </div>
+
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <div class="submenu-icon">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <div class="submenu-text">Study Notes</div>
+                        <div class="menu-tooltip">Study Notes</div>
+                    </div>
+
+                    <div class="submenu-item active">
+                        <div class="submenu-icon">
+                            <i class="bi bi-journal-check"></i>
+                        </div>
+                        <div class="submenu-text">Question Bank</div>
+                        <div class="menu-tooltip">Question Bank</div>
+                    </div>
+
+                    <div class="submenu-item">
+                        <div class="submenu-icon">
+                            <i class="bi bi-play-circle"></i>
+                        </div>
+                        <div class="submenu-text">Video Lectures</div>
+                        <div class="menu-tooltip">Video Lectures</div>
+                    </div>
+
+                    <div class="submenu-item">
+                        <div class="submenu-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <div class="submenu-text">E-books</div>
+                        <div class="menu-tooltip">E-books</div>
+                    </div>
+
+                    <div class="submenu-item">
+                        <div class="submenu-icon">
+                            <i class="bi bi-card-list"></i>
+                        </div>
+                        <div class="submenu-text">Flashcards</div>
+                        <div class="menu-tooltip">Flashcards</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <div class="menu-text">Performance Tracking</div>
+                    <div class="menu-tooltip">Performance Tracking</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="menu-text">Schedule Meeting</div>
+                    <div class="menu-tooltip">Schedule Meeting</div>
+                </div>
+
+                <div class="menu-label">Community</div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-camera-video"></i>
+                    </div>
+                    <div class="menu-text">Live Sessions</div>
+                    <div class="menu-tooltip">Live Sessions</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="menu-text">Study Groups</div>
+                    <div class="menu-tooltip">Study Groups</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-broadcast"></i>
+                    </div>
+                    <div class="menu-text">Educational Podcasts</div>
+                    <div class="menu-tooltip">Educational Podcasts</div>
+                </div>
+
+                <div class="menu-label">Account</div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-gear"></i>
+                    </div>
+                    <div class="menu-text">Settings</div>
+                    <div class="menu-tooltip">Settings</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-question-circle"></i>
+                    </div>
+                    <div class="menu-text">Help & Support</div>
+                    <div class="menu-tooltip">Help & Support</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </div>
+                    <div class="menu-text">Logout</div>
+                    <div class="menu-tooltip">Logout</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="header" id="practiceHeader">
+            <div class="session-info">
+                <div class="session-icon practice-icon">
+                    <i class="bi bi-journal-text"></i>
+                </div>
+                <div>
+                    <h1 class="session-title">Anatomy Practice Session</h1>
+                    <p class="session-subtitle">Cardiovascular System • Medium Difficulty</p>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Progress</span>
+                        <span id="progressText">1/25 Questions</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBar" style="width: 4%;"></div>
+                    </div>
+                </div>
+
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="bi bi-moon"></i>
+                </button>
+
+                <div class="user-profile" id="userProfile">
+                    <div class="user-avatar">
+                        <img src="https://picsum.photos/id/64/100/100" alt="User Avatar">
+                    </div>
+                    <div class="user-info">
+                        <h6>Jedidiah Samson</h6>
+                        <p>Medical Student</p>
+                    </div>
+
+                    <!-- User Dropdown -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-person"></i>
+                            <span>My Profile</span>
+                        </div>
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-gear"></i>
+                            <span>Account Settings</span>
+                        </div>
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>My Schedule</span>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Exam Mode Header (Initially Hidden) -->
+        <header class="header exam-mode" id="examHeader" style="display: none;">
+            <div class="session-info">
+                <div class="session-icon exam-icon">
+                    <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div>
+                    <h1 class="session-title">Anatomy Exam Session</h1>
+                    <p class="session-subtitle">Comprehensive • 50 Questions</p>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Progress</span>
+                        <span id="examProgressText">1/50 Questions</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="examProgressBar" style="width: 2%;"></div>
+                    </div>
+                </div>
+
+                <div class="timer-container" id="examTimer">
+                    <div class="timer-icon">
+                        <i class="bi bi-stopwatch"></i>
+                    </div>
+                    <div class="timer-value" id="timerValue">01:15:00</div>
+                </div>
+
+                <button class="theme-toggle" id="examThemeToggle">
+                    <i class="bi bi-moon"></i>
+                </button>
+
+                <div class="user-profile" id="examUserProfile">
+                    <div class="user-avatar">
+                        <img src="https://picsum.photos/id/64/100/100" alt="User Avatar">
+                    </div>
+                    <div class="user-info">
+                        <h6>Jedidiah Samson</h6>
+                        <p>Medical Student</p>
+                    </div>
+
+                    <!-- User Dropdown (Same as above) -->
+                    <div class="user-dropdown" id="examUserDropdown">
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-person"></i>
+                            <span>My Profile</span>
+                        </div>
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-gear"></i>
+                            <span>Account Settings</span>
+                        </div>
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>My Schedule</span>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <div class="user-dropdown-item">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile sidebar toggle -->
+        <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+            <i class="bi bi-list"></i>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="question-session-content">
+                <!-- Practice Mode Content -->
+                <div id="practiceContent">
+                    <!-- Question Container -->
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="question-number">Question 1</div>
+                            <div class="question-actions">
+                                <button class="question-action-btn question-bookmark" id="bookmarkBtn" title="Bookmark">
+                                    <i class="bi bi-bookmark"></i>
+                                </button>
+                                <button class="question-action-btn question-flag" id="flagBtn" title="Flag for review">
+                                    <i class="bi bi-flag"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="question-text">
+                            A 45-year-old male presents with chest pain radiating to the left arm and jaw. An ECG shows ST-segment elevation in leads II, III, and aVF. Which coronary artery is most likely occluded?
+                        </div>
+
+                        <div class="options-container">
+                            <div class="option-item" data-option="A">
+                                <div class="option-marker">A</div>
+                                <div class="option-text">Left anterior descending artery</div>
+                            </div>
+                            <div class="option-item" data-option="B">
+                                <div class="option-marker">B</div>
+                                <div class="option-text">Left circumflex artery</div>
+                            </div>
+                            <div class="option-item" data-option="C">
+                                <div class="option-marker">C</div>
+                                <div class="option-text">Right coronary artery</div>
+                            </div>
+                            <div class="option-item" data-option="D">
+                                <div class="option-marker">D</div>
+                                <div class="option-text">Left main coronary artery</div>
+                            </div>
+                        </div>
+
+                        <!-- Explanation Container (Initially Hidden) -->
+                        <div class="explanation-container" id="explanationContainer">
+                            <div class="explanation-header">
+                                <i class="bi bi-lightbulb"></i>
+                                <span>Explanation</span>
+                            </div>
+                            <div class="explanation-content">
+                                <p>The correct answer is <strong>C. Right coronary artery</strong>.</p>
+                                <p>ST-segment elevation in leads II, III, and aVF indicates an inferior wall myocardial infarction. The inferior wall of the left ventricle is supplied by the right coronary artery in about 80% of people (right dominant circulation).</p>
+                                <p>The left anterior descending artery supplies the anterior wall and apex of the left ventricle, as well as the anterior two-thirds of the interventricular septum. Occlusion would show ST elevation in leads V1-V4.</p>
+                                <p>The left circumflex artery supplies the lateral wall of the left ventricle. Occlusion would show ST elevation in leads I, aVL, V5, and V6.</p>
+                                <p>The left main coronary artery divides into the left anterior descending and left circumflex arteries. Occlusion is often fatal and would show widespread ST elevation across multiple leads.</p>
+                            </div>
+
+                            <!-- Video Explanation -->
+                            <div class="video-container">
+                                <div style="position:relative;padding-top:56.25%;">
+                                    <iframe src="https://iframe.mediadelivery.net/embed/314464/1c915a8d-fa90-468e-9346-e5368ff38b2f?autoplay=false&loop=false&muted=false&preload=true&responsive=true" 
+                                    loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true">
+                                    </iframe>
+                                </div> 
+                            </div>
+
+                            <!-- Study Resources -->
+                            <div class="explanation-resources">
+                                <div class="resource-card">
+                                    <div class="resource-icon notes-icon">
+                                        <i class="bi bi-journal-text"></i>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Coronary Circulation</div>
+                                        <div class="resource-description">Study notes with detailed anatomy</div>
+                                    </div>
+                                </div>
+                                <div class="resource-card">
+                                    <div class="resource-icon video-icon">
+                                        <i class="bi bi-play-circle"></i>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="resource-title">ECG Interpretation</div>
+                                        <div class="resource-description">Video lecture series</div>
+                                    </div>
+                                </div>
+                                <div class="resource-card">
+                                    <div class="resource-icon flashcard-icon">
+                                        <i class="bi bi-card-list"></i>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Cardiac Anatomy</div>
+                                        <div class="resource-description">Flashcard deck</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="navigation-buttons">
+                            <button class="nav-btn prev-btn" id="prevBtn" disabled>
+                                <i class="bi bi-arrow-left"></i> Previous Question
+                            </button>
+                            <button class="nav-btn next-btn" id="nextBtn">
+                                Next Question <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Panel -->
+                    <div class="question-nav-panel">
+                        <div class="panel-title">Question Navigator</div>
+                        <div class="question-grid" id="questionGrid">
+                            <!-- Question grid items will be generated dynamically -->
+                        </div>
+                        <div class="legend-container">
+                            <div class="legend-item">
+                                <div class="legend-color legend-current"></div>
+                                <span>Current</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-answered"></div>
+                                <span>Answered</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-correct"></div>
+                                <span>Correct</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-incorrect"></div>
+                                <span>Incorrect</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-flagged"></div>
+                                <span>Flagged</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-bookmarked"></div>
+                                <span>Bookmarked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam Mode Content (Initially Hidden) -->
+                <div id="examContent" style="display: none;">
+                    <!-- Question Container -->
+                    <div class="question-container">
+                        <div class="question-header">
+                            <div class="question-number">Question 1</div>
+                            <div class="question-actions">
+                                <button class="question-action-btn question-flag" id="examFlagBtn" title="Flag for review">
+                                    <i class="bi bi-flag"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="question-text">
+                            A 28-year-old female presents with fatigue, weight loss, and a butterfly-shaped rash on her face. Laboratory findings show positive ANA and anti-dsDNA antibodies. Which of the following structures is most likely affected by this condition?
+                        </div>
+
+                        <div class="options-container">
+                            <div class="option-item" data-option="A">
+                                <div class="option-marker">A</div>
+                                <div class="option-text">Glomerular basement membrane</div>
+                            </div>
+                            <div class="option-item" data-option="B">
+                                <div class="option-marker">B</div>
+                                <div class="option-text">Myelin sheath</div>
+                            </div>
+                            <div class="option-item" data-option="C">
+                                <div class="option-marker">C</div>
+                                <div class="option-text">Articular cartilage</div>
+                            </div>
+                            <div class="option-item" data-option="D">
+                                <div class="option-marker">D</div>
+                                <div class="option-text">Thyroid follicular cells</div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="navigation-buttons">
+                            <button class="nav-btn prev-btn" id="examPrevBtn" disabled>
+                                <i class="bi bi-arrow-left"></i> Previous Question
+                            </button>
+                            <button class="nav-btn next-btn" id="examNextBtn">
+                                Next Question <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Panel -->
+                    <div class="question-nav-panel">
+                        <div class="panel-title">Question Navigator</div>
+                        <div class="question-grid" id="examQuestionGrid">
+                            <!-- Question grid items will be generated dynamically -->
+                        </div>
+                        <div class="legend-container">
+                            <div class="legend-item">
+                                <div class="legend-color legend-current"></div>
+                                <span>Current</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-answered"></div>
+                                <span>Answered</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-flagged"></div>
+                                <span>Flagged</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Exam Completion Modal (Initially Hidden) -->
+    <div class="modal-overlay" id="examCompletionModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">Exam Completed</div>
+                <button class="modal-close" id="modalClose">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div class="exam-summary">
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-value">50</div>
+                        <div class="summary-label">Total Questions</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value">42</div>
+                        <div class="summary-label">Attempted</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value">35</div>
+                        <div class="summary-label">Correct</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value">7</div>
+                        <div class="summary-label">Incorrect</div>
+                    </div>
+                </div>
+                <div class="score-card">
+                    <div class="score-title">Your Score</div>
+                    <div class="score-circle">
+                        <div class="score-value">70%</div>
+                    </div>
+                    <div class="score-message">Good job! You're on the right track.</div>
+                    <div class="score-description">You performed well in Cardiovascular and Respiratory systems but need improvement in Neuroanatomy.</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn review-btn" id="reviewExamBtn">
+                    <i class="bi bi-eye"></i> Review Exam
+                </button>
+                <button class="modal-btn dashboard-btn" id="returnDashboardBtn">
+                    <i class="bi bi-house"></i> Return to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+        const container = document.getElementById('rainAnimation');
+        const dropCount = 100;
+
+        for (let i = 0; i < dropCount; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+
+            // Random position
+            drop.style.left = `${Math.random() * 100}%`;
+
+            // Random animation duration and delay
+            const duration = Math.random() * 1 + 0.5;
+            const delay = Math.random() * 5;
+            drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+
+            container.appendChild(drop);
+        }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const examThemeToggle = document.getElementById('examThemeToggle');
+    
+    function toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.body.setAttribute('data-theme', newTheme);
+        
+        // Update both theme toggle buttons
+        themeToggle.innerHTML = newTheme === 'dark' ?
+            '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+        examThemeToggle.innerHTML = newTheme === 'dark' ?
+            '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+
+        // Save theme preference
+        localStorage.setItem('theme', newTheme);
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+    examThemeToggle.addEventListener('click', toggleTheme);
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'dark' ?
+            '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+        examThemeToggle.innerHTML = savedTheme === 'dark' ?
+            '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+
+    toggleSidebar.addEventListener('click', () => {
+        dashboardContainer.classList.toggle('sidebar-collapsed');
+
+        // Update toggle icon
+        const icon = toggleSidebar.querySelector('i');
+        if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+            icon.classList.remove('bi-chevron-left');
+            icon.classList.add('bi-chevron-right');
+        } else {
+            icon.classList.remove('bi-chevron-right');
+            icon.classList.add('bi-chevron-left');
+        }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileSidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 992) {
+            if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    menuItems.forEach(item => {
+        if (item.querySelector('.menu-arrow')) {
+            item.addEventListener('click', () => {
+                // If sidebar is collapsed, don't toggle active state
+                if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+                    item.classList.toggle('active');
+                }
+            });
+        }
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    const examUserProfile = document.getElementById('examUserProfile');
+    const examUserDropdown = document.getElementById('examUserDropdown');
+
+    userProfile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userDropdown.classList.toggle('show');
+    });
+
+    examUserProfile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        examUserDropdown.classList.toggle('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+        userDropdown.classList.remove('show');
+        examUserDropdown.classList.remove('show');
+    });
+
+    // Practice Mode Functionality
+    const optionItems = document.querySelectorAll('#practiceContent .option-item');
+    const explanationContainer = document.getElementById('explanationContainer');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const bookmarkBtn = document.getElementById('bookmarkBtn');
+    const flagBtn = document.getElementById('flagBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    // Practice Mode Question Data
+    const practiceQuestions = [
+        {
+            id: 1,
+            text: "A 45-year-old male presents with chest pain radiating to the left arm and jaw. An ECG shows ST-segment elevation in leads II, III, and aVF. Which coronary artery is most likely occluded?",
+            options: [
+                { id: "A", text: "Left anterior descending artery" },
+                { id: "B", text: "Left circumflex artery" },
+                { id: "C", text: "Right coronary artery" },
+                { id: "D", text: "Left main coronary artery" }
+            ],
+            correctAnswer: "C",
+            explanation: `<p>The correct answer is <strong>C. Right coronary artery</strong>.</p>
+                <p>ST-segment elevation in leads II, III, and aVF indicates an inferior wall myocardial infarction. The inferior wall of the left ventricle is supplied by the right coronary artery in about 80% of people (right dominant circulation).</p>
+                <p>The left anterior descending artery supplies the anterior wall and apex of the left ventricle, as well as the anterior two-thirds of the interventricular septum. Occlusion would show ST elevation in leads V1-V4.</p>
+                <p>The left circumflex artery supplies the lateral wall of the left ventricle. Occlusion would show ST elevation in leads I, aVL, V5, and V6.</p>
+                <p>The left main coronary artery divides into the left anterior descending and left circumflex arteries. Occlusion is often fatal and would show widespread ST elevation across multiple leads.</p>`,
+            videoUrl: "https://www.youtube.com/embed/f9XEue-mWy0",
+            resources: [
+                { type: "notes", title: "Coronary Circulation", description: "Study notes with detailed anatomy" },
+                { type: "video", title: "ECG Interpretation", description: "Video lecture series" },
+                { type: "flashcard", title: "Cardiac Anatomy", description: "Flashcard deck" }
+            ],
+            hasImage: false
+        },
+        {
+            id: 2,
+            text: "Which of the following structures passes through the foramen ovale of the sphenoid bone?",
+            options: [
+                { id: "A", text: "Ophthalmic nerve (V1)" },
+                { id: "B", text: "Maxillary nerve (V2)" },
+                { id: "C", text: "Mandibular nerve (V3)" },
+                { id: "D", text: "Facial nerve (VII)" }
+            ],
+            correctAnswer: "C",
+            explanation: `<p>The correct answer is <strong>C. Mandibular nerve (V3)</strong>.</p>
+                <p>The mandibular nerve (V3), which is the third division of the trigeminal nerve, passes through the foramen ovale of the sphenoid bone. It carries sensory information from the lower face, lower teeth, and tongue, and provides motor innervation to the muscles of mastication.</p>
+                <p>The ophthalmic nerve (V1) passes through the superior orbital fissure, the maxillary nerve (V2) passes through the foramen rotundum, and the facial nerve (VII) passes through the internal acoustic meatus and then the stylomastoid foramen.</p>`,
+            videoUrl: "https://www.youtube.com/embed/Hj3jTTKPbq0",
+            resources: [
+                { type: "notes", title: "Cranial Nerves", description: "Comprehensive study notes" },
+                { type: "video", title: "Skull Foramina", description: "3D visualization lecture" },
+                { type: "flashcard", title: "Cranial Nerve Pathways", description: "Interactive flashcards" }
+            ],
+            hasImage: true,
+            imageUrl: "https://picsum.photos/id/237/600/400"
+        },
+        {
+            id: 3,
+            text: "A 35-year-old patient presents with difficulty breathing and chest pain. A chest X-ray reveals a pneumothorax on the right side. Which of the following structures has been compromised?",
+            options: [
+                { id: "A", text: "Visceral pleura only" },
+                { id: "B", text: "Parietal pleura only" },
+                { id: "C", text: "Both visceral and parietal pleura" },
+                { id: "D", text: "Neither visceral nor parietal pleura" }
+            ],
+            correctAnswer: "C",
+            explanation: `<p>The correct answer is <strong>C. Both visceral and parietal pleura</strong>.</p>
+                <p>A pneumothorax occurs when air enters the pleural space, causing the lung to collapse. For air to enter this normally sealed space, there must be a breach in both the visceral pleura (which covers the lung surface) and the parietal pleura (which lines the thoracic cavity).</p>
+                <p>In a pneumothorax, the negative pressure normally present in the pleural space is lost, causing the elastic lung tissue to recoil and collapse away from the chest wall. This results in breathing difficulty and chest pain, as seen in this patient.</p>`,
+            videoUrl: "https://www.youtube.com/embed/aeXfNp6Vzs4",
+            resources: [
+                { type: "notes", title: "Pleural Anatomy", description: "Detailed notes with diagrams" },
+                { type: "video", title: "Pneumothorax Pathophysiology", description: "Clinical correlations" },
+                { type: "flashcard", title: "Thoracic Emergencies", description: "Clinical case flashcards" }
+            ],
+            hasImage: false
+        }
+    ];
+
+    // Current question index (0-based)
+    let currentQuestionIndex = 0;
+    let selectedAnswers = new Array(practiceQuestions.length).fill(null);
+    let questionStatus = new Array(practiceQuestions.length).fill(null); // null, 'correct', 'incorrect'
+    let flaggedQuestions = new Array(practiceQuestions.length).fill(false);
+    let bookmarkedQuestions = new Array(practiceQuestions.length).fill(false);
+
+    // Initialize question grid
+    function initializeQuestionGrid() {
+        const questionGrid = document.getElementById('questionGrid');
+        questionGrid.innerHTML = '';
+
+        for (let i = 0; i < practiceQuestions.length; i++) {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'question-grid-item';
+            gridItem.textContent = i + 1;
+            gridItem.dataset.index = i;
+
+            if (i === currentQuestionIndex) {
+                gridItem.classList.add('current');
+            }
+
+            gridItem.addEventListener('click', () => {
+                navigateToQuestion(i);
+            });
+
+            questionGrid.appendChild(gridItem);
+        }
+    }
+
+    // Navigate to a specific question
+    function navigateToQuestion(index) {
+        if (index < 0 || index >= practiceQuestions.length) return;
+
+        // Update current question index
+        currentQuestionIndex = index;
+
+        // Update question display
+        updateQuestionDisplay();
+
+        // Update navigation buttons
+        updateNavigationButtons();
+
+        // Update question grid
+        updateQuestionGrid();
+
+        // Update progress
+        updateProgress();
+
+        // Hide explanation if showing
+        explanationContainer.classList.remove('show');
+    }
+
+    // Update question display
+    function updateQuestionDisplay() {
+        const question = practiceQuestions[currentQuestionIndex];
+        
+        // Update question number and text
+        document.querySelector('#practiceContent .question-number').textContent = `Question ${currentQuestionIndex + 1}`;
+        document.querySelector('#practiceContent .question-text').textContent = question.text;
+
+        // Update options
+        const optionsContainer = document.querySelector('#practiceContent .options-container');
+        optionsContainer.innerHTML = '';
+
+        question.options.forEach(option => {
+            const optionItem = document.createElement('div');
+            optionItem.className = 'option-item';
+            optionItem.dataset.option = option.id;
+
+            // If this option was previously selected, mark it
+            if (selectedAnswers[currentQuestionIndex] === option.id) {
+                optionItem.classList.add('selected');
+                
+                // If we have status for this question, show correct/incorrect
+                if (questionStatus[currentQuestionIndex]) {
+                    if (option.id === question.correctAnswer) {
+                        optionItem.classList.add('correct');
+                        optionItem.innerHTML += '<div class="option-status correct-icon"><i class="bi bi-check-circle-fill"></i></div>';
+                    } else {
+                        optionItem.classList.add('incorrect');
+                        optionItem.innerHTML += '<div class="option-status incorrect-icon"><i class="bi bi-x-circle-fill"></i></div>';
+                    }
+                }
+            }
+
+            optionItem.innerHTML += `
+                <div class="option-marker">${option.id}</div>
+                <div class="option-text">${option.text}</div>
+            `;
+
+            optionItem.addEventListener('click', () => {
+                handleOptionClick(option.id);
+            });
+
+            optionsContainer.appendChild(optionItem);
+        });
+
+        // Update explanation
+        if (questionStatus[currentQuestionIndex]) {
+            updateExplanation(question);
+            explanationContainer.classList.add('show');
+        } else {
+            explanationContainer.classList.remove('show');
+        }
+
+        // Add image if question has one
+        if (question.hasImage) {
+            // Check if image container already exists
+            let imageContainer = document.querySelector('#practiceContent .question-image');
+            if (!imageContainer) {
+                imageContainer = document.createElement('div');
+                imageContainer.className = 'question-image';
+                const questionText = document.querySelector('#practiceContent .question-text');
+                questionText.insertAdjacentElement('afterend', imageContainer);
+            }
+            
+            imageContainer.innerHTML = `<img src="${question.imageUrl || 'https://picsum.photos/id/237/600/400'}" alt="Question Image">`;
+        } else {
+            // Remove image container if it exists
+            const imageContainer = document.querySelector('#practiceContent .question-image');
+            if (imageContainer) {
+                imageContainer.remove();
+            }
+        }
+
+        // Update bookmark and flag buttons
+        bookmarkBtn.classList.toggle('active', bookmarkedQuestions[currentQuestionIndex]);
+        flagBtn.classList.toggle('active', flaggedQuestions[currentQuestionIndex]);
+    }
+
+    // Handle option click
+    function handleOptionClick(optionId) {
+        // If already answered, do nothing
+        if (questionStatus[currentQuestionIndex]) return;
+
+        // Update selected answer
+        selectedAnswers[currentQuestionIndex] = optionId;
+
+        // Check if answer is correct
+        const correctAnswer = practiceQuestions[currentQuestionIndex].correctAnswer;
+        questionStatus[currentQuestionIndex] = (optionId === correctAnswer) ? 'correct' : 'incorrect';
+
+        // Update options display
+        const options = document.querySelectorAll('#practiceContent .option-item');
+        options.forEach(option => {
+            if (option.dataset.option === optionId) {
+                option.classList.add('selected');
+                
+                if (optionId === correctAnswer) {
+                    option.classList.add('correct');
+                    option.innerHTML += '<div class="option-status correct-icon"><i class="bi bi-check-circle-fill"></i></div>';
+                } else {
+                    option.classList.add('incorrect');
+                    option.innerHTML += '<div class="option-status incorrect-icon"><i class="bi bi-x-circle-fill"></i></div>';
+                    
+                    // Highlight the correct answer
+                    options.forEach(opt => {
+                        if (opt.dataset.option === correctAnswer) {
+                            opt.classList.add('correct');
+                            opt.innerHTML += '<div class="option-status correct-icon"><i class="bi bi-check-circle-fill"></i></div>';
+                        }
+                    });
+                }
+            }
+        });
+
+        // Show explanation
+        updateExplanation(practiceQuestions[currentQuestionIndex]);
+        explanationContainer.classList.add('show');
+
+        // Update question grid
+        updateQuestionGrid();
+    }
+
+    // Update explanation
+    function updateExplanation(question) {
+        const explanationContent = document.querySelector('#explanationContainer .explanation-content');
+        explanationContent.innerHTML = question.explanation;
+
+        // Update video
+        const videoContainer = document.querySelector('#explanationContainer .video-container');
+        videoContainer.innerHTML = `<iframe src="${question.videoUrl}" title="Explanation Video" allowfullscreen></iframe>`;
+
+        // Update resources
+        const resourcesContainer = document.querySelector('#explanationContainer .explanation-resources');
+        resourcesContainer.innerHTML = '';
+
+        question.resources.forEach(resource => {
+            let iconClass, bgClass;
+            
+            switch(resource.type) {
+                case 'notes':
+                    iconClass = 'bi-journal-text';
+                    bgClass = 'notes-icon';
+                    break;
+                case 'video':
+                    iconClass = 'bi-play-circle';
+                    bgClass = 'video-icon';
+                    break;
+                case 'flashcard':
+                    iconClass = 'bi-card-list';
+                    bgClass = 'flashcard-icon';
+                    break;
+                default:
+                    iconClass = 'bi-file-earmark';
+                    bgClass = 'notes-icon';
+            }
+
+            const resourceCard = document.createElement('div');
+            resourceCard.className = 'resource-card';
+            resourceCard.innerHTML = `
+                <div class="resource-icon ${bgClass}">
+                    <i class="bi ${iconClass}"></i>
+                </div>
+                <div class="resource-info">
+                    <div class="resource-title">${resource.title}</div>
+                    <div class="resource-description">${resource.description}</div>
+                </div>
+            `;
+            resourcesContainer.appendChild(resourceCard);
+        });
+    }
+
+    // Update navigation buttons
+    function updateNavigationButtons() {
+        prevBtn.disabled = currentQuestionIndex === 0;
+        
+        if (currentQuestionIndex === practiceQuestions.length - 1) {
+            nextBtn.textContent = 'Finish';
+            nextBtn.classList.add('finish-btn');
+        } else {
+            nextBtn.innerHTML = 'Next Question <i class="bi bi-arrow-right"></i>';
+            nextBtn.classList.remove('finish-btn');
+        }
+    }
+
+    // Update question grid
+    function updateQuestionGrid() {
+        const gridItems = document.querySelectorAll('#questionGrid .question-grid-item');
+        
+        gridItems.forEach(item => {
+            const index = parseInt(item.dataset.index);
+            
+            // Reset all classes
+            item.className = 'question-grid-item';
+            
+            // Add appropriate classes
+            if (index === currentQuestionIndex) {
+                item.classList.add('current');
+            }
+            
+            if (selectedAnswers[index] !== null) {
+                if (questionStatus[index] === 'correct') {
+                    item.classList.add('correct');
+                } else if (questionStatus[index] === 'incorrect') {
+                    item.classList.add('incorrect');
+                } else {
+                    item.classList.add('answered');
+                }
+            }
+            
+            if (flaggedQuestions[index]) {
+                item.classList.add('flagged');
+            }
+            
+            if (bookmarkedQuestions[index]) {
+                item.classList.add('bookmarked');
+            }
+        });
+    }
+
+    // Update progress
+    function updateProgress() {
+        const progress = ((currentQuestionIndex + 1) / practiceQuestions.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${currentQuestionIndex + 1}/${practiceQuestions.length} Questions`;
+    }
+
+    // Event listeners for navigation buttons
+    nextBtn.addEventListener('click', () => {
+        if (currentQuestionIndex < practiceQuestions.length - 1) {
+            navigateToQuestion(currentQuestionIndex + 1);
+        } else {
+            // Handle finish
+            alert('Practice session completed! You can review your answers or return to the dashboard.');
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentQuestionIndex > 0) {
+            navigateToQuestion(currentQuestionIndex - 1);
+        }
+    });
+
+    // Bookmark and flag buttons
+    bookmarkBtn.addEventListener('click', () => {
+        bookmarkedQuestions[currentQuestionIndex] = !bookmarkedQuestions[currentQuestionIndex];
+        bookmarkBtn.classList.toggle('active');
+        updateQuestionGrid();
+    });
+
+    flagBtn.addEventListener('click', () => {
+        flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
+        flagBtn.classList.toggle('active');
+        updateQuestionGrid();
+    });
+
+    // Initialize practice mode
+    initializeQuestionGrid();
+    updateQuestionDisplay();
+    updateNavigationButtons();
+    updateProgress();
+
+    // Exam Mode Functionality
+    const examOptionItems = document.querySelectorAll('#examContent .option-item');
+    const examNextBtn = document.getElementById('examNextBtn');
+    const examPrevBtn = document.getElementById('examPrevBtn');
+    const examFlagBtn = document.getElementById('examFlagBtn');
+    const examProgressBar = document.getElementById('examProgressBar');
+    const examProgressText = document.getElementById('examProgressText');
+    const timerValue = document.getElementById('timerValue');
+    const examCompletionModal = document.getElementById('examCompletionModal');
+    const modalClose = document.getElementById('modalClose');
+    const reviewExamBtn = document.getElementById('reviewExamBtn');
+    const returnDashboardBtn = document.getElementById('returnDashboardBtn');
+
+    // Exam Mode Question Data (simplified for demo)
+    const examQuestions = [
+        {
+            id: 1,
+            text: "A 28-year-old female presents with fatigue, weight loss, and a butterfly-shaped rash on her face. Laboratory findings show positive ANA and anti-dsDNA antibodies. Which of the following structures is most likely affected by this condition?",
+            options: [
+                { id: "A", text: "Glomerular basement membrane" },
+                { id: "B", text: "Myelin sheath" },
+                { id: "C", text: "Articular cartilage" },
+                { id: "D", text: "Thyroid follicular cells" }
+            ],
+            correctAnswer: "A",
+            explanation: "The patient is presenting with classic symptoms of Systemic Lupus Erythematosus (SLE), including the malar (butterfly) rash and positive ANA and anti-dsDNA antibodies. Lupus nephritis is one of the most common and serious complications of SLE, affecting the glomerular basement membrane through immune complex deposition."
+        },
+        {
+            id: 2,
+            text: "During a surgical procedure, the surgeon must avoid damaging the recurrent laryngeal nerve. Which of the following structures serves as an anatomical landmark for identifying this nerve on the right side?",
+            options: [
+                { id: "A", text: "Common carotid artery" },
+                { id: "B", text: "Subclavian artery" },
+                { id: "C", text: "Tracheoesophageal groove" },
+                { id: "D", text: "Thoracic duct" }
+            ],
+            correctAnswer: "C",
+            explanation: "The recurrent laryngeal nerve runs in the tracheoesophageal groove, which serves as an important anatomical landmark for surgeons to identify and protect this nerve during procedures in the neck and upper thorax."
+        }
+    ];
+
+    // Current exam question index
+    let currentExamIndex = 0;
+    let examSelectedAnswers = new Array(examQuestions.length).fill(null);
+    let examFlaggedQuestions = new Array(examQuestions.length).fill(false);
+    let examTimer;
+    let examTimeRemaining = 75 * 60; // 75 minutes in seconds
+
+    // Initialize exam question grid
+    function initializeExamQuestionGrid() {
+        const examQuestionGrid = document.getElementById('examQuestionGrid');
+        examQuestionGrid.innerHTML = '';
+
+        for (let i = 0; i < examQuestions.length; i++) {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'question-grid-item';
+            gridItem.textContent = i + 1;
+            gridItem.dataset.index = i;
+
+            if (i === currentExamIndex) {
+                gridItem.classList.add('current');
+            }
+
+            gridItem.addEventListener('click', () => {
+                navigateToExamQuestion(i);
+            });
+
+            examQuestionGrid.appendChild(gridItem);
+        }
+    }
+
+    // Navigate to a specific exam question
+    function navigateToExamQuestion(index) {
+        if (index < 0 || index >= examQuestions.length) return;
+
+        // Update current question index
+        currentExamIndex = index;
+
+        // Update question display
+        updateExamQuestionDisplay();
+
+        // Update navigation buttons
+        updateExamNavigationButtons();
+
+        // Update question grid
+        updateExamQuestionGrid();
+
+        // Update progress
+        updateExamProgress();
+    }
+
+    // Update exam question display
+    function updateExamQuestionDisplay() {
+        const question = examQuestions[currentExamIndex];
+        
+        // Update question number and text
+        document.querySelector('#examContent .question-number').textContent = `Question ${currentExamIndex + 1}`;
+        document.querySelector('#examContent .question-text').textContent = question.text;
+
+        // Update options
+        const optionsContainer = document.querySelector('#examContent .options-container');
+        optionsContainer.innerHTML = '';
+
+        question.options.forEach(option => {
+            const optionItem = document.createElement('div');
+            optionItem.className = 'option-item';
+            optionItem.dataset.option = option.id;
+
+            // If this option was previously selected, mark it
+            if (examSelectedAnswers[currentExamIndex] === option.id) {
+                optionItem.classList.add('selected');
+            }
+
+            optionItem.innerHTML = `
+                <div class="option-marker">${option.id}</div>
+                <div class="option-text">${option.text}</div>
+            `;
+
+            optionItem.addEventListener('click', () => {
+                handleExamOptionClick(option.id);
+            });
+
+            optionsContainer.appendChild(optionItem);
+        });
+
+        // Update flag button
+        examFlagBtn.classList.toggle('active', examFlaggedQuestions[currentExamIndex]);
+    }
+
+    // Handle exam option click
+    function handleExamOptionClick(optionId) {
+        // Update selected answer
+        examSelectedAnswers[currentExamIndex] = optionId;
+
+        // Update options display
+        const options = document.querySelectorAll('#examContent .option-item');
+        options.forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.option === optionId) {
+                option.classList.add('selected');
+            }
+        });
+
+        // Update question grid
+        updateExamQuestionGrid();
+    }
+
+    // Update exam navigation buttons
+    function updateExamNavigationButtons() {
+        examPrevBtn.disabled = currentExamIndex === 0;
+        
+        if (currentExamIndex === examQuestions.length - 1) {
+            examNextBtn.textContent = 'Submit Exam';
+            examNextBtn.classList.add('finish-btn');
+        } else {
+            examNextBtn.innerHTML = 'Next Question <i class="bi bi-arrow-right"></i>';
+            examNextBtn.classList.remove('finish-btn');
+        }
+    }
+
+    // Update exam question grid
+    function updateExamQuestionGrid() {
+        const gridItems = document.querySelectorAll('#examQuestionGrid .question-grid-item');
+        
+        gridItems.forEach(item => {
+            const index = parseInt(item.dataset.index);
+            
+            // Reset all classes
+            item.className = 'question-grid-item';
+            
+            // Add appropriate classes
+            if (index === currentExamIndex) {
+                item.classList.add('current');
+            }
+            
+            if (examSelectedAnswers[index] !== null) {
+                item.classList.add('answered');
+            }
+            
+            if (examFlaggedQuestions[index]) {
+                item.classList.add('flagged');
+            }
+        });
+    }
+
+    // Update exam progress
+    function updateExamProgress() {
+        const progress = ((currentExamIndex + 1) / examQuestions.length) * 100;
+        examProgressBar.style.width = `${progress}%`;
+        examProgressText.textContent = `${currentExamIndex + 1}/${examQuestions.length} Questions`;
+    }
+
+    // Start exam timer
+    function startExamTimer() {
+        examTimer = setInterval(() => {
+            examTimeRemaining--;
+            
+            if (examTimeRemaining <= 0) {
+                clearInterval(examTimer);
+                submitExam();
+            } else {
+                updateTimerDisplay();
+                
+                // Add warning class when less than 5 minutes remain
+                if (examTimeRemaining <= 300) {
+                    timerValue.classList.add('timer-warning');
+                }
+            }
+        }, 1000);
+    }
+
+    // Update timer display
+    function updateTimerDisplay() {
+        const hours = Math.floor(examTimeRemaining / 3600);
+        const minutes = Math.floor((examTimeRemaining % 3600) / 60);
+        const seconds = examTimeRemaining % 60;
+        
+        timerValue.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Submit exam
+    function submitExam() {
+        clearInterval(examTimer);
+        examCompletionModal.classList.add('show');
+    }
+
+    // Event listeners for exam navigation buttons
+    examNextBtn.addEventListener('click', () => {
+        if (currentExamIndex < examQuestions.length - 1) {
+            navigateToExamQuestion(currentExamIndex + 1);
+        } else {
+            // Handle submit
+            if (confirm('Are you sure you want to submit your exam?')) {
+                submitExam();
+            }
+        }
+    });
+
+    examPrevBtn.addEventListener('click', () => {
+        if (currentExamIndex > 0) {
+            navigateToExamQuestion(currentExamIndex - 1);
+        }
+    });
+
+    // Exam flag button
+    examFlagBtn.addEventListener('click', () => {
+        examFlaggedQuestions[currentExamIndex] = !examFlaggedQuestions[currentExamIndex];
+        examFlagBtn.classList.toggle('active');
+        updateExamQuestionGrid();
+    });
+
+    // Modal actions
+    modalClose.addEventListener('click', () => {
+        examCompletionModal.classList.remove('show');
+    });
+
+    reviewExamBtn.addEventListener('click', () => {
+        examCompletionModal.classList.remove('show');
+        // Here you would implement the exam review functionality
+        alert('Review functionality would be implemented here');
+    });
+
+    returnDashboardBtn.addEventListener('click', () => {
+        // Redirect to dashboard
+        window.location.href = 'question.html';
+    });
+
+    // Switch between Practice and Exam modes for demo purposes
+    const switchToExamMode = () => {
+        document.getElementById('practiceHeader').style.display = 'none';
+        document.getElementById('examHeader').style.display = 'flex';
+        document.getElementById('practiceContent').style.display = 'none';
+        document.getElementById('examContent').style.display = 'block';
+        
+        // Initialize exam mode
+        initializeExamQuestionGrid();
+        updateExamQuestionDisplay();
+        updateExamNavigationButtons();
+        updateExamProgress();
+        updateTimerDisplay();
+        startExamTimer();
+    };
+
+    const switchToPracticeMode = () => {
+        document.getElementById('examHeader').style.display = 'none';
+        document.getElementById('practiceHeader').style.display = 'flex';
+        document.getElementById('examContent').style.display = 'none';
+        document.getElementById('practiceContent').style.display = 'block';
+        
+        if (examTimer) {
+            clearInterval(examTimer);
+        }
+    };
+
+    // For demo purposes, add buttons to switch modes
+    const modeControls = document.createElement('div');
+    modeControls.style.position = 'fixed';
+    modeControls.style.bottom = '80px';
+    modeControls.style.right = '20px';
+    modeControls.style.zIndex = '1000';
+    modeControls.style.display = 'flex';
+    modeControls.style.flexDirection = 'column';
+    modeControls.style.gap = '10px';
+
+    const practiceBtn = document.createElement('button');
+    practiceBtn.textContent = 'Practice Mode';
+    practiceBtn.style.padding = '8px 15px';
+    practiceBtn.style.borderRadius = '8px';
+    practiceBtn.style.background = '#38B2AC';
+    practiceBtn.style.color = 'white';
+    practiceBtn.style.border = 'none';
+    practiceBtn.style.cursor = 'pointer';
+    practiceBtn.addEventListener('click', switchToPracticeMode);
+
+    const examBtn = document.createElement('button');
+    examBtn.textContent = 'Exam Mode';
+    examBtn.style.padding = '8px 15px';
+    examBtn.style.borderRadius = '8px';
+    examBtn.style.background = '#ED8936';
+    examBtn.style.color = 'white';
+    examBtn.style.border = 'none';
+    examBtn.style.cursor = 'pointer';
+    examBtn.addEventListener('click', switchToExamMode);
+
+    modeControls.appendChild(practiceBtn);
+    modeControls.appendChild(examBtn);
+    document.body.appendChild(modeControls);
+    </script>
+</body>
+</html>

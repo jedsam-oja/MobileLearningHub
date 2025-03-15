@@ -1,0 +1,2916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MedTutorials - Study Notes</title>
+  <link rel="icon" type="image/x-icon" href="images/main logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Study Notes Content Styles */
+    .dashboard-content {
+      padding: 30px;
+    }
+    
+    .page-header {
+      margin-bottom: 30px;
+    }
+    
+    .page-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .page-title i {
+      color: var(--accent-color);
+    }
+    
+    .page-subtitle {
+      color: var(--text-light);
+    }
+    
+    .search-filter-container {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+    
+    [data-theme="dark"] .search-filter-container {
+      box-shadow: var(--neumorphic-dark);
+    }
+    
+    .filter-row {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-item {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-label {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+    
+    .filter-select {
+      width: 100%;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-select:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+    
+    .filter-search {
+      position: relative;
+    }
+    
+    .filter-search input {
+      width: 100%;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-search input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+    
+    .filter-search i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+    
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .filter-btn-primary {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+    }
+    
+    .filter-btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    
+    .filter-btn-secondary {
+      background: transparent;
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+    }
+    
+    .filter-btn-secondary:hover {
+      background: rgba(56, 178, 172, 0.1);
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+    
+    .tab-container {
+      margin-bottom: 30px;
+    }
+    
+    .nav-tabs {
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    
+    .nav-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .nav-tabs .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-light);
+      font-weight: 500;
+      padding: 12px 20px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    
+    .nav-tabs .nav-link:hover {
+      color: var(--accent-color);
+    }
+    
+    .nav-tabs .nav-link.active {
+      color: var(--accent-color);
+      border-bottom-color: var(--accent-color);
+      background: transparent;
+    }
+    
+    .tab-content {
+      padding-top: 20px;
+    }
+    
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .subject-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    [data-theme="dark"] .subject-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+    
+    .subject-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+    }
+    
+    .subject-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--accent-color);
+      transition: all 0.3s ease;
+    }
+    
+    .subject-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    
+    .subject-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.3s ease;
+    }
+    
+    .subject-card:hover .subject-icon {
+      transform: scale(1.1);
+    }
+    
+    .subject-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    
+    .subject-count {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    
+    .subject-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    
+    .subject-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    
+    .subject-description {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .progress-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .progress-circle {
+      position: relative;
+      width: 60px;
+      height: 60px;
+    }
+    
+    .progress-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    
+    .progress-circle-bg {
+      fill: none;
+      stroke: var(--border-color);
+      stroke-width: 6;
+    }
+    
+    .progress-circle-value {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.3s ease;
+    }
+    
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .progress-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .progress-title {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+    
+    .progress-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    
+    .subject-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .subject-tags {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .subject-tag {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+    
+    .subject-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .subject-action {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .subject-action:hover {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+    
+    .recent-notes-section {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+    
+    [data-theme="dark"] .recent-notes-section {
+      box-shadow: var(--neumorphic-dark);
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    
+    .section-action {
+      color: var(--accent-color);
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .section-action:hover {
+      color: var(--accent-hover);
+    }
+    
+    .note-card {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .note-card:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transform: translateY(-3px);
+      border-color: var(--accent-color);
+    }
+    
+    .note-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    
+    .note-details {
+      flex: 1;
+    }
+    
+    .note-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .note-info {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .note-info-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+    
+    .note-preview {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .note-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    
+    .note-card:hover .note-action {
+      background: var(--accent-color);
+      color: white;
+    }
+    
+    .create-note-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    [data-theme="dark"] .create-note-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+    
+    .create-note-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+    }
+    
+    .create-note-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin: 0 auto 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .create-note-card:hover .create-note-icon {
+      background: var(--accent-color);
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    .create-note-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    
+    .create-note-text {
+      color: var(--text-light);
+      margin-bottom: 20px;
+      padding: 0 20px;
+    }
+    
+    .create-note-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .create-note-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+    
+    .study-stats-section {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+    
+    [data-theme="dark"] .study-stats-section {
+      box-shadow: var(--neumorphic-dark);
+    }
+    
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+    }
+    
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover .stat-icon {
+      transform: scale(1.1);
+    }
+    
+    .stat-value {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+    
+    .stats-chart {
+      height: 300px;
+    }
+    
+    /* Study Time Chart */
+    .study-time-chart {
+      height: 300px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .subject-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .dashboard-content {
+        padding: 20px;
+      }
+      
+      .filter-row {
+        flex-direction: column;
+      }
+      
+      .filter-item {
+        min-width: 100%;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .subject-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .dashboard-content {
+        padding: 15px;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+      
+      .note-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="MedTutorials Logo">
+          <span class="logo-text"></span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item active">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Your Cardiology live session starts in 30 minutes</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">You completed the Anatomy quiz with 92% score</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Sarah invited you to join Neurology study group</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <h2 class="page-title"><i class="bi bi-journal-text"></i> Study Notes</h2>
+          <p class="page-subtitle">Organize, create and review your medical study notes</p>
+        </div>
+        
+        <!-- Search and Filter Container -->
+        <div class="search-filter-container">
+          <div class="filter-row">
+            <div class="filter-item filter-search">
+              <div class="filter-label">Search Notes</div>
+              <input type="text" placeholder="Search by keywords...">
+              <i class="bi bi-search"></i>
+            </div>
+            
+            <div class="filter-item">
+              <div class="filter-label">Category</div>
+              <select class="filter-select">
+                <option value="all">All Categories</option>
+                <option value="basic-science">Basic Science</option>
+                <option value="clinical">Clinical</option>
+              </select>
+            </div>
+            
+            <div class="filter-item">
+              <div class="filter-label">Subject</div>
+              <select class="filter-select">
+                <option value="all">All Subjects</option>
+                <option value="anatomy">Anatomy</option>
+                <option value="physiology">Physiology</option>
+                <option value="biochemistry">Biochemistry</option>
+                <option value="pathology">Pathology</option>
+                <option value="pharmacology">Pharmacology</option>
+                <option value="microbiology">Microbiology</option>
+                <option value="internal-medicine">Internal Medicine</option>
+                <option value="surgery">Surgery</option>
+                <option value="pediatrics">Pediatrics</option>
+                <option value="obstetrics">Obstetrics & Gynecology</option>
+                <option value="psychiatry">Psychiatry</option>
+              </select>
+            </div>
+            
+            <div class="filter-item">
+              <div class="filter-label">Sort By</div>
+              <select class="filter-select">
+                <option value="recent">Recently Updated</option>
+                <option value="title-asc">Title (A-Z)</option>
+                <option value="title-desc">Title (Z-A)</option>
+                <option value="progress">Progress</option>
+                <option value="created">Date Created</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="filter-actions">
+            <button class="filter-btn filter-btn-primary">Apply Filters</button>
+            <button class="filter-btn filter-btn-secondary">Reset</button>
+          </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+          <ul class="nav nav-tabs" id="studyTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All Categories</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="basic-science-tab" data-bs-toggle="tab" data-bs-target="#basic-science" type="button" role="tab" aria-controls="basic-science" aria-selected="false">Basic Science</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="clinical-tab" data-bs-toggle="tab" data-bs-target="#clinical" type="button" role="tab" aria-controls="clinical" aria-selected="false">Clinical</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="recent-tab" data-bs-toggle="tab" data-bs-target="#recent" type="button" role="tab" aria-controls="recent" aria-selected="false">Recently Viewed</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="bookmarked-tab" data-bs-toggle="tab" data-bs-target="#bookmarked" type="button" role="tab" aria-controls="bookmarked" aria-selected="false">Bookmarked</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="my-notes-tab" data-bs-toggle="tab" data-bs-target="#my-notes" type="button" role="tab" aria-controls="my-notes" aria-selected="false">My Notes</button>
+            </li>
+          </ul>
+          
+          <div class="tab-content" id="studyTabsContent">
+            <!-- All Categories Tab -->
+            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+              <div class="row">
+                <div class="col-lg-9">
+                  <!-- Basic Science Section -->
+                  <h3 class="mb-4">Basic Science</h3>
+                  <div class="subject-grid">
+                    <!-- Anatomy -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+                          <i class="bi bi-person"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">32</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Anatomy</h4>
+                      <p class="subject-description">Study of the structure of organisms and their parts, including gross anatomy and histology.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #4F46E5; stroke-dasharray: 151; stroke-dashoffset: 45;"></circle>
+                          </svg>
+                          <div class="progress-text">70%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">22/32 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">Year 1</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Physiology -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                          <i class="bi bi-activity"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">28</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Physiology</h4>
+                      <p class="subject-description">Study of the functions and mechanisms in a living system, from cellular to organ system level.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #059669; stroke-dasharray: 151; stroke-dashoffset: 60;"></circle>
+                          </svg>
+                          <div class="progress-text">60%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">17/28 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(5, 150, 105, 0.1); color: #059669;">Year 1</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Biochemistry -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(217, 119, 6, 0.1); color: #D97706;">
+                          <i class="bi bi-droplet"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">25</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Biochemistry</h4>
+                      <p class="subject-description">Study of chemical processes within and relating to living organisms, including metabolism and molecular biology.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #D97706; stroke-dasharray: 151; stroke-dashoffset: 75;"></circle>
+                          </svg>
+                          <div class="progress-text">50%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">12/25 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(217, 119, 6, 0.1); color: #D97706;">Year 1</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Pathology -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(220, 38, 38, 0.1); color: #DC2626;">
+                          <i class="bi bi-virus"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">35</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Pathology</h4>
+                      <p class="subject-description">Study of the causes and effects of disease or injury, including disease mechanisms and cellular/tissue changes.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #DC2626; stroke-dasharray: 151; stroke-dashoffset: 90;"></circle>
+                          </svg>
+                          <div class="progress-text">40%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">14/35 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(220, 38, 38, 0.1); color: #DC2626;">Year 2</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Pharmacology -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(124, 58, 237, 0.1); color: #7C3AED;">
+                          <i class="bi bi-capsule"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">30</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Pharmacology</h4>
+                      <p class="subject-description">Study of drug action and how medicines affect living systems, including pharmacokinetics and pharmacodynamics.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #7C3AED; stroke-dasharray: 151; stroke-dashoffset: 30;"></circle>
+                          </svg>
+                          <div class="progress-text">80%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">24/30 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(124, 58, 237, 0.1); color: #7C3AED;">Year 2</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Microbiology -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(14, 165, 233, 0.1); color: #0EA5E9;">
+                          <i class="bi bi-bug"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">22</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Microbiology</h4>
+                      <p class="subject-description">Study of microorganisms including bacteria, viruses, fungi, and parasites, and their roles in disease.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #0EA5E9; stroke-dasharray: 151; stroke-dashoffset: 75;"></circle>
+                          </svg>
+                          <div class="progress-text">50%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">11/22 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(14, 165, 233, 0.1); color: #0EA5E9;">Year 2</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Clinical Sciences Section -->
+                  <h3 class="mb-4 mt-5">Clinical Sciences</h3>
+                  <div class="subject-grid">
+                    <!-- Internal Medicine -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(236, 72, 153, 0.1); color: #EC4899;">
+                          <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">45</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Internal Medicine</h4>
+                      <p class="subject-description">Deals with diagnosis, treatment, and prevention of adult diseases not requiring surgery.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #EC4899; stroke-dasharray: 151; stroke-dashoffset: 45;"></circle>
+                          </svg>
+                          <div class="progress-text">70%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">31/45 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(236, 72, 153, 0.1); color: #EC4899;">Year 3</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Surgery -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(20, 184, 166, 0.1); color: #14B8A6;">
+                          <i class="bi bi-scissors"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">38</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Surgery</h4>
+                      <p class="subject-description">Medical specialty that uses operative techniques to investigate or treat diseases, injuries, or deformities.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #14B8A6; stroke-dasharray: 151; stroke-dashoffset: 90;"></circle>
+                          </svg>
+                          <div class="progress-text">40%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">15/38 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(20, 184, 166, 0.1); color: #14B8A6;">Year 3</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Pediatrics -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                          <i class="bi bi-balloon"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">30</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Pediatrics</h4>
+                      <p class="subject-description">Branch of medicine that involves the medical care of infants, children, and adolescents.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #F59E0B; stroke-dasharray: 151; stroke-dashoffset: 60;"></circle>
+                          </svg>
+                          <div class="progress-text">60%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">18/30 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Year 4</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Obstetrics & Gynecology -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(217, 70, 239, 0.1); color: #D946EF;">
+                          <i class="bi bi-gender-female"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">32</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Obstetrics & Gynecology</h4>
+                      <p class="subject-description">Medical specialty dealing with pregnancy, childbirth, and the female reproductive system.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #D946EF; stroke-dasharray: 151; stroke-dashoffset: 75;"></circle>
+                          </svg>
+                          <div class="progress-text">50%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">16/32 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(217, 70, 239, 0.1); color: #D946EF;">Year 4</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Psychiatry -->
+                    <div class="subject-card">
+                      <div class="subject-header">
+                        <div class="subject-icon" style="background: rgba(6, 182, 212, 0.1); color: #06B6D4;">
+                          <i class="bi bi-brain"></i>
+                        </div>
+                        <div class="subject-stats">
+                          <div class="subject-count">25</div>
+                          <div class="subject-label">Notes</div>
+                        </div>
+                      </div>
+                      <h4 class="subject-title">Psychiatry</h4>
+                      <p class="subject-description">Medical specialty devoted to the diagnosis, prevention, and treatment of mental disorders.</p>
+                      
+                      <div class="progress-row">
+                        <div class="progress-circle">
+                          <svg class="progress-svg">
+                            <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                            <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #06B6D4; stroke-dasharray: 151; stroke-dashoffset: 105;"></circle>
+                          </svg>
+                          <div class="progress-text">30%</div>
+                        </div>
+                        <div class="progress-info">
+                          <div class="progress-title">Progress</div>
+                          <div class="progress-subtitle">8/25 notes reviewed</div>
+                        </div>
+                      </div>
+                      
+                      <div class="subject-footer">
+                        <div class="subject-tags">
+                          <span class="subject-tag" style="background: rgba(6, 182, 212, 0.1); color: #06B6D4;">Year 4</span>
+                        </div>
+                        <div class="subject-actions">
+                          <button class="subject-action">
+                            <i class="bi bi-bookmark"></i>
+                          </button>
+                          <button class="subject-action">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-lg-3">
+                  <!-- Create New Note Card -->
+                  <div class="create-note-card">
+                    <div class="create-note-icon">
+                      <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <h4 class="create-note-title">Create New Note</h4>
+                    <p class="create-note-text">Start a new study note with our intuitive editor</p>
+                    <button class="create-note-btn">Create Note</button>
+                  </div>
+                  
+                  <!-- Study Statistics -->
+                  <div class="study-stats-section">
+                    <div class="section-header">
+                      <h3 class="section-title">Study Statistics</h3>
+                      <a href="#" class="section-action">
+                        View Details <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                    
+                    <div class="stats-cards">
+                      <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(56, 178, 172, 0.1); color: #38B2AC;">
+                          <i class="bi bi-journal-text"></i>
+                        </div>
+                        <div class="stat-value">342</div>
+                        <div class="stat-label">Total Notes</div>
+                      </div>
+                      
+                      <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+                          <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="stat-value">176</div>
+                        <div class="stat-label">Completed</div>
+                      </div>
+                      
+                      <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                          <i class="bi bi-star"></i>
+                        </div>
+                        <div class="stat-value">48</div>
+                        <div class="stat-label">Bookmarked</div>
+                      </div>
+                    </div>
+                    
+                    <div class="study-time-chart" id="studyTimeChart"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Basic Science Tab -->
+            <div class="tab-pane fade" id="basic-science" role="tabpanel" aria-labelledby="basic-science-tab">
+              <div class="subject-grid">
+                <!-- Basic Science subjects repeated here -->
+                <!-- Anatomy -->
+                <div class="subject-card">
+                  <div class="subject-header">
+                    <div class="subject-icon" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div class="subject-stats">
+                      <div class="subject-count">32</div>
+                      <div class="subject-label">Notes</div>
+                    </div>
+                  </div>
+                  <h4 class="subject-title">Anatomy</h4>
+                  <p class="subject-description">Study of the structure of organisms and their parts, including gross anatomy and histology.</p>
+                  
+                  <div class="progress-row">
+                    <div class="progress-circle">
+                      <svg class="progress-svg">
+                        <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                        <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #4F46E5; stroke-dasharray: 151; stroke-dashoffset: 45;"></circle>
+                      </svg>
+                      <div class="progress-text">70%</div>
+                    </div>
+                    <div class="progress-info">
+                      <div class="progress-title">Progress</div>
+                      <div class="progress-subtitle">22/32 notes reviewed</div>
+                    </div>
+                  </div>
+                  
+                  <div class="subject-footer">
+                    <div class="subject-tags">
+                      <span class="subject-tag" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">Year 1</span>
+                    </div>
+                    <div class="subject-actions">
+                      <button class="subject-action">
+                        <i class="bi bi-bookmark"></i>
+                      </button>
+                      <button class="subject-action">
+                        <i class="bi bi-arrow-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Physiology -->
+                <div class="subject-card">
+                  <div class="subject-header">
+                    <div class="subject-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                      <i class="bi bi-activity"></i>
+                    </div>
+                    <div class="subject-stats">
+                      <div class="subject-count">28</div>
+                      <div class="subject-label">Notes</div>
+                    </div>
+                  </div>
+                  <h4 class="subject-title">Physiology</h4>
+                  <p class="subject-description">Study of the functions and mechanisms in a living system, from cellular to organ system level.</p>
+                  
+                  <div class="progress-row">
+                    <div class="progress-circle">
+                      <svg class="progress-svg">
+                        <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                        <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #059669; stroke-dasharray: 151; stroke-dashoffset: 60;"></circle>
+                      </svg>
+                      <div class="progress-text">60%</div>
+                    </div>
+                    <div class="progress-info">
+                      <div class="progress-title">Progress</div>
+                      <div class="progress-subtitle">17/28 notes reviewed</div>
+                    </div>
+                  </div>
+                  
+                  <div class="subject-footer">
+                    <div class="subject-tags">
+                      <span class="subject-tag" style="background: rgba(5, 150, 105, 0.1); color: #059669;">Year 1</span>
+                    </div>
+                    <div class="subject-actions">
+                      <button class="subject-action">
+                        <i class="bi bi-bookmark"></i>
+                      </button>
+                      <button class="subject-action">
+                        <i class="bi bi-arrow-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- More basic science subjects here -->
+                <!-- Biochemistry, Pathology, Pharmacology, Microbiology -->
+                <!-- Copy from the All tab -->
+              </div>
+            </div>
+            
+            <!-- Clinical Tab -->
+            <div class="tab-pane fade" id="clinical" role="tabpanel" aria-labelledby="clinical-tab">
+              <div class="subject-grid">
+                <!-- Clinical subjects repeated here -->
+                <!-- Internal Medicine -->
+                <div class="subject-card">
+                  <div class="subject-header">
+                    <div class="subject-icon" style="background: rgba(236, 72, 153, 0.1); color: #EC4899;">
+                      <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <div class="subject-stats">
+                      <div class="subject-count">45</div>
+                      <div class="subject-label">Notes</div>
+                    </div>
+                  </div>
+                  <h4 class="subject-title">Internal Medicine</h4>
+                  <p class="subject-description">Deals with diagnosis, treatment, and prevention of adult diseases not requiring surgery.</p>
+                  
+                  <div class="progress-row">
+                    <div class="progress-circle">
+                      <svg class="progress-svg">
+                        <circle cx="30" cy="30" r="24" class="progress-circle-bg"></circle>
+                        <circle cx="30" cy="30" r="24" class="progress-circle-value" style="stroke: #EC4899; stroke-dasharray: 151; stroke-dashoffset: 45;"></circle>
+                      </svg>
+                      <div class="progress-text">70%</div>
+                    </div>
+                    <div class="progress-info">
+                      <div class="progress-title">Progress</div>
+                      <div class="progress-subtitle">31/45 notes reviewed</div>
+                    </div>
+                  </div>
+                  
+                  <div class="subject-footer">
+                    <div class="subject-tags">
+                      <span class="subject-tag" style="background: rgba(236, 72, 153, 0.1); color: #EC4899;">Year 3</span>
+                    </div>
+                    <div class="subject-actions">
+                      <button class="subject-action">
+                        <i class="bi bi-bookmark"></i>
+                      </button>
+                      <button class="subject-action">
+                        <i class="bi bi-arrow-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- More clinical subjects here -->
+                <!-- Surgery, Pediatrics, OB/GYN, Psychiatry -->
+                <!-- Copy from the All tab -->
+              </div>
+            </div>
+            
+            <!-- Recently Viewed Tab -->
+            <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
+              <div class="recent-notes-section">
+                <div class="section-header">
+                  <h3 class="section-title">Recently Viewed Notes</h3>
+                </div>
+                
+                <!-- Recent Note 1 -->
+                <div class="note-card">
+                  <div class="note-icon" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+                    <i class="bi bi-person"></i>
+                  </div>
+                  <div class="note-details">
+                    <h4 class="note-title">Cranial Nerves: Function and Clinical Significance</h4>
+                    <div class="note-info">
+                      <span class="note-info-item"><i class="bi bi-folder"></i> Anatomy</span>
+                      <span class="note-info-item"><i class="bi bi-calendar3"></i> Viewed 2 hours ago</span>
+                    </div>
+                    <p class="note-preview">The 12 cranial nerves are: olfactory (I), optic (II), oculomotor (III), trochlear (IV), trigeminal (V), abducens (VI), facial (VII), vestibulocochlear (VIII), glossopharyngeal (IX), vagus (X), accessory (XI), and hypoglossal (XII)...</p>
+                  </div>
+                  <div class="note-action">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </div>
+                
+                <!-- Recent Note 2 -->
+                <div class="note-card">
+                  <div class="note-icon" style="background: rgba(236, 72, 153, 0.1); color: #EC4899;">
+                    <i class="bi bi-heart-pulse"></i>
+                  </div>
+                  <div class="note-details">
+                    <h4 class="note-title">Hypertension: Diagnosis and Management</h4>
+                    <div class="note-info">
+                      <span class="note-info-item"><i class="bi bi-folder"></i> Internal Medicine</span>
+                      <span class="note-info-item"><i class="bi bi-calendar3"></i> Viewed yesterday</span>
+                    </div>
+                    <p class="note-preview">Hypertension is defined as a systolic blood pressure ≥130 mmHg or a diastolic blood pressure ≥80 mmHg. Risk factors include age, family history, obesity, high sodium intake, physical inactivity, and certain chronic conditions...</p>
+                  </div>
+                  <div class="note-action">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </div>
+                
+                <!-- Recent Note 3 -->
+                <div class="note-card">
+                  <div class="note-icon" style="background: rgba(124, 58, 237, 0.1); color: #7C3AED;">
+                    <i class="bi bi-capsule"></i>
+                  </div>
+                  <div class="note-details">
+                    <h4 class="note-title">Antibiotics: Classification and Mechanisms</h4>
+                    <div class="note-info">
+                      <span class="note-info-item"><i class="bi bi-folder"></i> Pharmacology</span>
+                      <span class="note-info-item"><i class="bi bi-calendar3"></i> Viewed 2 days ago</span>
+                    </div>
+                    <p class="note-preview">Antibiotics can be classified based on their mechanism of action: cell wall synthesis inhibitors (β-lactams, glycopeptides), protein synthesis inhibitors (aminoglycosides, tetracyclines, macrolides), nucleic acid synthesis inhibitors...</p>
+                  </div>
+                  <div class="note-action">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </div>
+                
+                <!-- Recent Note 4 -->
+                <div class="note-card">
+                  <div class="note-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                    <i class="bi bi-activity"></i>
+                  </div>
+                  <div class="note-details">
+                    <h4 class="note-title">Cardiac Cycle and Heart Sounds</h4>
+                    <div class="note-info">
+                      <span class="note-info-item"><i class="bi bi-folder"></i> Physiology</span>
+                      <span class="note-info-item"><i class="bi bi-calendar3"></i> Viewed 3 days ago</span>
+                    </div>
+                    <p class="note-preview">The cardiac cycle consists of systole (contraction) and diastole (relaxation). The first heart sound (S1) occurs at the beginning of systole when the mitral and tricuspid valves close. The second heart sound (S2) occurs at the beginning of diastole...</p>
+                  </div>
+                  <div class="note-action">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </div>
+                
+                <!-- Recent Note 5 -->
+                <div class="note-card">
+                  <div class="note-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                    <i class="bi bi-balloon"></i>
+                  </div>
+                  <div class="note-details">
+                    <h4 class="note-title">Childhood Immunization Schedule</h4>
+                    <div class="note-info">
+                      <span class="note-info-item"><i class="bi bi-folder"></i> Pediatrics</span>
+                      <span class="note-info-item"><i class="bi bi-calendar3"></i> Viewed 4 days ago</span>
+                    </div>
+                    <p class="note-preview">Recommended immunization schedule includes: Hepatitis B (birth, 1-2 months, 6-18 months), DTaP (2, 4, 6, 15-18 months, 4-6 years), Hib (2, 4, 6, 12-15 months), PCV13 (2, 4, 6, 12-15 months), IPV (2, 4, 6-18 months, 4-6 years)...</p>
+                  </div>
+                  <div class="note-action">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Bookmarked Tab -->
+            <div class="tab-pane fade" id="bookmarked" role="tabpanel" aria-labelledby="bookmarked-tab">
+              <div class="recent-notes-section">
+                <div class="section-header">
+                  <h3 class="section-title">Bookmarked Notes</h3>
+                </div>
+                
+                <!-- Bookmarked notes would go here, similar to recent notes format -->
+                <!-- Example bookmarked notes -->
+              </div>
+            </div>
+            
+            <!-- My Notes Tab -->
+            <div class="tab-pane fade" id="my-notes" role="tabpanel" aria-labelledby="my-notes-tab">
+              <div class="recent-notes-section">
+                <div class="section-header">
+                  <h3 class="section-title">My Personal Notes</h3>
+                  <a href="#" class="section-action">
+                    <i class="bi bi-plus-circle"></i> Create New
+                  </a>
+                </div>
+                
+                <!-- Personal notes would go here, similar to recent notes format -->
+                <!-- Example personal notes -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+      
+      // Update chart theme
+      updateChartTheme();
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // Study Time Chart
+    const studyTimeOptions = {
+      series: [{
+        name: 'Study Hours',
+        data: [3.2, 4.5, 2.8, 5.1, 3.7, 4.2, 2.5]
+      }],
+      chart: {
+        type: 'bar',
+        height: 300,
+        toolbar: {
+          show: false
+        },
+        fontFamily: 'Inter, sans-serif',
+        foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+      },
+      colors: ['#38B2AC'],
+      plotOptions: {
+        bar: {
+          borderRadius: 8,
+          columnWidth: '60%',
+          distributed: false,
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      grid: {
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color'),
+        strokeDashArray: 4,
+      },
+      xaxis: {
+        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Hours'
+        }
+      },
+      tooltip: {
+        theme: document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+        y: {
+          formatter: function (val) {
+            return val + " hours";
+          }
+        }
+      }
+    };
+    
+    const studyTimeChart = new ApexCharts(document.getElementById('studyTimeChart'), studyTimeOptions);
+    studyTimeChart.render();
+
+    // Update chart theme when theme changes
+    function updateChartTheme() {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color');
+      
+      studyTimeChart.updateOptions({
+        chart: {
+          foreColor: getComputedStyle(document.documentElement).getPropertyValue('--text-light')
+        },
+        grid: {
+          borderColor: borderColor
+        },
+        tooltip: {
+          theme: isDark ? 'dark' : 'light'
+        }
+      });
+    }
+    
+    // Progress circles animation
+    const progressCircles = document.querySelectorAll('.progress-circle-value');
+    
+    function animateProgressCircles() {
+      progressCircles.forEach(circle => {
+        const circumference = 2 * Math.PI * 24; // 2πr where r=24
+        circle.style.strokeDasharray = circumference;
+        
+        // Get the current offset
+        const currentOffset = parseFloat(circle.style.strokeDashoffset || 0);
+        const targetOffset = parseFloat(circle.style.strokeDashoffset.split(';')[0]);
+        
+        // Animate from full circle to target value
+        let offset = circumference;
+        const duration = 1500; // 1.5 seconds
+        const startTime = performance.now();
+        
+        function animate(time) {
+          const elapsed = time - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          offset = circumference - (circumference - targetOffset) * progress;
+          circle.style.strokeDashoffset = offset;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      });
+    }
+    
+    // Animate progress circles when they come into view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            animateProgressCircles();
+          }, 300);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.subject-grid').forEach(grid => {
+      observer.observe(grid);
+    });
+    
+    // Subject card bookmark toggle
+    document.querySelectorAll('.subject-action').forEach(btn => {
+      if (btn.querySelector('.bi-bookmark') || btn.querySelector('.bi-bookmark-fill')) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const icon = btn.querySelector('i');
+          if (icon.classList.contains('bi-bookmark')) {
+            icon.classList.remove('bi-bookmark');
+            icon.classList.add('bi-bookmark-fill');
+          } else {
+            icon.classList.remove('bi-bookmark-fill');
+            icon.classList.add('bi-bookmark');
+          }
+        });
+      }
+    });
+    
+    // Subject card click to navigate
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.addEventListener('click', () => {
+        // Navigate to subject detail page
+        // window.location.href = 'subject-detail.html?id=' + card.dataset.id;
+        console.log('Navigate to subject detail');
+      });
+    });
+    
+    // Note card click to navigate
+    document.querySelectorAll('.note-card').forEach(card => {
+      card.addEventListener('click', () => {
+        // Navigate to note detail page
+        // window.location.href = 'note-detail.html?id=' + card.dataset.id;
+        console.log('Navigate to note detail');
+      });
+    });
+    
+    // Create note button click
+    document.querySelector('.create-note-btn').addEventListener('click', () => {
+      // Navigate to note editor
+      // window.location.href = 'note-editor.html';
+      console.log('Open note editor');
+    });
+  </script>
+</body>
+</html>

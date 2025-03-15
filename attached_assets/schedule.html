@@ -1,0 +1,2901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - Schedule Meeting</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Dashboard Content */
+    .dashboard-content {
+      padding: 30px;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Schedule Meeting Page Specific Styles */
+    .page-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      color: var(--text-dark);
+    }
+
+    .card-section {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .card-section {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .section-action {
+      color: var(--accent-color);
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .section-action:hover {
+      color: var(--accent-hover);
+    }
+
+    /* Calendar Styles */
+    .calendar-container {
+      height: 650px;
+      overflow: hidden;
+    }
+
+    .fc-theme-standard .fc-scrollgrid,
+    .fc-theme-standard th,
+    .fc-theme-standard td {
+      border-color: var(--border-color);
+    }
+
+    .fc-toolbar-title {
+      font-size: 1.2rem !important;
+      font-weight: 600;
+    }
+
+    .fc-daygrid-day-number {
+      color: var(--text-dark);
+    }
+
+    .fc-day-today {
+      background-color: rgba(56, 178, 172, 0.1) !important;
+    }
+
+    .fc-button-primary {
+      background-color: var(--accent-color) !important;
+      border-color: var(--accent-color) !important;
+    }
+
+    .fc-button-primary:hover {
+      background-color: var(--accent-hover) !important;
+      border-color: var(--accent-hover) !important;
+    }
+
+    .fc-event {
+      border-radius: 6px;
+      padding: 3px 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .fc-event:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .fc-event-time {
+      font-weight: 500;
+    }
+
+    /* Meeting Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234A5568' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      transition: all 0.3s ease;
+    }
+
+    .form-select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+    }
+
+    .form-text {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 5px;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(56, 178, 172, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(56, 178, 172, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--accent-color);
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    /* Meeting Cards */
+    .meeting-card {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .meeting-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .meeting-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .meeting-date {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .meeting-day {
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .meeting-month {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    .meeting-details {
+      flex: 1;
+    }
+
+    .meeting-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .meeting-subject {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .meeting-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .meeting-info-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-dark);
+      font-size: 0.85rem;
+    }
+
+    .meeting-tutor {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tutor-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .tutor-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tutor-info {
+      flex: 1;
+    }
+
+    .tutor-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+
+    .tutor-specialty {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .meeting-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .meeting-action-btn {
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .join-btn {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .join-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .reschedule-btn {
+      background: rgba(79, 70, 229, 0.1);
+      color: #4F46E5;
+    }
+
+    .reschedule-btn:hover {
+      background: rgba(79, 70, 229, 0.2);
+    }
+
+    .cancel-btn {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+    }
+
+    .cancel-btn:hover {
+      background: rgba(220, 38, 38, 0.2);
+    }
+
+    .past-meeting {
+      opacity: 0.7;
+    }
+
+    .meeting-status {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .status-upcoming {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .status-completed {
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+    }
+
+    .status-cancelled {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+    }
+
+    /* Live Sessions Card */
+    .live-session-card {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .live-session-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .live-session-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .live-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #DC2626;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+      }
+    }
+
+    .live-session-image {
+      width: 120px;
+      height: 90px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .live-session-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .live-session-details {
+      flex: 1;
+    }
+
+    .live-session-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .live-session-description {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .live-session-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .live-session-info-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-dark);
+      font-size: 0.85rem;
+    }
+
+    .live-session-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .join-live-btn {
+      background: #DC2626;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .join-live-btn:hover {
+      background: #B91C1C;
+      transform: translateY(-2px);
+    }
+
+    .remind-btn {
+      background: rgba(79, 70, 229, 0.1);
+      color: #4F46E5;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .remind-btn:hover {
+      background: rgba(79, 70, 229, 0.2);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      width: 90%;
+      max-width: 500px;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Success Message */
+    .success-message {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Tutor Selection */
+    .tutor-selection {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .tutor-card {
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: var(--neumorphic-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    [data-theme="dark"] .tutor-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .tutor-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+    }
+
+    .tutor-card.selected {
+      border-color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.05);
+    }
+
+    .tutor-card-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .tutor-card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tutor-card-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .tutor-card-specialty {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .tutor-card-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #F59E0B;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .tutor-card-reviews {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    /* Time Slot Selection */
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .time-slot {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .time-slot:hover {
+      background: rgba(56, 178, 172, 0.05);
+      border-color: var(--accent-color);
+    }
+
+    .time-slot.selected {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
+    .time-slot.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .dashboard-content {
+        padding: 20px;
+      }
+      
+      .calendar-container {
+        height: 500px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .meeting-card {
+        flex-direction: column;
+      }
+      
+      .meeting-date {
+        width: 60px;
+        height: 60px;
+        align-self: flex-start;
+      }
+      
+      .live-session-card {
+        flex-direction: column;
+      }
+      
+      .live-session-image {
+        width: 100%;
+        height: 150px;
+      }
+      
+      .tutor-selection {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+    }
+
+    @media (max-width: 576px) {
+      .dashboard-content {
+        padding: 15px;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+      
+      .section-title {
+        font-size: 1.1rem;
+      }
+      
+      .meeting-info {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .meeting-actions {
+        flex-wrap: wrap;
+      }
+      
+      .tutor-selection {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="OnlineJacademy Logo">
+          <span class="logo-text"></span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Your Cardiology live session starts in 30 minutes</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">You completed the Anatomy quiz with 92% score</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Sarah invited you to join Neurology study group</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-content">
+        <h1 class="page-title">Schedule Meeting</h1>
+        
+        <div class="row">
+          <div class="col-lg-8">
+            <!-- Schedule New Meeting Section -->
+            <div class="card-section">
+              <div class="section-header">
+                <h3 class="section-title">Book a One-on-One Session</h3>
+                <div class="section-action" id="viewCalendarBtn">
+                  <i class="bi bi-calendar3"></i> View Calendar
+                </div>
+              </div>
+              
+              <div id="successMessage" class="success-message" style="display: none;">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Your meeting has been scheduled successfully! A confirmation email with meeting details has been sent to your registered email address.</span>
+              </div>
+              
+              <form id="scheduleForm">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Subject</label>
+                      <select class="form-select" id="meetingSubject" required>
+                        <option value="" selected disabled>Select a subject</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Anatomy">Anatomy</option>
+                        <option value="Pharmacology">Pharmacology</option>
+                        <option value="Pathology">Pathology</option>
+                        <option value="Biochemistry">Biochemistry</option>
+                        <option value="Physiology">Physiology</option>
+                        <option value="General Medicine">General Medicine</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Topic</label>
+                      <input type="text" class="form-control" id="meetingTopic" placeholder="Specific topic or question" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" id="meetingDescription" rows="3" placeholder="Briefly describe what you'd like to discuss"></textarea>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Date</label>
+                      <input type="text" class="form-control" id="meetingDate" placeholder="Select date" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Duration</label>
+                      <select class="form-select" id="meetingDuration" required>
+                        <option value="30">30 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="60" selected>1 hour</option>
+                        <option value="90">1 hour 30 minutes</option>
+                        <option value="120">2 hours</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Preferred Time Slots</label>
+                  <div class="time-slots">
+                    <div class="time-slot" data-time="09:00">9:00 AM</div>
+                    <div class="time-slot" data-time="10:00">10:00 AM</div>
+                    <div class="time-slot" data-time="11:00">11:00 AM</div>
+                    <div class="time-slot" data-time="12:00">12:00 PM</div>
+                    <div class="time-slot" data-time="13:00">1:00 PM</div>
+                    <div class="time-slot" data-time="14:00">2:00 PM</div>
+                    <div class="time-slot" data-time="15:00">3:00 PM</div>
+                    <div class="time-slot" data-time="16:00">4:00 PM</div>
+                    <div class="time-slot" data-time="17:00">5:00 PM</div>
+                    <div class="time-slot" data-time="18:00">6:00 PM</div>
+                    <div class="time-slot disabled" data-time="19:00">7:00 PM</div>
+                    <div class="time-slot disabled" data-time="20:00">8:00 PM</div>
+                  </div>
+                  <input type="hidden" id="selectedTimeSlot" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Select a Tutor</label>
+                  <div class="form-text mb-3">Choose a tutor specializing in your selected subject</div>
+                  
+                  <div class="tutor-selection">
+                    <div class="tutor-card" data-tutor-id="1">
+                      <div class="tutor-card-avatar">
+                        <img src="\images\logo.png" alt="Dr. Michael Chen">
+                      </div>
+                      <div class="tutor-card-name">Dr. Michael</div>
+                      <div class="tutor-card-specialty">Cardiology</div>
+                      <div class="tutor-card-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span>4.9</span>
+                      </div>
+                      <div class="tutor-card-reviews">124 reviews</div>
+                    </div>
+                    
+                    <div class="tutor-card" data-tutor-id="2">
+                      <div class="tutor-card-avatar">
+                        <img src="\images\logo.png" alt="Dr. Sarah Johnson">
+                      </div>
+                      <div class="tutor-card-name">Dr. Sarah</div>
+                      <div class="tutor-card-specialty">Neurology</div>
+                      <div class="tutor-card-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span>4.8</span>
+                      </div>
+                      <div class="tutor-card-reviews">98 reviews</div>
+                    </div>
+                    
+                    <div class="tutor-card" data-tutor-id="3">
+                      <div class="tutor-card-avatar">
+                        <img src="\images\logo.png" alt="Dr. James Wilson">
+                      </div>
+                      <div class="tutor-card-name">Dr. James</div>
+                      <div class="tutor-card-specialty">Anatomy</div>
+                      <div class="tutor-card-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span>4.7</span>
+                      </div>
+                      <div class="tutor-card-reviews">87 reviews</div>
+                    </div>
+                    
+                    <div class="tutor-card" data-tutor-id="4">
+                      <div class="tutor-card-avatar">
+                        <img src="\images\logo.png" alt="Dr. Emily Rodriguez">
+                      </div>
+                      <div class="tutor-card-name">Dr. Emily</div>
+                      <div class="tutor-card-specialty">Pharmacology</div>
+                      <div class="tutor-card-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span>4.9</span>
+                      </div>
+                      <div class="tutor-card-reviews">112 reviews</div>
+                    </div>
+                  </div>
+                  <input type="hidden" id="selectedTutor" required>
+                </div>
+                
+                <div class="form-group mt-4">
+                  <button type="submit" class="btn btn-primary">Schedule Meeting</button>
+                </div>
+              </form>
+            </div>
+            
+            <!-- Upcoming Meetings Section -->
+            <div class="card-section">
+              <div class="section-header">
+                <h3 class="section-title">Upcoming Meetings</h3>
+                <a href="#" class="section-action">
+                  View All <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+              
+              <div class="meeting-card">
+                <div class="meeting-date">
+                  <div class="meeting-day">15</div>
+                  <div class="meeting-month">Apr</div>
+                </div>
+                <div class="meeting-details">
+                  <h4 class="meeting-title">Cardiology Consultation</h4>
+                  <div class="meeting-subject">Topic: Cardiovascular System Pathologies</div>
+                  <div class="meeting-info">
+                    <div class="meeting-info-item">
+                      <i class="bi bi-clock"></i> 10:00 - 11:00 AM
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-calendar-check"></i>April 15, 2025
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-camera-video"></i> Google Meet
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-tutor">
+                    <div class="tutor-avatar">
+                      <img src="\images\logo.png" alt="Dr. Michael Chen">
+                    </div>
+                    <div class="tutor-info">
+                      <div class="tutor-name">Dr. Michael</div>
+                      <div class="tutor-specialty">Cardiology Specialist</div>
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-actions">
+                    <div class="meeting-action-btn join-btn">
+                      <i class="bi bi-camera-video"></i> Join Meeting
+                    </div>
+                    <div class="meeting-action-btn reschedule-btn">
+                      <i class="bi bi-calendar"></i> Reschedule
+                    </div>
+                    <div class="meeting-action-btn cancel-btn">
+                      <i class="bi bi-x-circle"></i> Cancel
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="meeting-card">
+                <div class="meeting-date">
+                  <div class="meeting-day">18</div>
+                  <div class="meeting-month">Apr</div>
+                </div>
+                <div class="meeting-details">
+                  <h4 class="meeting-title">Neurology Study Session</h4>
+                  <div class="meeting-subject">Topic: Brain Stem Functions and Pathways</div>
+                  <div class="meeting-info">
+                    <div class="meeting-info-item">
+                      <i class="bi bi-clock"></i> 2:00 - 3:00 PM
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-calendar-check"></i>April 18, 2025
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-camera-video"></i> Zoom Meeting
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-tutor">
+                    <div class="tutor-avatar">
+                      <img src="\images\logo.png" alt="Dr. Sarah Johnson">
+                    </div>
+                    <div class="tutor-info">
+                      <div class="tutor-name">Dr. Sarah</div>
+                      <div class="tutor-specialty">Neurology Specialist</div>
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-actions">
+                    <div class="meeting-action-btn join-btn">
+                      <i class="bi bi-camera-video"></i> Join Meeting
+                    </div>
+                    <div class="meeting-action-btn reschedule-btn">
+                      <i class="bi bi-calendar"></i> Reschedule
+                    </div>
+                    <div class="meeting-action-btn cancel-btn">
+                      <i class="bi bi-x-circle"></i> Cancel
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Past Meetings Section -->
+            <div class="card-section">
+              <div class="section-header">
+                <h3 class="section-title">Past Meetings</h3>
+                <a href="#" class="section-action">
+                  View All <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+              
+              <div class="meeting-card past-meeting">
+                <div class="meeting-date">
+                  <div class="meeting-day">10</div>
+                  <div class="meeting-month">Apr</div>
+                </div>
+                <div class="meeting-details">
+                  <h4 class="meeting-title">Pharmacology Review</h4>
+                  <div class="meeting-subject">Topic: Antibiotics Classification and Mechanisms</div>
+                  <div class="meeting-info">
+                    <div class="meeting-info-item">
+                      <i class="bi bi-clock"></i> 4:00 - 5:00 PM
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-calendar-check"></i> Saturday, April 10, 2023
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-camera-video"></i> Google Meet
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-tutor">
+                    <div class="tutor-avatar">
+                      <img src="\images\logo.png" alt="Dr. Emily Rodriguez">
+                    </div>
+                    <div class="tutor-info">
+                      <div class="tutor-name">Dr. Emily Rodriguez</div>
+                      <div class="tutor-specialty">Pharmacology Specialist</div>
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-actions">
+                    <div class="meeting-action-btn" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+                      <i class="bi bi-file-earmark-text"></i> View Notes
+                    </div>
+                    <div class="meeting-action-btn" style="background: rgba(56, 178, 172, 0.1); color: var(--accent-color);">
+                      <i class="bi bi-camera-video"></i> Watch Recording
+                    </div>
+                    <div class="meeting-action-btn" style="background: rgba(217, 119, 6, 0.1); color: #D97706;">
+                      <i class="bi bi-calendar-plus"></i> Schedule Follow-up
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="meeting-card past-meeting">
+                <div class="meeting-date">
+                  <div class="meeting-day">05</div>
+                  <div class="meeting-month">Apr</div>
+                </div>
+                <div class="meeting-details">
+                  <h4 class="meeting-title">Anatomy Session</h4>
+                  <div class="meeting-subject">Topic: Musculoskeletal System Review</div>
+                  <div class="meeting-info">
+                    <div class="meeting-info-item">
+                      <i class="bi bi-clock"></i> 11:00 AM - 12:00 PM
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-calendar-check"></i> Monday, April 5, 2023
+                    </div>
+                    <div class="meeting-info-item">
+                      <i class="bi bi-camera-video"></i> Zoom Meeting
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-tutor">
+                    <div class="tutor-avatar">
+                      <img src="\images\logo.png" alt="Dr. James">
+                    </div>
+                    <div class="tutor-info">
+                      <div class="tutor-name">Dr. James Wilson</div>
+                      <div class="tutor-specialty">Anatomy Specialist</div>
+                    </div>
+                  </div>
+                  
+                  <div class="meeting-actions">
+                    <div class="meeting-action-btn" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+                      <i class="bi bi-file-earmark-text"></i> View Notes
+                    </div>
+                    <div class="meeting-action-btn" style="background: rgba(56, 178, 172, 0.1); color: var(--accent-color);">
+                      <i class="bi bi-camera-video"></i> Watch Recording
+                    </div>
+                    <div class="meeting-action-btn" style="background: rgba(217, 119, 6, 0.1); color: #D97706;">
+                      <i class="bi bi-calendar-plus"></i> Schedule Follow-up
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-4">
+            <!-- Live Sessions Section -->
+            <div class="card-section">
+              <div class="section-header">
+                <h3 class="section-title">Upcoming Live Sessions</h3>
+                <a href="#" class="section-action">
+                  View All <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+              
+              <div class="live-session-card">
+                <div class="live-indicator">
+                  <div class="live-dot"></div>
+                  <span>LIVE NOW</span>
+                </div>
+                <div class="live-session-image">
+                  <img src="\images\heart.jpg" alt="Cardiology Live Session">
+                </div>
+                <div class="live-session-details">
+                  <h4 class="live-session-title">Advanced Cardiac Pathophysiology</h4>
+                  <div class="live-session-description">Live discussion on heart failure mechanisms and clinical correlations</div>
+                  <div class="live-session-info">
+                    <div class="live-session-info-item">
+                      <i class="bi bi-person"></i> Dr. Michael Chen
+                    </div>
+                    <div class="live-session-info-item">
+                      <i class="bi bi-people"></i> 42 participants
+                    </div>
+                  </div>
+                  <div class="live-session-actions">
+                    <div class="join-live-btn">
+                      <i class="bi bi-broadcast"></i> Join Live
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="live-session-card">
+                <div class="live-session-image">
+                  <img src="\images\pharmacology.jpg" alt="Pharmacology Live Session">
+                </div>
+                <div class="live-session-details">
+                  <h4 class="live-session-title">Antibiotics Masterclass</h4>
+                  <div class="live-session-description">Comprehensive review of antibiotic classes, mechanisms, and clinical applications</div>
+                  <div class="live-session-info">
+                    <div class="live-session-info-item">
+                      <i class="bi bi-calendar"></i> Apr 16, 2:00 PM
+                    </div>
+                    <div class="live-session-info-item">
+                      <i class="bi bi-person"></i> Dr. Emily Rodriguez
+                    </div>
+                  </div>
+                  <div class="live-session-actions">
+                    <div class="remind-btn">
+                      <i class="bi bi-bell"></i> Set Reminder
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="live-session-card">
+                <div class="live-session-image">
+                  <img src="\images\neurology.jpg" alt="Neurology Live Session">
+                </div>
+                <div class="live-session-details">
+                  <h4 class="live-session-title">Neurological Examination</h4>
+                  <div class="live-session-description">Step-by-step guide to performing a comprehensive neurological examination</div>
+                  <div class="live-session-info">
+                    <div class="live-session-info-item">
+                      <i class="bi bi-calendar"></i> Apr 18, 4:00 PM
+                    </div>
+                    <div class="live-session-info-item">
+                      <i class="bi bi-person"></i> Dr. Sarah 
+                    </div>
+                  </div>
+                  <div class="live-session-actions">
+                    <div class="remind-btn">
+                      <i class="bi bi-bell"></i> Set Reminder
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Meeting Tips Section -->
+            <div class="card-section">
+              <div class="section-header">
+                <h3 class="section-title">Tips for Effective Meetings</h3>
+              </div>
+              
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Prepare specific questions in advance</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Review relevant material before the session</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Test your audio and video equipment beforehand</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Find a quiet, well-lit environment for the meeting</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Have necessary materials ready (notes, textbooks, etc.)</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Take notes during the session for future reference</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center gap-2 border-0 ps-0">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Follow up with practice questions after the meeting</span>
+                </li>
+              </ul>
+            </div>
+            
+            <!-- Meeting Stats Section -->
+            <div class="card-section">
+              <div class="section-header">
+                <h3 class="section-title">Your Meeting Stats</h3>
+              </div>
+              
+              <div class="row text-center">
+                <div class="col-4">
+                  <div class="display-6 fw-bold text-primary">8</div>
+                  <div class="small text-muted">Total Meetings</div>
+                </div>
+                <div class="col-4">
+                  <div class="display-6 fw-bold" style="color: var(--accent-color)">4.8</div>
+                  <div class="small text-muted">Avg. Rating</div>
+                </div>
+                <div class="col-4">
+                  <div class="display-6 fw-bold text-success">12</div>
+                  <div class="small text-muted">Study Hours</div>
+                </div>
+              </div>
+              
+              <div class="mt-4">
+                <h6 class="fw-bold mb-3">Most Discussed Subjects</h6>
+                <div class="progress mb-3" style="height: 8px;">
+                  <div class="progress-bar" role="progressbar" style="width: 35%; background-color: #4F46E5;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex justify-content-between small mb-3">
+                  <span>Cardiology</span>
+                  <span>35%</span>
+                </div>
+                
+                <div class="progress mb-3" style="height: 8px;">
+                  <div class="progress-bar" role="progressbar" style="width: 25%; background-color: var(--accent-color);" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex justify-content-between small mb-3">
+                  <span>Neurology</span>
+                  <span>25%</span>
+                </div>
+                
+                <div class="progress mb-3" style="height: 8px;">
+                  <div class="progress-bar" role="progressbar" style="width: 20%; background-color: #D97706;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex justify-content-between small mb-3">
+                  <span>Pharmacology</span>
+                  <span>20%</span>
+                </div>
+                
+                <div class="progress mb-3" style="height: 8px;">
+                  <div class="progress-bar" role="progressbar" style="width: 15%; background-color: #DC2626;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex justify-content-between small">
+                  <span>Anatomy</span>
+                  <span>15%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Calendar Modal -->
+  <div class="modal-overlay" id="calendarModal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h5 class="modal-title">Your Schedule</h5>
+        <div class="modal-close" id="closeCalendarModal">
+          <i class="bi bi-x"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="calendar-container" id="scheduleCalendar"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Meeting Details Modal -->
+  <div class="modal-overlay" id="meetingDetailsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Meeting Details</h5>
+        <div class="modal-close" id="closeMeetingDetailsModal">
+          <i class="bi bi-x"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="meeting-details-content">
+          <h4 class="mb-3" id="modalMeetingTitle">Cardiology Consultation</h4>
+          
+          <div class="mb-3">
+            <div class="fw-bold mb-1">Date & Time</div>
+            <div id="modalMeetingDateTime">Thursday, April 15, 2025 • 10:00 - 11:00 AM</div>
+          </div>
+          
+          <div class="mb-3">
+            <div class="fw-bold mb-1">Subject</div>
+            <div id="modalMeetingSubject">Cardiovascular System Pathologies</div>
+          </div>
+          
+          <div class="mb-3">
+            <div class="fw-bold mb-1">Meeting Link</div>
+            <div id="modalMeetingLink">
+              <a href="#" class="d-flex align-items-center gap-2">
+                <i class="bi bi-link-45deg"></i>
+                <span>https://meet.google.com/wtb-swxx-otg</span>
+              </a>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <div class="fw-bold mb-1">Tutor</div>
+            <div class="d-flex align-items-center gap-2">
+              <div class="tutor-avatar" style="width: 30px; height: 30px;">
+                <img src="\images\logo.png" alt="Dr. Michael" id="modalTutorImage">
+              </div>
+              <span id="modalTutorName">Dr. Chido</span>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <div class="fw-bold mb-1">Description</div>
+            <div id="modalMeetingDescription">Discussion about cardiovascular system pathologies, focusing on heart failure, coronary artery disease, and valvular disorders.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="closeDetailsBtn">Close</button>
+        <button class="btn btn-primary" id="joinMeetingBtn">
+          <i class="bi bi-camera-video"></i> Join Meeting
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+      
+      // Update calendar theme if it's initialized
+      if (calendar) {
+        calendar.setOption('themeSystem', newTheme === 'dark' ? 'standard' : 'standard');
+      }
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // Initialize Date Picker
+    const datePicker = flatpickr("#meetingDate", {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      disable: [
+        function(date) {
+          // Disable weekends
+          return date.getDay() === 0; // Disable Sundays
+        }
+      ],
+      locale: {
+        firstDayOfWeek: 1 // Monday
+      }
+    });
+
+    // Time Slot Selection
+    const timeSlots = document.querySelectorAll('.time-slot:not(.disabled)');
+    const selectedTimeSlotInput = document.getElementById('selectedTimeSlot');
+    
+    timeSlots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        // Remove selected class from all slots
+        timeSlots.forEach(s => s.classList.remove('selected'));
+        
+        // Add selected class to clicked slot
+        slot.classList.add('selected');
+        
+        // Update hidden input
+        selectedTimeSlotInput.value = slot.dataset.time;
+      });
+    });
+
+    // Tutor Selection
+    const tutorCards = document.querySelectorAll('.tutor-card');
+    const selectedTutorInput = document.getElementById('selectedTutor');
+    
+    tutorCards.forEach(card => {
+      card.addEventListener('click', () => {
+        // Remove selected class from all cards
+        tutorCards.forEach(c => c.classList.remove('selected'));
+        
+        // Add selected class to clicked card
+        card.classList.add('selected');
+        
+        // Update hidden input
+        selectedTutorInput.value = card.dataset.tutorId;
+      });
+    });
+
+    // Schedule Form Submission
+    const scheduleForm = document.getElementById('scheduleForm');
+    const successMessage = document.getElementById('successMessage');
+    
+    scheduleForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Validate form
+      if (!selectedTimeSlotInput.value) {
+        alert('Please select a time slot');
+        return;
+      }
+      
+      if (!selectedTutorInput.value) {
+        alert('Please select a tutor');
+        return;
+      }
+      
+      // Show success message
+      successMessage.style.display = 'flex';
+      
+      // Scroll to success message
+      successMessage.scrollIntoView({ behavior: 'smooth' });
+      
+      // Reset form after 2 seconds
+      setTimeout(() => {
+        scheduleForm.reset();
+        timeSlots.forEach(s => s.classList.remove('selected'));
+        tutorCards.forEach(c => c.classList.remove('selected'));
+        selectedTimeSlotInput.value = '';
+        selectedTutorInput.value = '';
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+        }, 5000);
+      }, 2000);
+    });
+
+    // Calendar Modal
+    const calendarModal = document.getElementById('calendarModal');
+    const viewCalendarBtn = document.getElementById('viewCalendarBtn');
+    const closeCalendarModal = document.getElementById('closeCalendarModal');
+    
+    viewCalendarBtn.addEventListener('click', () => {
+      calendarModal.classList.add('show');
+      initializeCalendar();
+    });
+    
+    closeCalendarModal.addEventListener('click', () => {
+      calendarModal.classList.remove('show');
+    });
+
+    // Meeting Details Modal
+    const meetingDetailsModal = document.getElementById('meetingDetailsModal');
+    const closeMeetingDetailsModal = document.getElementById('closeMeetingDetailsModal');
+    const closeDetailsBtn = document.getElementById('closeDetailsBtn');
+    const meetingCards = document.querySelectorAll('.meeting-card');
+    
+    meetingCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (!e.target.closest('.meeting-action-btn')) {
+          meetingDetailsModal.classList.add('show');
+          
+          // Update modal content with meeting details
+          const title = card.querySelector('.meeting-title').textContent;
+          const subject = card.querySelector('.meeting-subject').textContent.replace('Topic: ', '');
+          const dateTimeStr = card.querySelector('.meeting-info-item:nth-child(2)').textContent.trim();
+          const tutorName = card.querySelector('.tutor-name').textContent;
+          const tutorImg = card.querySelector('.tutor-avatar img').src;
+          
+          document.getElementById('modalMeetingTitle').textContent = title;
+          document.getElementById('modalMeetingSubject').textContent = subject;
+          document.getElementById('modalMeetingDateTime').textContent = dateTimeStr;
+          document.getElementById('modalTutorName').textContent = tutorName;
+          document.getElementById('modalTutorImage').src = tutorImg;
+        }
+      });
+    });
+    
+    closeMeetingDetailsModal.addEventListener('click', () => {
+      meetingDetailsModal.classList.remove('show');
+    });
+    
+    closeDetailsBtn.addEventListener('click', () => {
+      meetingDetailsModal.classList.remove('show');
+    });
+
+    // Join Meeting Button
+    const joinMeetingBtn = document.getElementById('joinMeetingBtn');
+    
+    joinMeetingBtn.addEventListener('click', () => {
+      // Simulate joining a meeting
+      window.open('https://meet.google.com', '_blank');
+    });
+
+    // Meeting Action Buttons
+    const joinButtons = document.querySelectorAll('.join-btn');
+    
+    joinButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open('https://meet.google.com', '_blank');
+      });
+    });
+
+    const rescheduleButtons = document.querySelectorAll('.reschedule-btn');
+    
+    rescheduleButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        alert('Reschedule functionality will be implemented soon.');
+      });
+    });
+
+    const cancelButtons = document.querySelectorAll('.cancel-btn');
+    
+    cancelButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm('Are you sure you want to cancel this meeting?')) {
+          alert('Meeting cancelled successfully.');
+          btn.closest('.meeting-card').style.opacity = '0.5';
+        }
+      });
+    });
+
+    // Live Session Buttons
+    const joinLiveButtons = document.querySelectorAll('.join-live-btn');
+    
+    joinLiveButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.open('https://meet.google.com', '_blank');
+      });
+    });
+
+    const remindButtons = document.querySelectorAll('.remind-btn');
+    
+    remindButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.innerHTML = '<i class="bi bi-bell-fill"></i> Reminder Set';
+        btn.style.background = 'rgba(56, 178, 172, 0.1)';
+        btn.style.color = 'var(--accent-color)';
+      });
+    });
+
+    // Initialize Calendar
+    let calendar;
+    
+    function initializeCalendar() {
+      if (calendar) return;
+      
+      const calendarEl = document.getElementById('scheduleCalendar');
+      
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [
+          {
+            title: 'Cardiology Consultation',
+            start: '2023-04-15T10:00:00',
+            end: '2023-04-15T11:00:00',
+            backgroundColor: '#38B2AC',
+            borderColor: '#38B2AC'
+          },
+          {
+            title: 'Neurology Study Session',
+            start: '2023-04-18T14:00:00',
+            end: '2023-04-18T15:00:00',
+            backgroundColor: '#4F46E5',
+            borderColor: '#4F46E5'
+          },
+          {
+            title: 'Pharmacology Review',
+            start: '2023-04-10T16:00:00',
+            end: '2023-04-10T17:00:00',
+            backgroundColor: '#D97706',
+            borderColor: '#D97706'
+          },
+          {
+            title: 'Anatomy Session',
+            start: '2023-04-05T11:00:00',
+            end: '2023-04-05T12:00:00',
+            backgroundColor: '#DC2626',
+            borderColor: '#DC2626'
+          },
+          {
+            title: 'Advanced Cardiac Pathophysiology',
+            start: '2023-04-14T13:00:00',
+            end: '2023-04-14T14:30:00',
+            backgroundColor: '#DC2626',
+            borderColor: '#DC2626'
+          },
+          {
+            title: 'Antibiotics Masterclass',
+            start: '2023-04-16T14:00:00',
+            end: '2023-04-16T15:30:00',
+            backgroundColor: '#D97706',
+            borderColor: '#D97706'
+          },
+          {
+            title: 'Neurological Examination',
+            start: '2023-04-18T16:00:00',
+            end: '2023-04-18T17:30:00',
+            backgroundColor: '#4F46E5',
+            borderColor: '#4F46E5'
+          }
+        ],
+        eventClick: function(info) {
+          meetingDetailsModal.classList.add('show');
+          
+          // Update modal content with event details
+          document.getElementById('modalMeetingTitle').textContent = info.event.title;
+          document.getElementById('modalMeetingDateTime').textContent = info.event.start.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          }) + ' • ' + info.event.start.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: 'numeric', 
+            hour12: true 
+          }) + ' - ' + info.event.end.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: 'numeric', 
+            hour12: true 
+          });
+        },
+        themeSystem: savedTheme === 'dark' ? 'standard' : 'standard'
+      });
+      
+      calendar.render();
+    }
+
+    // Close modals when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === calendarModal) {
+        calendarModal.classList.remove('show');
+      }
+      
+      if (e.target === meetingDetailsModal) {
+        meetingDetailsModal.classList.remove('show');
+      }
+    });
+
+    // Subject change handler to filter tutors
+    const meetingSubject = document.getElementById('meetingSubject');
+    
+    meetingSubject.addEventListener('change', () => {
+      const selectedSubject = meetingSubject.value;
+      
+      // Reset tutor selection
+      tutorCards.forEach(card => {
+        card.classList.remove('selected');
+        card.style.display = 'flex';
+        
+        // If a subject is selected, filter tutors
+        if (selectedSubject) {
+          const tutorSpecialty = card.querySelector('.tutor-card-specialty').textContent;
+          
+          if (tutorSpecialty !== selectedSubject) {
+            card.style.display = 'none';
+          }
+        }
+      });
+      
+      selectedTutorInput.value = '';
+    });
+
+    // Escape key to close modals
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        calendarModal.classList.remove('show');
+        meetingDetailsModal.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

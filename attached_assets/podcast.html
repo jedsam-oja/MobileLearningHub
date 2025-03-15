@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - Educational Podcasts</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+      --player-height: 80px;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+      padding-bottom: var(--player-height);
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* Podcast Content Styles */
+    .podcast-content {
+      padding: 30px;
+    }
+
+    .podcast-header {
+      background: var(--gradient-primary);
+      border-radius: var(--card-radius);
+      padding: 30px;
+      color: white;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .podcast-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.2;
+    }
+
+    .podcast-header-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .podcast-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .podcast-subtitle {
+      opacity: 0.8;
+      margin-bottom: 10px;
+      max-width: 600px;
+    }
+
+    .podcast-stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .podcast-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .podcast-categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .podcast-category {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .podcast-category:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .podcast-search-container {
+      margin-bottom: 30px;
+    }
+
+    .podcast-search {
+      position: relative;
+      width: 100%;
+    }
+
+    .podcast-search input {
+      width: 100%;
+      height: 50px;
+      border-radius: 25px;
+      border: none;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 50px 0 25px;
+      font-size: 1rem;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+    }
+
+    .podcast-search input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+    }
+
+    .podcast-search i {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      color: var(--accent-color);
+      font-size: 1.2rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .filter-tab {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .filter-tab.active {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .filter-tab:hover:not(.active) {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .podcast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .podcast-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    [data-theme="dark"] .podcast-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .podcast-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .podcast-card-img {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .podcast-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .podcast-card:hover .podcast-card-img img {
+      transform: scale(1.05);
+    }
+
+    .podcast-card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .podcast-card:hover .podcast-card-overlay {
+      opacity: 1;
+    }
+
+    .podcast-play-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transform: scale(0.8);
+      transition: all 0.3s ease;
+    }
+
+    .podcast-card:hover .podcast-play-btn {
+      transform: scale(1);
+    }
+
+    .podcast-card-content {
+      padding: 20px;
+    }
+
+    .podcast-card-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 48px;
+    }
+
+    .podcast-card-host {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .podcast-card-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .podcast-card-tag {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .podcast-series {
+      margin-bottom: 40px;
+    }
+
+    .series-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .series-title {
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+
+    .series-action {
+      color: var(--accent-color);
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .series-action:hover {
+      color: var(--accent-hover);
+    }
+
+    .podcast-carousel {
+      position: relative;
+      padding: 0 10px;
+    }
+
+    .podcast-carousel .swiper-container {
+      padding: 10px 0;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .carousel-nav:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .carousel-nav.prev {
+      left: -5px;
+    }
+
+    .carousel-nav.next {
+      right: -5px;
+    }
+
+    .featured-podcast {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .featured-podcast {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    @media (min-width: 992px) {
+      .featured-podcast {
+        flex-direction: row;
+        height: 300px;
+      }
+    }
+
+    .featured-podcast-img {
+      flex: 1;
+      min-height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-podcast-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured-podcast-content {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .featured-badge {
+      background: var(--accent-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .featured-podcast-title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .featured-podcast-desc {
+      color: var(--text-light);
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .featured-podcast-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .featured-podcast-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-play {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 20px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-play:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-action {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-action:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .podcast-list {
+      margin-bottom: 30px;
+    }
+
+    .podcast-list-item {
+      display: flex;
+      gap: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .podcast-list-item {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .podcast-list-item:hover {
+      transform: translateX(5px);
+    }
+
+    .podcast-list-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .podcast-list-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .podcast-list-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .podcast-list-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .podcast-list-info {
+      display: flex;
+      gap: 15px;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    .podcast-list-desc {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .podcast-list-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      flex-shrink: 0;
+      align-self: center;
+      transition: all 0.3s ease;
+    }
+
+    .podcast-list-item:hover .podcast-list-action {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .podcast-player {
+      position: fixed;
+      bottom: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      height: var(--player-height);
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .sidebar-collapsed .podcast-player {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .podcast-player {
+        left: 0;
+      }
+      .sidebar-collapsed .podcast-player {
+        left: 0;
+      }
+    }
+
+    .player-podcast-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 25%;
+    }
+
+    .player-podcast-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .player-podcast-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .player-podcast-details {
+      overflow: hidden;
+    }
+
+    .player-podcast-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .player-podcast-host {
+      color: var(--text-light);
+      font-size: 0.8rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      width: 50%;
+      padding: 0 20px;
+    }
+
+    .player-control-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .player-control-btn:hover {
+      color: var(--accent-color);
+    }
+
+    .player-control-btn.play-pause {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .player-control-btn.play-pause:hover {
+      background: var(--accent-hover);
+      color: white;
+    }
+
+    .player-progress {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-time {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      width: 45px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .progress-value {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 2px;
+    }
+
+    .progress-handle {
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .progress-bar:hover .progress-handle {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    .player-additional {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 25%;
+      justify-content: flex-end;
+    }
+
+    .player-volume {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100px;
+    }
+
+    .volume-icon {
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .volume-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .volume-value {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 2px;
+    }
+
+    .player-speed {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-dark);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .player-speed:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .player-more {
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .player-more:hover {
+      color: var(--accent-color);
+    }
+
+    @media (max-width: 992px) {
+      .player-podcast-info {
+        width: 120px;
+      }
+      .player-additional {
+        width: 80px;
+      }
+      .player-volume {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .podcast-content {
+        padding: 20px;
+      }
+      .podcast-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      .player-podcast-info {
+        width: 60px;
+      }
+      .player-podcast-details {
+        display: none;
+      }
+      .player-controls {
+        width: 60%;
+      }
+      .player-additional {
+        width: 60px;
+      }
+      .player-speed {
+        display: none;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .podcast-content {
+        padding: 15px;
+      }
+      .podcast-grid {
+        grid-template-columns: 1fr;
+      }
+      .player-time {
+        display: none;
+      }
+      .player-controls {
+        gap: 10px;
+      }
+    }
+
+    /* Podcast Categories Section */
+    .categories-section {
+      margin-bottom: 30px;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .category-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .category-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .category-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .category-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .category-count {
+      color: var(--text-light);
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    /* Podcast Detail Modal */
+    .podcast-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .podcast-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .podcast-modal-content {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .podcast-modal.show .podcast-modal-content {
+      transform: translateY(0);
+    }
+
+    .podcast-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    .podcast-modal-close:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .podcast-modal-img {
+      width: 100%;
+      height: 250px;
+      position: relative;
+    }
+
+    .podcast-modal-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .podcast-modal-img::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(to top, var(--card-bg), transparent);
+    }
+
+    .podcast-modal-body {
+      padding: 30px;
+    }
+
+    .podcast-modal-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .podcast-modal-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .podcast-modal-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .podcast-modal-tag {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .podcast-modal-description {
+      margin-bottom: 20px;
+      line-height: 1.6;
+      color: var(--text-dark);
+    }
+
+    .podcast-modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .podcast-episodes {
+      margin-top: 30px;
+    }
+
+    .podcast-episodes-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    .episode-item {
+      padding: 15px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.03);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .episode-item {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .episode-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .episode-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .episode-title {
+      font-weight: 600;
+    }
+
+    .episode-duration {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .episode-date {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .episode-description {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Host Information */
+    .host-info {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    [data-theme="dark"] .host-info {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .host-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .host-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .host-details {
+      flex: 1;
+    }
+
+    .host-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .host-bio {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Audio visualization */
+    .audio-visualization {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 10px;
+    }
+
+    .audio-bar {
+      width: 3px;
+      background: var(--accent-color);
+      border-radius: 1.5px;
+      height: 5px;
+      animation: audio-wave 1.2s ease-in-out infinite;
+    }
+
+    @keyframes audio-wave {
+      0%, 100% {
+        height: 5px;
+      }
+      50% {
+        height: 20px;
+      }
+    }
+
+    .audio-bar:nth-child(1) { animation-delay: 0.0s; }
+    .audio-bar:nth-child(2) { animation-delay: 0.1s; }
+    .audio-bar:nth-child(3) { animation-delay: 0.2s; }
+    .audio-bar:nth-child(4) { animation-delay: 0.3s; }
+    .audio-bar:nth-child(5) { animation-delay: 0.4s; }
+    .audio-bar:nth-child(6) { animation-delay: 0.5s; }
+    .audio-bar:nth-child(7) { animation-delay: 0.6s; }
+    .audio-bar:nth-child(8) { animation-delay: 0.7s; }
+    .audio-bar:nth-child(9) { animation-delay: 0.8s; }
+    .audio-bar:nth-child(10) { animation-delay: 0.9s; }
+    .audio-bar:nth-child(11) { animation-delay: 1.0s; }
+    .audio-bar:nth-child(12) { animation-delay: 1.1s; }
+
+    /* Paused state */
+    .audio-visualization.paused .audio-bar {
+      animation-play-state: paused;
+      height: 5px;
+    }
+
+    /* Subscription Section */
+    .subscription-section {
+      background: var(--gradient-primary);
+      border-radius: var(--card-radius);
+      padding: 30px;
+      color: white;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .subscription-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.2;
+    }
+
+    .subscription-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .subscription-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .subscription-subtitle {
+      opacity: 0.8;
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    .subscription-form {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .subscription-input {
+      flex: 1;
+      height: 50px;
+      border-radius: 25px;
+      border: none;
+      padding: 0 20px;
+      font-size: 1rem;
+    }
+
+    .subscription-input:focus {
+      outline: none;
+    }
+
+    .subscription-btn {
+      background: white;
+      color: var(--accent-color);
+      border: none;
+      border-radius: 25px;
+      padding: 0 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .subscription-btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 576px) {
+      .subscription-form {
+        flex-direction: column;
+      }
+      .subscription-btn {
+        width: 100%;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="MedTutorials Logo">
+          <span class="logo-text"></span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Your Cardiology live session starts in 30 minutes</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">You completed the Anatomy quiz with 92% score</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Sarah invited you to join Neurology study group</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="podcast-content">
+        <!-- Podcast Header -->
+        <div class="podcast-header">
+          <div class="podcast-header-content">
+            <h2 class="podcast-title">Educational Podcasts</h2>
+            <p class="podcast-subtitle">Enhance your medical knowledge on the go with our curated collection of educational podcasts from leading experts in the field.</p>
+            
+            <div class="podcast-stats">
+              <div class="podcast-stat">
+                <i class="bi bi-broadcast"></i>
+                <span>120+ Episodes</span>
+              </div>
+              <div class="podcast-stat">
+                <i class="bi bi-people"></i>
+                <span>45+ Hosts</span>
+              </div>
+              <div class="podcast-stat">
+                <i class="bi bi-clock"></i>
+                <span>300+ Hours</span>
+              </div>
+            </div>
+            
+            <div class="podcast-categories">
+              <div class="podcast-category">Cardiology</div>
+              <div class="podcast-category">Neurology</div>
+              <div class="podcast-category">Pharmacology</div>
+              <div class="podcast-category">Anatomy</div>
+              <div class="podcast-category">Research</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Podcast Search -->
+        <div class="podcast-search-container">
+          <div class="podcast-search">
+            <input type="text" placeholder="Search podcasts, episodes, or hosts...">
+            <i class="bi bi-search"></i>
+          </div>
+        </div>
+        
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+          <div class="filter-tab active">All Podcasts</div>
+          <div class="filter-tab">Recently Added</div>
+          <div class="filter-tab">Most Popular</div>
+          <div class="filter-tab">My Subscriptions</div>
+          <div class="filter-tab">Downloaded</div>
+          <div class="filter-tab">Playlists</div>
+        </div>
+        
+        <!-- Featured Podcast -->
+        <div class="featured-podcast">
+          <div class="featured-podcast-img">
+            <img src="\images\precision.jpg" alt="Featured Podcast">
+          </div>
+          <div class="featured-podcast-content">
+            <span class="featured-badge">Featured Series</span>
+            <h3 class="featured-podcast-title">The Future of Precision Medicine</h3>
+            <p class="featured-podcast-desc">Join Dr. Elizabeth as she explores how personalized medicine is transforming healthcare through genomics, AI, and targeted therapies.</p>
+            <div class="featured-podcast-meta">
+              <span><i class="bi bi-person"></i> Dr. Elizabeth</span>
+              <span><i class="bi bi-collection"></i> 8 Episodes</span>
+              <span><i class="bi bi-star-fill"></i> 4.9</span>
+            </div>
+            <div class="featured-podcast-actions">
+              <button class="btn-play"><i class="bi bi-play-fill"></i> Play Latest</button>
+              <button class="btn-action"><i class="bi bi-plus"></i></button>
+              <button class="btn-action"><i class="bi bi-share"></i></button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Podcast Categories -->
+        <div class="categories-section">
+          <div class="section-header">
+            <h3 class="section-title">Browse by Categories</h3>
+            <a href="#" class="section-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="categories-grid">
+            <div class="category-card">
+              <div class="category-icon" style="background: #4F46E5;">
+                <i class="bi bi-heart-pulse"></i>
+              </div>
+              <h4 class="category-name">Cardiology</h4>
+              <p class="category-count">24 Podcasts</p>
+            </div>
+            
+            <div class="category-card">
+              <div class="category-icon" style="background: #059669;">
+                <i class="bi bi-brain"></i>
+              </div>
+              <h4 class="category-name">Neurology</h4>
+              <p class="category-count">18 Podcasts</p>
+            </div>
+            
+            <div class="category-card">
+              <div class="category-icon" style="background: #D97706;">
+                <i class="bi bi-capsule"></i>
+              </div>
+              <h4 class="category-name">Pharmacology</h4>
+              <p class="category-count">15 Podcasts</p>
+            </div>
+            
+            <div class="category-card">
+              <div class="category-icon" style="background: #DC2626;">
+                <i class="bi bi-lungs"></i>
+              </div>
+              <h4 class="category-name">Respiratory</h4>
+              <p class="category-count">12 Podcasts</p>
+            </div>
+            
+            <div class="category-card">
+              <div class="category-icon" style="background: #2563EB;">
+                <i class="bi bi-clipboard2-pulse"></i>
+              </div>
+              <h4 class="category-name">Pathology</h4>
+              <p class="category-count">20 Podcasts</p>
+            </div>
+            
+            <div class="category-card">
+              <div class="category-icon" style="background: #7C3AED;">
+                <i class="bi bi-eyedropper"></i>
+              </div>
+              <h4 class="category-name">Biochemistry</h4>
+              <p class="category-count">14 Podcasts</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Popular Podcasts -->
+        <div class="podcast-series">
+          <div class="series-header">
+            <h3 class="series-title">Popular Podcasts</h3>
+            <a href="#" class="series-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="podcast-grid">
+            <div class="podcast-card" data-id="1">
+              <div class="podcast-card-img">
+                <img src="\images\cardio.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Cardiology Concepts: From Basics to Advanced</h4>
+                <p class="podcast-card-host">Dr. Michael Chen</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 25K</span>
+                  <span><i class="bi bi-collection"></i> 12 Episodes</span>
+                  <span class="podcast-card-tag">Weekly</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="podcast-card" data-id="2">
+              <div class="podcast-card-img">
+                <img src="\images\neurology.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Neurology Decoded: Brain & Beyond</h4>
+                <p class="podcast-card-host">Dr. Sarah</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 18K</span>
+                  <span><i class="bi bi-collection"></i> 16 Episodes</span>
+                  <span class="podcast-card-tag">Biweekly</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="podcast-card" data-id="3">
+              <div class="podcast-card-img">
+                <img src="\images\drug.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Pharmacology Simplified: Drug Mechanisms</h4>
+                <p class="podcast-card-host">Dr. Robert</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 15K</span>
+                  <span><i class="bi bi-collection"></i> 20 Episodes</span>
+                  <span class="podcast-card-tag">Monthly</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="podcast-card" data-id="4">
+              <div class="podcast-card-img">
+                <img src="\images\ethics.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Medical Ethics: Dilemmas in Practice</h4>
+                <p class="podcast-card-host">Dr. Emily Parker</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 12K</span>
+                  <span><i class="bi bi-collection"></i> 8 Episodes</span>
+                  <span class="podcast-card-tag">Biweekly</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recently Added -->
+        <div class="podcast-series">
+          <div class="series-header">
+            <h3 class="series-title">Recently Added</h3>
+            <a href="#" class="series-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="podcast-list">
+            <div class="podcast-list-item" data-id="5">
+              <div class="podcast-list-img">
+                <img src="\images\autoimmune.jpg" alt="Podcast">
+              </div>
+              <div class="podcast-list-content">
+                <h4 class="podcast-list-title">Understanding Autoimmune Disorders</h4>
+                <div class="podcast-list-info">
+                  <span><i class="bi bi-person"></i> Dr. Lisa</span>
+                  <span><i class="bi bi-clock"></i> 45 min</span>
+                  <span><i class="bi bi-calendar3"></i> Apr 12, 2025</span>
+                </div>
+                <p class="podcast-list-desc">Explore the complex world of autoimmune disorders, their causes, and the latest treatment approaches.</p>
+              </div>
+              <div class="podcast-list-action">
+                <i class="bi bi-play-fill"></i>
+              </div>
+            </div>
+            
+            <div class="podcast-list-item" data-id="6">
+              <div class="podcast-list-img">
+                <img src="\images\surgical.jpg" alt="Podcast">
+              </div>
+              <div class="podcast-list-content">
+                <h4 class="podcast-list-title">Advances in Surgical Techniques</h4>
+                <div class="podcast-list-info">
+                  <span><i class="bi bi-person"></i> Dr. James</span>
+                  <span><i class="bi bi-clock"></i> 52 min</span>
+                  <span><i class="bi bi-calendar3"></i> Apr 10, 2025</span>
+                </div>
+                <p class="podcast-list-desc">Discover cutting-edge surgical innovations that are transforming patient outcomes and recovery times.</p>
+              </div>
+              <div class="podcast-list-action">
+                <i class="bi bi-play-fill"></i>
+              </div>
+            </div>
+            
+            <div class="podcast-list-item" data-id="7">
+              <div class="podcast-list-img">
+                <img src="\images\mental.jpg" alt="Podcast">
+              </div>
+              <div class="podcast-list-content">
+                <h4 class="podcast-list-title">Mental Health in Medical Practice</h4>
+                <div class="podcast-list-info">
+                  <span><i class="bi bi-person"></i> Dr. Katherine</span>
+                  <span><i class="bi bi-clock"></i> 38 min</span>
+                  <span><i class="bi bi-calendar3"></i> Apr 8, 2025</span>
+                </div>
+                <p class="podcast-list-desc">Learn about the importance of mental health awareness in healthcare settings and strategies for support.</p>
+              </div>
+              <div class="podcast-list-action">
+                <i class="bi bi-play-fill"></i>
+              </div>
+            </div>
+            
+            <div class="podcast-list-item" data-id="8">
+              <div class="podcast-list-img">
+                <img src="\images\peds.jpg" alt="Podcast">
+              </div>
+              <div class="podcast-list-content">
+                <h4 class="podcast-list-title">Pediatric Emergencies: Quick Response</h4>
+                <div class="podcast-list-info">
+                  <span><i class="bi bi-person"></i> Dr. Thomas</span>
+                  <span><i class="bi bi-clock"></i> 42 min</span>
+                  <span><i class="bi bi-calendar3"></i> Apr 5, 2025</span>
+                </div>
+                <p class="podcast-list-desc">Essential knowledge for handling common pediatric emergencies with confidence and precision.</p>
+              </div>
+              <div class="podcast-list-action">
+                <i class="bi bi-play-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Subscription Section -->
+        <div class="subscription-section">
+          <div class="subscription-content">
+            <h3 class="subscription-title">Stay Updated with New Episodes</h3>
+            <p class="subscription-subtitle">Subscribe to our newsletter and never miss new podcasts, special episodes, and expert insights.</p>
+            
+            <form class="subscription-form">
+              <input type="email" class="subscription-input" placeholder="Your email address">
+              <button type="submit" class="subscription-btn">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Recommended for You -->
+        <div class="podcast-series">
+          <div class="series-header">
+            <h3 class="series-title">Recommended for You</h3>
+            <a href="#" class="series-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="podcast-grid">
+            <div class="podcast-card" data-id="9">
+              <div class="podcast-card-img">
+                <img src="\images\infection.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Infectious Diseases: Global Perspectives</h4>
+                <p class="podcast-card-host">Dr. David</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 14K</span>
+                  <span><i class="bi bi-collection"></i> 10 Episodes</span>
+                  <span class="podcast-card-tag">Monthly</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="podcast-card" data-id="10">
+              <div class="podcast-card-img">
+                <img src="\images\imaging.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Diagnostic Imaging: Reading Between the Lines</h4>
+                <p class="podcast-card-host">Dr. Jennifer</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 10K</span>
+                  <span><i class="bi bi-collection"></i> 14 Episodes</span>
+                  <span class="podcast-card-tag">Biweekly</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="podcast-card" data-id="11">
+              <div class="podcast-card-img">
+                <img src="\images\em.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Emergency Medicine: Critical Decisions</h4>
+                <p class="podcast-card-host">Dr. Mark</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 22K</span>
+                  <span><i class="bi bi-collection"></i> 18 Episodes</span>
+                  <span class="podcast-card-tag">Weekly</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="podcast-card" data-id="12">
+              <div class="podcast-card-img">
+                <img src="\images\res.jpg" alt="Podcast">
+                <div class="podcast-card-overlay">
+                  <div class="podcast-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="podcast-card-content">
+                <h4 class="podcast-card-title">Medical Research: Frontiers of Discovery</h4>
+                <p class="podcast-card-host">Dr. Sophia</p>
+                <div class="podcast-card-details">
+                  <span><i class="bi bi-headphones"></i> 9K</span>
+                  <span><i class="bi bi-collection"></i> 6 Episodes</span>
+                  <span class="podcast-card-tag">Monthly</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Podcast Player -->
+    <div class="podcast-player" id="podcastPlayer">
+      <div class="player-podcast-info">
+        <div class="player-podcast-img">
+          <img src="\images\cardio.jpg" alt="Playing Podcast">
+        </div>
+        <div class="player-podcast-details">
+          <div class="player-podcast-title">Cardiology Concepts: Episode 5</div>
+          <div class="player-podcast-host">Dr. Michael Chen</div>
+        </div>
+      </div>
+      
+      <div class="player-controls">
+        <button class="player-control-btn">
+          <i class="bi bi-skip-backward-fill"></i>
+        </button>
+        <button class="player-control-btn">
+          <i class="bi bi-rewind-fill"></i>
+        </button>
+        <button class="player-control-btn play-pause" id="playPauseBtn">
+          <i class="bi bi-play-fill" id="playPauseIcon"></i>
+        </button>
+        <button class="player-control-btn">
+          <i class="bi bi-fast-forward-fill"></i>
+        </button>
+        <button class="player-control-btn">
+          <i class="bi bi-skip-forward-fill"></i>
+        </button>
+      </div>
+      
+      <div class="player-progress">
+        <div class="player-time">12:34</div>
+        <div class="progress-bar">
+          <div class="progress-value" style="width: 45%;"></div>
+          <div class="progress-handle" style="left: 45%;"></div>
+        </div>
+        <div class="player-time">28:56</div>
+      </div>
+      
+      <div class="player-additional">
+        <div class="player-volume">
+          <i class="bi bi-volume-up volume-icon"></i>
+          <div class="volume-bar">
+            <div class="volume-value" style="width: 70%;"></div>
+          </div>
+        </div>
+        <button class="player-speed">1.0x</button>
+        <i class="bi bi-three-dots player-more"></i>
+      </div>
+    </div>
+    
+    <!-- Podcast Detail Modal -->
+    <div class="podcast-modal" id="podcastModal">
+      <div class="podcast-modal-content">
+        <div class="podcast-modal-close">
+          <i class="bi bi-x"></i>
+        </div>
+        
+        <div class="podcast-modal-img">
+          <img src="https://picsum.photos/800/500?random=15" alt="Podcast Cover">
+        </div>
+        
+        <div class="podcast-modal-body">
+          <h3 class="podcast-modal-title">Cardiology Concepts: From Basics to Advanced</h3>
+          
+          <div class="podcast-modal-meta">
+            <span><i class="bi bi-person"></i> Dr. Michael Chen</span>
+            <span><i class="bi bi-collection"></i> 12 Episodes</span>
+            <span><i class="bi bi-headphones"></i> 25K Listeners</span>
+            <span><i class="bi bi-star-fill"></i> 4.8 (156 ratings)</span>
+          </div>
+          
+          <div class="podcast-modal-tags">
+            <span class="podcast-modal-tag">Cardiology</span>
+            <span class="podcast-modal-tag">Medical Education</span>
+            <span class="podcast-modal-tag">Clinical Practice</span>
+          </div>
+          
+          <p class="podcast-modal-description">
+            Join Dr. Michael Chen, renowned cardiologist and educator, as he takes you through a comprehensive journey into the world of cardiology. From fundamental concepts to advanced clinical applications, this podcast series is designed to enhance your understanding of cardiovascular medicine.
+            <br><br>
+            Each episode explores different aspects of cardiology, including anatomy, physiology, pathology, diagnostics, and treatment approaches. Dr. Chen combines evidence-based insights with practical clinical pearls gained from his 20+ years of experience in the field.
+          </p>
+          
+          <div class="podcast-modal-actions">
+            <button class="btn-play"><i class="bi bi-play-fill"></i> Play Latest</button>
+            <button class="btn-action"><i class="bi bi-plus"></i></button>
+            <button class="btn-action"><i class="bi bi-share"></i></button>
+            <button class="btn-action"><i class="bi bi-download"></i></button>
+          </div>
+          
+          <div class="host-info">
+            <div class="host-avatar">
+              <img src="https://picsum.photos/100/100?random=16" alt="Host Avatar">
+            </div>
+            <div class="host-details">
+              <h4 class="host-name">Dr. Michael Chen</h4>
+              <p class="host-bio">Dr. Michael Chen is a Professor of Cardiology at Stanford Medical School with over 20 years of clinical and research experience. He is passionate about medical education and making complex concepts accessible to students and practitioners.</p>
+            </div>
+          </div>
+          
+          <div class="podcast-episodes">
+            <h4 class="podcast-episodes-title">Episodes</h4>
+            
+            <div class="episode-item">
+              <div class="episode-header">
+                <h5 class="episode-title">Episode 12: Advanced Cardiac Imaging Techniques</h5>
+                <span class="episode-duration">42 min</span>
+              </div>
+              <div class="episode-date">Released: Apr 1, 2023</div>
+              <p class="episode-description">Explore the latest advancements in cardiac imaging, including 3D echocardiography, cardiac MRI, and CT angiography, and their clinical applications.</p>
+            </div>
+            
+            <div class="episode-item">
+              <div class="episode-header">
+                <h5 class="episode-title">Episode 11: Heart Failure Management</h5>
+                <span class="episode-duration">38 min</span>
+              </div>
+              <div class="episode-date">Released: Mar 15, 2023</div>
+              <p class="episode-description">A comprehensive overview of contemporary approaches to heart failure diagnosis, classification, and treatment strategies.</p>
+            </div>
+            
+            <div class="episode-item">
+              <div class="episode-header">
+                <h5 class="episode-title">Episode 10: Arrhythmias: Diagnosis and Management</h5>
+                <span class="episode-duration">45 min</span>
+              </div>
+              <div class="episode-date">Released: Mar 1, 2023</div>
+              <p class="episode-description">Learn about different types of cardiac arrhythmias, their ECG patterns, clinical significance, and treatment options.</p>
+            </div>
+            
+            <div class="episode-item">
+              <div class="episode-header">
+                <h5 class="episode-title">Episode 9: Coronary Artery Disease</h5>
+                <span class="episode-duration">40 min</span>
+              </div>
+              <div class="episode-date">Released: Feb 15, 2023</div>
+              <p class="episode-description">An in-depth discussion on the pathophysiology, risk factors, clinical presentation, and management of coronary artery disease.</p>
+            </div>
+            
+            <div class="episode-item">
+              <div class="episode-header">
+                <h5 class="episode-title">Episode 8: Valvular Heart Disease</h5>
+                <span class="episode-duration">37 min</span>
+              </div>
+              <div class="episode-date">Released: Feb 1, 2023</div>
+              <p class="episode-description">Explore the different types of valvular heart diseases, their hemodynamic effects, clinical manifestations, and treatment approaches.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // Filter tabs
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Podcast card click - open modal
+    const podcastCards = document.querySelectorAll('.podcast-card, .podcast-list-item');
+    const podcastModal = document.getElementById('podcastModal');
+    const podcastModalClose = podcastModal.querySelector('.podcast-modal-close');
+    
+    podcastCards.forEach(card => {
+      card.addEventListener('click', () => {
+        podcastModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    podcastModalClose.addEventListener('click', () => {
+      podcastModal.classList.remove('show');
+      document.body.style.overflow = '';
+    });
+    
+    // Close modal when clicking outside
+    podcastModal.addEventListener('click', (e) => {
+      if (e.target === podcastModal) {
+        podcastModal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Player controls
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playPauseIcon = document.getElementById('playPauseIcon');
+    let isPlaying = false;
+    
+    playPauseBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      
+      if (isPlaying) {
+        playPauseIcon.classList.remove('bi-play-fill');
+        playPauseIcon.classList.add('bi-pause-fill');
+        
+        // Create audio visualization
+        createAudioVisualization();
+      } else {
+        playPauseIcon.classList.remove('bi-pause-fill');
+        playPauseIcon.classList.add('bi-play-fill');
+        
+        // Pause visualization
+        document.querySelectorAll('.audio-visualization').forEach(vis => {
+          vis.classList.add('paused');
+        });
+      }
+    });
+
+    // Create audio visualization
+    function createAudioVisualization() {
+      // Remove existing visualizations
+      document.querySelectorAll('.audio-visualization').forEach(vis => {
+        vis.remove();
+      });
+      
+      // Create new visualization
+      const visualization = document.createElement('div');
+      visualization.className = 'audio-visualization';
+      
+      // Add bars
+      for (let i = 0; i < 12; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'audio-bar';
+        visualization.appendChild(bar);
+      }
+      
+      // Add to player
+      const playerControls = document.querySelector('.player-controls');
+      playerControls.appendChild(visualization);
+    }
+
+    // Progress bar interaction
+    const progressBar = document.querySelector('.progress-bar');
+    const progressValue = document.querySelector('.progress-value');
+    const progressHandle = document.querySelector('.progress-handle');
+    
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const position = (e.clientX - rect.left) / rect.width;
+      updateProgress(position);
+    });
+    
+    function updateProgress(position) {
+      // Ensure position is between 0 and 1
+      position = Math.max(0, Math.min(1, position));
+      
+      // Update UI
+      const percent = position * 100;
+      progressValue.style.width = `${percent}%`;
+      progressHandle.style.left = `${percent}%`;
+    }
+
+    // Volume bar interaction
+    const volumeBar = document.querySelector('.volume-bar');
+    const volumeValue = document.querySelector('.volume-value');
+    
+    volumeBar.addEventListener('click', (e) => {
+      const rect = volumeBar.getBoundingClientRect();
+      const position = (e.clientX - rect.left) / rect.width;
+      updateVolume(position);
+    });
+    
+    function updateVolume(position) {
+      // Ensure position is between 0 and 1
+      position = Math.max(0, Math.min(1, position));
+      
+      // Update UI
+      const percent = position * 100;
+      volumeValue.style.width = `${percent}%`;
+    }
+
+    // Playback speed toggle
+    const speedBtn = document.querySelector('.player-speed');
+    const speeds = ['0.5x', '0.75x', '1.0x', '1.25x', '1.5x', '2.0x'];
+    let currentSpeedIndex = 2; // Start with 1.0x
+    
+    speedBtn.addEventListener('click', () => {
+      currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+      speedBtn.textContent = speeds[currentSpeedIndex];
+    });
+
+    // Initialize Swiper for podcast carousels
+    function initCarousels() {
+      const carousels = document.querySelectorAll('.podcast-carousel');
+      
+      carousels.forEach((carousel, index) => {
+        const swiper = new Swiper(carousel.querySelector('.swiper-container'), {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          navigation: {
+            nextEl: carousel.querySelector('.carousel-nav.next'),
+            prevEl: carousel.querySelector('.carousel-nav.prev'),
+          },
+          breakpoints: {
+            576: {
+              slidesPerView: 2,
+            },
+            992: {
+              slidesPerView: 3,
+            },
+            1200: {
+              slidesPerView: 4,
+            },
+          }
+        });
+      });
+    }
+
+    // Call this function if you add carousels to the page
+    // initCarousels();
+  </script>
+</body>
+</html>

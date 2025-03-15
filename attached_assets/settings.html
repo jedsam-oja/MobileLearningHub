@@ -1,0 +1,3135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - Settings</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+      --toggle-bg-light: #E2E8F0;
+      --toggle-bg-dark: #4A5568;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Dashboard Content */
+    .dashboard-content {
+      padding: 30px;
+    }
+
+    @media (max-width: 992px) {
+      .dashboard-content {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-content {
+        padding: 15px;
+      }
+    }
+
+    /* Settings Page Specific Styles */
+    .settings-header {
+      margin-bottom: 30px;
+    }
+
+    .settings-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .settings-subtitle {
+      color: var(--text-light);
+    }
+
+    .settings-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border-color);
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .settings-nav::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .settings-nav-item {
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      color: var(--text-dark);
+    }
+
+    .settings-nav-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .settings-nav-item.active {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .settings-section {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    [data-theme="dark"] .settings-section {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .settings-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      outline: none;
+    }
+
+    .form-text {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 5px;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23718096' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 16px 12px;
+    }
+
+    .form-select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      outline: none;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-dark);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .btn-sm {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+
+    .avatar-upload {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+
+    .avatar-preview {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-edit {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .avatar-edit:hover {
+      background: var(--accent-hover);
+      transform: scale(1.1);
+    }
+
+    .avatar-edit input {
+      display: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--toggle-bg-light);
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: var(--accent-color);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+    }
+
+    [data-theme="dark"] .toggle-slider {
+      background-color: var(--toggle-bg-dark);
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toggle-label-text {
+      flex: 1;
+    }
+
+    .settings-row {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .settings-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .color-option.active {
+      transform: scale(1.2);
+      border-color: var(--text-dark);
+    }
+
+    .color-options {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .timezone-select {
+      position: relative;
+    }
+
+    .timezone-select .form-control {
+      padding-right: 40px;
+    }
+
+    .timezone-select i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .profile-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .profile-avatar {
+      flex-shrink: 0;
+    }
+
+    .profile-details {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .crop-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      padding: 30px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .crop-container.active {
+      display: flex;
+    }
+
+    .crop-area {
+      max-width: 80%;
+      max-height: 70vh;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .crop-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .security-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .security-badge.good {
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+    }
+
+    .security-badge.warning {
+      background: rgba(217, 119, 6, 0.1);
+      color: #D97706;
+    }
+
+    .security-badge.danger {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+    }
+
+    .device-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .device-item:hover {
+      border-color: var(--accent-color);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .device-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      flex-shrink: 0;
+    }
+
+    .device-info {
+      flex: 1;
+    }
+
+    .device-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .device-details {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .device-current {
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    .device-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .device-action {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .device-action:hover {
+      background: #DC2626;
+      color: white;
+    }
+
+    .password-input {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .password-toggle:hover {
+      color: var(--accent-color);
+    }
+
+    .password-strength {
+      height: 5px;
+      border-radius: 3px;
+      background: var(--border-color);
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .password-strength-value {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .strength-weak {
+      background: #DC2626;
+      width: 25%;
+    }
+
+    .strength-fair {
+      background: #D97706;
+      width: 50%;
+    }
+
+    .strength-good {
+      background: #2563EB;
+      width: 75%;
+    }
+
+    .strength-strong {
+      background: #059669;
+      width: 100%;
+    }
+
+    .notification-group {
+      margin-bottom: 25px;
+    }
+
+    .notification-group-title {
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .notification-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-item-title {
+      font-weight: 500;
+    }
+
+    .notification-item-desc {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .language-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .language-option:hover {
+      border-color: var(--accent-color);
+    }
+
+    .language-option.active {
+      border-color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .language-flag {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .language-flag img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .language-name {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .language-check {
+      color: var(--accent-color);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .language-option.active .language-check {
+      opacity: 1;
+    }
+
+    .theme-option {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 120px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-option:hover .theme-preview {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+    }
+
+    .theme-preview {
+      width: 100%;
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .theme-option.active .theme-preview {
+      border-color: var(--accent-color);
+    }
+
+    .theme-preview-light {
+      background: linear-gradient(to bottom, #F7FAFC 50%, white 50%);
+    }
+
+    .theme-preview-dark {
+      background: linear-gradient(to bottom, #1A202C 50%, #2D3748 50%);
+    }
+
+    .theme-preview-auto {
+      background: linear-gradient(to bottom right, #F7FAFC 50%, #1A202C 50%);
+    }
+
+    .theme-name {
+      text-align: center;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .theme-options {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .font-option {
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .font-option:hover {
+      border-color: var(--accent-color);
+    }
+
+    .font-option.active {
+      border-color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .font-inter {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .font-roboto {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .font-poppins {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .font-opensans {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .danger-zone {
+      background: rgba(220, 38, 38, 0.05);
+      border: 1px dashed #DC2626;
+      border-radius: var(--card-radius);
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    .danger-zone-title {
+      color: #DC2626;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .danger-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+    }
+
+    .danger-action:last-child {
+      border-bottom: none;
+    }
+
+    .danger-action-info {
+      flex: 1;
+    }
+
+    .danger-action-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .danger-action-desc {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .btn-danger {
+      background: #DC2626;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #B91C1C;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="MedTutorials Logo">
+          <span class="logo-text">OnlineJacademy</span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-calendar-event"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Your Cardiology live session starts in 30 minutes</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">You completed the Anatomy quiz with 92% score</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Sarah invited you to join Neurology study group</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-content">
+        <!-- Settings Header -->
+        <div class="settings-header">
+          <h2 class="settings-title">Account Settings</h2>
+          <p class="settings-subtitle">Manage your account settings and preferences</p>
+        </div>
+
+        <!-- Settings Navigation -->
+        <div class="settings-nav" id="settingsNav">
+          <div class="settings-nav-item active" data-target="profile">Profile</div>
+          <div class="settings-nav-item" data-target="account">Account</div>
+          <div class="settings-nav-item" data-target="security">Security</div>
+          <div class="settings-nav-item" data-target="notifications">Notifications</div>
+          <div class="settings-nav-item" data-target="appearance">Appearance</div>
+          <div class="settings-nav-item" data-target="accessibility">Accessibility</div>
+          <div class="settings-nav-item" data-target="privacy">Privacy</div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="settings-section active" id="profile-section">
+          <h3 class="section-title">Profile Information</h3>
+          
+          <div class="profile-info">
+            <div class="profile-avatar">
+              <div class="avatar-upload">
+                <div class="avatar-preview">
+                  <img src="\images\logo.png" id="profileImagePreview" alt="Profile Image">
+                </div>
+                <label for="profileImageUpload" class="avatar-edit">
+                  <i class="bi bi-pencil"></i>
+                  <input type="file" id="profileImageUpload" accept="image/*">
+                </label>
+              </div>
+            </div>
+            
+            <div class="profile-details">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control" value="Jedidiah">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" value="Samson">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Display Name</label>
+                <input type="text" class="form-control" value="Jedidiah Samson">
+                <div class="form-text">This is how your name will appear to other users.</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Bio</label>
+                <textarea class="form-control" rows="3">Medical student passionate about neurology and cardiology. Currently in my third year of studies.</textarea>
+                <div class="form-text">Tell others a little about yourself.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" value="jedidiah.samson@example.com">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" value="+1 (555) 123-4567">
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Institution</label>
+                <input type="text" class="form-control" value="University Medical School">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Specialization</label>
+                <select class="form-select">
+                  <option value="general">General Medicine</option>
+                  <option value="cardiology" selected>Cardiology</option>
+                  <option value="neurology">Neurology</option>
+                  <option value="pediatrics">Pediatrics</option>
+                  <option value="surgery">Surgery</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" value="New York, USA">
+          </div>
+          
+          <h3 class="section-title mt-4">Social Profiles</h3>
+          
+          <div class="form-group social-link">
+            <div class="social-icon" style="background: #1DA1F2;">
+              <i class="bi bi-twitter"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="Twitter Profile URL" value="https://twitter.com/jedidiah_med">
+          </div>
+          
+          <div class="form-group social-link">
+            <div class="social-icon" style="background: #0A66C2;">
+              <i class="bi bi-linkedin"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="LinkedIn Profile URL" value="https://linkedin.com/in/jedidiah-samson">
+          </div>
+          
+          <div class="form-group social-link">
+            <div class="social-icon" style="background: #5865F2;">
+              <i class="bi bi-discord"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="Discord Username" value="jedidiah#1234">
+          </div>
+          
+          <div class="form-group social-link">
+            <div class="social-icon" style="background: #FF4500;">
+              <i class="bi bi-reddit"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="Reddit Username" value="u/jedidiah_med">
+          </div>
+          
+          <div class="profile-actions">
+            <button class="btn btn-primary">Save Changes</button>
+            <button class="btn btn-outline">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Account Section -->
+        <div class="settings-section" id="account-section">
+          <h3 class="section-title">Account Preferences</h3>
+          
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" value="jedidiah.samson@example.com">
+            <div class="form-text">This email will be used for account notifications and communications.</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" value="jedidiah_med">
+            <div class="form-text">Your username is unique and will be visible to other users.</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Language</label>
+            <div class="language-options">
+              <div class="language-option active">
+                <div class="language-flag">
+                  <img src="https://flagcdn.com/w40/us.png" alt="English">
+                </div>
+                <div class="language-name">English (US)</div>
+                <div class="language-check">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </div>
+              
+              <div class="language-option">
+                <div class="language-flag">
+                  <img src="https://flagcdn.com/w40/es.png" alt="Spanish">
+                </div>
+                <div class="language-name">Español</div>
+                <div class="language-check">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </div>
+              
+              <div class="language-option">
+                <div class="language-flag">
+                  <img src="https://flagcdn.com/w40/fr.png" alt="French">
+                </div>
+                <div class="language-name">Français</div>
+                <div class="language-check">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </div>
+              
+              <div class="language-option">
+                <div class="language-flag">
+                  <img src="https://flagcdn.com/w40/de.png" alt="German">
+                </div>
+                <div class="language-name">Deutsch</div>
+                <div class="language-check">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Timezone</label>
+            <div class="timezone-select">
+              <select class="form-select">
+                <option value="utc-8">(UTC-08:00) Pacific Time (US & Canada)</option>
+                <option value="utc-7">(UTC-07:00) Mountain Time (US & Canada)</option>
+                <option value="utc-6">(UTC-06:00) Central Time (US & Canada)</option>
+                <option value="utc-5" selected>(UTC-05:00) Eastern Time (US & Canada)</option>
+                <option value="utc-4">(UTC-04:00) Atlantic Time (Canada)</option>
+                <option value="utc+0">(UTC+00:00) London, Edinburgh, Dublin</option>
+                <option value="utc+1">(UTC+01:00) Paris, Berlin, Rome, Madrid</option>
+                <option value="utc+2">(UTC+02:00) Athens, Istanbul, Helsinki</option>
+                <option value="utc+3">(UTC+03:00) Moscow, Baghdad, Nairobi</option>
+                <option value="utc+5.5">(UTC+05:30) Mumbai, New Delhi, Colombo</option>
+                <option value="utc+8">(UTC+08:00) Beijing, Hong Kong, Singapore</option>
+                <option value="utc+9">(UTC+09:00) Tokyo, Seoul, Osaka</option>
+                <option value="utc+10">(UTC+10:00) Sydney, Melbourne, Brisbane</option>
+              </select>
+              <i class="bi bi-globe"></i>
+            </div>
+            <div class="form-text">Your current timezone will be used for date and time displays.</div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Academic Year Display</h5>
+                <p class="text-muted">Show your academic year on your profile</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Learning Progress Display</h5>
+                <p class="text-muted">Show your learning progress to other students</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Study Group Visibility</h5>
+                <p class="text-muted">Allow others to see study groups you've joined</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="profile-actions">
+            <button class="btn btn-primary">Save Changes</button>
+            <button class="btn btn-outline">Cancel</button>
+          </div>
+          
+          <div class="danger-zone">
+            <h4 class="danger-zone-title">Danger Zone</h4>
+            
+            <div class="danger-action">
+              <div class="danger-action-info">
+                <div class="danger-action-title">Deactivate Account</div>
+                <div class="danger-action-desc">Temporarily disable your account. You can reactivate it later.</div>
+              </div>
+              <button class="btn btn-sm btn-outline">Deactivate</button>
+            </div>
+            
+            <div class="danger-action">
+              <div class="danger-action-info">
+                <div class="danger-action-title">Delete Account</div>
+                <div class="danger-action-desc">Permanently delete your account and all associated data. This action cannot be undone.</div>
+              </div>
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Section -->
+        <div class="settings-section" id="security-section">
+          <h3 class="section-title">Security Settings</h3>
+          
+          <div class="settings-row">
+            <h4>Change Password</h4>
+            <p class="text-muted">Ensure your account is using a strong, secure password</p>
+            
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <div class="password-input">
+                <input type="password" class="form-control" placeholder="Enter current password">
+                <i class="bi bi-eye password-toggle"></i>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <div class="password-input">
+                <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                <i class="bi bi-eye password-toggle"></i>
+              </div>
+              <div class="password-strength">
+                <div class="password-strength-value"></div>
+              </div>
+              <div class="form-text" id="passwordStrengthText">Password strength: Not set</div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Confirm New Password</label>
+              <div class="password-input">
+                <input type="password" class="form-control" placeholder="Confirm new password">
+                <i class="bi bi-eye password-toggle"></i>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary">Update Password</button>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Two-Factor Authentication</h4>
+            <p class="text-muted">Add an extra layer of security to your account</p>
+            
+            <div class="toggle-label mb-3">
+              <div class="toggle-label-text">
+                <h5>Enable Two-Factor Authentication</h5>
+                <p class="text-muted">Require a verification code in addition to your password when signing in</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="twoFactorToggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div id="twoFactorOptions" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">Verification Method</label>
+                <select class="form-select">
+                  <option value="app">Authenticator App</option>
+                  <option value="sms">SMS</option>
+                  <option value="email">Email</option>
+                </select>
+              </div>
+              
+              <button class="btn btn-primary">Set Up Two-Factor</button>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Active Sessions</h4>
+            <p class="text-muted">Manage your active sessions across different devices</p>
+            
+            <div class="device-item">
+              <div class="device-icon">
+                <i class="bi bi-laptop"></i>
+              </div>
+              <div class="device-info">
+                <div class="device-name">
+                  MacBook Pro <span class="device-current">Current Device</span>
+                </div>
+                <div class="device-details">
+                  <span>New York, USA</span> • 
+                  <span>Last active: Just now</span> • 
+                  <span>Chrome 98.0.4758</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="device-item">
+              <div class="device-icon">
+                <i class="bi bi-phone"></i>
+              </div>
+              <div class="device-info">
+                <div class="device-name">iPhone 13</div>
+                <div class="device-details">
+                  <span>New York, USA</span> • 
+                  <span>Last active: 2 hours ago</span> • 
+                  <span>Safari Mobile</span>
+                </div>
+              </div>
+              <div class="device-actions">
+                <div class="device-action">
+                  <i class="bi bi-x-lg"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="device-item">
+              <div class="device-icon">
+                <i class="bi bi-tablet"></i>
+              </div>
+              <div class="device-info">
+                <div class="device-name">iPad Pro</div>
+                <div class="device-details">
+                  <span>Boston, USA</span> • 
+                  <span>Last active: 5 days ago</span> • 
+                  <span>Safari</span>
+                </div>
+              </div>
+              <div class="device-actions">
+                <div class="device-action">
+                  <i class="bi bi-x-lg"></i>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn btn-outline mt-3">Sign Out All Other Devices</button>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Login History</h4>
+            <p class="text-muted">Recent sign-in activity for your account</p>
+            
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date & Time</th>
+                    <th>Location</th>
+                    <th>Device</th>
+                    <th>IP Address</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Apr 15, 2023 - 10:23 AM</td>
+                    <td>New York, USA</td>
+                    <td>MacBook Pro (Chrome)</td>
+                    <td>192.168.1.XX</td>
+                    <td><span class="security-badge good">Successful</span></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 14, 2023 - 6:45 PM</td>
+                    <td>New York, USA</td>
+                    <td>iPhone 13 (Safari)</td>
+                    <td>192.168.1.XX</td>
+                    <td><span class="security-badge good">Successful</span></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 12, 2023 - 9:12 AM</td>
+                    <td>Boston, USA</td>
+                    <td>iPad Pro (Safari)</td>
+                    <td>192.168.2.XX</td>
+                    <td><span class="security-badge warning">Location Change</span></td>
+                  </tr>
+                  <tr>
+                    <td>Apr 10, 2023 - 11:05 AM</td>
+                    <td>Unknown</td>
+                    <td>Windows PC (Firefox)</td>
+                    <td>192.168.3.XX</td>
+                    <td><span class="security-badge danger">Failed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div class="settings-section" id="notifications-section">
+          <h3 class="section-title">Notification Preferences</h3>
+          
+          <div class="notification-group">
+            <h4 class="notification-group-title">Learning Notifications</h4>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Course Updates</div>
+                <div class="notification-item-desc">Get notified when new content is added to your enrolled courses</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Assignment Reminders</div>
+                <div class="notification-item-desc">Receive reminders about upcoming assignments and deadlines</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Quiz Results</div>
+                <div class="notification-item-desc">Get notified when your quiz results are available</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Study Reminders</div>
+                <div class="notification-item-desc">Receive scheduled reminders to study based on your calendar</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="notification-group">
+            <h4 class="notification-group-title">Community Notifications</h4>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Live Session Reminders</div>
+                <div class="notification-item-desc">Get notified before your scheduled live sessions begin</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Study Group Messages</div>
+                <div class="notification-item-desc">Receive notifications for new messages in your study groups</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Forum Mentions</div>
+                <div class="notification-item-desc">Get notified when someone mentions you in a forum post</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">New Educational Podcasts</div>
+                <div class="notification-item-desc">Receive notifications when new podcasts are published</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="notification-group">
+            <h4 class="notification-group-title">System Notifications</h4>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Account Updates</div>
+                <div class="notification-item-desc">Get notified about important account updates and changes</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Security Alerts</div>
+                <div class="notification-item-desc">Receive alerts about security-related activities on your account</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Feature Updates</div>
+                <div class="notification-item-desc">Get notified when new features are added to the platform</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="notification-item">
+              <div>
+                <div class="notification-item-title">Maintenance Notices</div>
+                <div class="notification-item-desc">Receive notifications about scheduled maintenance</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Notification Delivery Method</label>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" checked id="emailNotif">
+              <label class="form-check-label" for="emailNotif">
+                Email Notifications
+              </label>
+            </div>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" checked id="pushNotif">
+              <label class="form-check-label" for="pushNotif">
+                Push Notifications
+              </label>
+            </div>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="smsNotif">
+              <label class="form-check-label" for="smsNotif">
+                SMS Notifications
+              </label>
+            </div>
+          </div>
+          
+          <div class="profile-actions">
+            <button class="btn btn-primary">Save Preferences</button>
+            <button class="btn btn-outline">Reset to Default</button>
+          </div>
+        </div>
+
+        <!-- Appearance Section -->
+        <div class="settings-section" id="appearance-section">
+          <h3 class="section-title">Appearance Settings</h3>
+          
+          <div class="settings-row">
+            <h4>Theme</h4>
+            <p class="text-muted">Choose your preferred theme for the platform</p>
+            
+            <div class="theme-options">
+              <div class="theme-option" data-theme="light">
+                <div class="theme-preview theme-preview-light"></div>
+                <div class="theme-name">Light</div>
+              </div>
+              
+              <div class="theme-option" data-theme="dark">
+                <div class="theme-preview theme-preview-dark"></div>
+                <div class="theme-name">Dark</div>
+              </div>
+              
+              <div class="theme-option active" data-theme="auto">
+                <div class="theme-preview theme-preview-auto"></div>
+                <div class="theme-name">Auto</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Color Scheme</h4>
+            <p class="text-muted">Select a primary color for the interface</p>
+            
+            <div class="color-options">
+              <div class="color-option active" style="background: #38B2AC;"></div>
+              <div class="color-option" style="background: #4F46E5;"></div>
+              <div class="color-option" style="background: #2563EB;"></div>
+              <div class="color-option" style="background: #059669;"></div>
+              <div class="color-option" style="background: #D97706;"></div>
+              <div class="color-option" style="background: #DC2626;"></div>
+              <div class="color-option" style="background: #7C3AED;"></div>
+              <div class="color-option" style="background: #DB2777;"></div>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Font</h4>
+            <p class="text-muted">Choose your preferred font for better readability</p>
+            
+            <div class="font-options">
+              <div class="font-option active font-inter">Inter</div>
+              <div class="font-option font-roboto">Roboto</div>
+              <div class="font-option font-poppins">Poppins</div>
+              <div class="font-option font-opensans">Open Sans</div>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Layout Density</h4>
+            <p class="text-muted">Adjust the spacing between elements</p>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="layoutDensity" id="densityComfortable" checked>
+              <label class="form-check-label" for="densityComfortable">
+                Comfortable - More space between elements
+              </label>
+            </div>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="layoutDensity" id="densityCompact">
+              <label class="form-check-label" for="densityCompact">
+                Compact - Less space between elements
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Animations</h5>
+                <p class="text-muted">Enable animations throughout the interface</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Sidebar Collapse</h5>
+                <p class="text-muted">Remember sidebar state between sessions</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="profile-actions">
+            <button class="btn btn-primary">Save Preferences</button>
+            <button class="btn btn-outline">Reset to Default</button>
+          </div>
+        </div>
+
+        <!-- Accessibility Section -->
+        <div class="settings-section" id="accessibility-section">
+          <h3 class="section-title">Accessibility Settings</h3>
+          
+          <div class="settings-row">
+            <h4>Text Size</h4>
+            <p class="text-muted">Adjust the size of text throughout the platform</p>
+            
+            <div class="form-group">
+              <input type="range" class="form-range" min="80" max="120" value="100" id="textSizeRange">
+              <div class="d-flex justify-content-between">
+                <span>Smaller</span>
+                <span>Default</span>
+                <span>Larger</span>
+              </div>
+            </div>
+            
+            <div class="mt-3">
+              <p class="sample-text">This is a sample text to preview your selected size.</p>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Color Contrast</h4>
+            <p class="text-muted">Adjust the contrast for better visibility</p>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="contrast" id="contrastNormal" checked>
+              <label class="form-check-label" for="contrastNormal">
+                Normal contrast
+              </label>
+            </div>
+            
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="contrast" id="contrastHigh">
+              <label class="form-check-label" for="contrastHigh">
+                High contrast
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Reduce Motion</h5>
+                <p class="text-muted">Minimize animations and transitions</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Screen Reader Support</h5>
+                <p class="text-muted">Optimize the interface for screen readers</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Focus Indicators</h5>
+                <p class="text-muted">Enhance visibility of focused elements</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Keyboard Navigation</h4>
+            <p class="text-muted">Keyboard shortcuts to navigate the platform</p>
+            
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Shortcut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Dashboard</td>
+                    <td><kbd>Alt</kbd> + <kbd>1</kbd></td>
+                  </tr>
+                  <tr>
+                    <td>Learning Resources</td>
+                    <td><kbd>Alt</kbd> + <kbd>2</kbd></td>
+                  </tr>
+                  <tr>
+                    <td>Performance Tracking</td>
+                    <td><kbd>Alt</kbd> + <kbd>3</kbd></td>
+                  </tr>
+                  <tr>
+                    <td>Schedule Meeting</td>
+                    <td><kbd>Alt</kbd> + <kbd>4</kbd></td>
+                  </tr>
+                  <tr>
+                    <td>Settings</td>
+                    <td><kbd>Alt</kbd> + <kbd>S</kbd></td>
+                  </tr>
+                  <tr>
+                    <td>Search</td>
+                    <td><kbd>Ctrl</kbd> + <kbd>/</kbd></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="profile-actions">
+            <button class="btn btn-primary">Save Preferences</button>
+            <button class="btn btn-outline">Reset to Default</button>
+          </div>
+        </div>
+
+        <!-- Privacy Section -->
+        <div class="settings-section" id="privacy-section">
+          <h3 class="section-title">Privacy Settings</h3>
+          
+          <div class="settings-row">
+            <h4>Profile Visibility</h4>
+            <p class="text-muted">Control who can view your profile information</p>
+            
+            <div class="form-group">
+              <label class="form-label">Who can see your profile</label>
+              <select class="form-select">
+                <option value="everyone">Everyone</option>
+                <option value="students" selected>Students & Faculty</option>
+                <option value="connections">My Connections Only</option>
+                <option value="nobody">Nobody</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Who can see your learning progress</label>
+              <select class="form-select">
+                <option value="everyone">Everyone</option>
+                <option value="students" selected>Students & Faculty</option>
+                <option value="connections">My Connections Only</option>
+                <option value="nobody">Nobody</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Activity Status</h4>
+            <p class="text-muted">Control your online presence and activity</p>
+            
+            <div class="toggle-label mb-3">
+              <div class="toggle-label-text">
+                <h5>Show Online Status</h5>
+                <p class="text-muted">Let others see when you're online</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="toggle-label mb-3">
+              <div class="toggle-label-text">
+                <h5>Show Study Activity</h5>
+                <p class="text-muted">Let others see what you're currently studying</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Read Receipts</h5>
+                <p class="text-muted">Let others know when you've read their messages</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-row">
+            <h4>Data Usage</h4>
+            <p class="text-muted">Control how your data is used</p>
+            
+            <div class="toggle-label mb-3">
+              <div class="toggle-label-text">
+                <h5>Personalized Learning</h5>
+                <p class="text-muted">Allow us to use your learning data to personalize your experience</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="toggle-label mb-3">
+              <div class="toggle-label-text">
+                <h5>Analytics & Improvements</h5>
+                <p class="text-muted">Allow us to use your data to improve our platform</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="toggle-label">
+              <div class="toggle-label-text">
+                <h5>Third-Party Integrations</h5>
+                <p class="text-muted">Allow third-party services to access your data</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <button class="btn btn-outline">Download My Data</button>
+            <div class="form-text">Request a copy of all your personal data</div>
+          </div>
+          
+          <div class="profile-actions">
+            <button class="btn btn-primary">Save Preferences</button>
+            <button class="btn btn-outline">Reset to Default</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Image Crop Modal -->
+  <div class="crop-container" id="cropContainer">
+    <div class="crop-area">
+      <img id="cropImage" src="">
+    </div>
+    <div class="crop-actions">
+      <button class="btn btn-primary" id="applyCrop">Apply</button>
+      <button class="btn btn-outline" id="cancelCrop">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // Settings Navigation
+    const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+    const settingsSections = document.querySelectorAll('.settings-section');
+    
+    settingsNavItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // Remove active class from all items
+        settingsNavItems.forEach(navItem => navItem.classList.remove('active'));
+        // Add active class to clicked item
+        item.classList.add('active');
+        
+        // Hide all sections
+        settingsSections.forEach(section => section.classList.remove('active'));
+        // Show target section
+        const targetSection = document.getElementById(`${item.dataset.target}-section`);
+        targetSection.classList.add('active');
+      });
+    });
+
+    // Password Toggle
+    const passwordToggles = document.querySelectorAll('.password-toggle');
+    
+    passwordToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const passwordInput = toggle.previousElementSibling;
+        
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          toggle.classList.remove('bi-eye');
+          toggle.classList.add('bi-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          toggle.classList.remove('bi-eye-slash');
+          toggle.classList.add('bi-eye');
+        }
+      });
+    });
+
+    // Password Strength Meter
+    const newPasswordInput = document.getElementById('newPassword');
+    const passwordStrengthValue = document.querySelector('.password-strength-value');
+    const passwordStrengthText = document.getElementById('passwordStrengthText');
+    
+    newPasswordInput.addEventListener('input', () => {
+      const password = newPasswordInput.value;
+      let strength = 0;
+      
+      if (password.length >= 8) strength += 1;
+      if (/[A-Z]/.test(password)) strength += 1;
+      if (/[0-9]/.test(password)) strength += 1;
+      if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+      
+      passwordStrengthValue.className = 'password-strength-value';
+      
+      if (password.length === 0) {
+        passwordStrengthValue.style.width = '0%';
+        passwordStrengthText.textContent = 'Password strength: Not set';
+      } else if (strength === 1) {
+        passwordStrengthValue.classList.add('strength-weak');
+        passwordStrengthText.textContent = 'Password strength: Weak';
+      } else if (strength === 2) {
+        passwordStrengthValue.classList.add('strength-fair');
+        passwordStrengthText.textContent = 'Password strength: Fair';
+      } else if (strength === 3) {
+        passwordStrengthValue.classList.add('strength-good');
+        passwordStrengthText.textContent = 'Password strength: Good';
+      } else if (strength === 4) {
+        passwordStrengthValue.classList.add('strength-strong');
+        passwordStrengthText.textContent = 'Password strength: Strong';
+      }
+    });
+
+    // Two-Factor Authentication Toggle
+    const twoFactorToggle = document.getElementById('twoFactorToggle');
+    const twoFactorOptions = document.getElementById('twoFactorOptions');
+    
+    twoFactorToggle.addEventListener('change', () => {
+      if (twoFactorToggle.checked) {
+        twoFactorOptions.style.display = 'block';
+      } else {
+        twoFactorOptions.style.display = 'none';
+      }
+    });
+
+    // Theme Options
+    const themeOptions = document.querySelectorAll('.theme-option');
+    
+    themeOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        themeOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    // Color Options
+    const colorOptions = document.querySelectorAll('.color-option');
+    
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        colorOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    // Font Options
+    const fontOptions = document.querySelectorAll('.font-option');
+    
+    fontOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        fontOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    // Language Options
+    const languageOptions = document.querySelectorAll('.language-option');
+    
+    languageOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        languageOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    // Text Size Slider
+    const textSizeRange = document.getElementById('textSizeRange');
+    const sampleText = document.querySelector('.sample-text');
+    
+    textSizeRange.addEventListener('input', () => {
+      const size = textSizeRange.value;
+      sampleText.style.fontSize = `${size}%`;
+    });
+
+    // Profile Image Upload
+    const profileImageUpload = document.getElementById('profileImageUpload');
+    const profileImagePreview = document.getElementById('profileImagePreview');
+    const cropContainer = document.getElementById('cropContainer');
+    const cropImage = document.getElementById('cropImage');
+    const applyCrop = document.getElementById('applyCrop');
+    const cancelCrop = document.getElementById('cancelCrop');
+    
+    let cropper;
+    
+    profileImageUpload.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          cropImage.src = e.target.result;
+          cropContainer.classList.add('active');
+          
+          // Initialize cropper
+          if (cropper) {
+            cropper.destroy();
+          }
+          
+          cropper = new Cropper(cropImage, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1
+          });
+        };
+        
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+    
+    applyCrop.addEventListener('click', () => {
+      const canvas = cropper.getCroppedCanvas({
+        width: 300,
+        height: 300
+      });
+      
+      profileImagePreview.src = canvas.toDataURL();
+      cropContainer.classList.remove('active');
+    });
+    
+    cancelCrop.addEventListener('click', () => {
+      cropContainer.classList.remove('active');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,2996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>OnlineJacademy - E-Books</title>
+  <link rel="icon" type="image/x-icon" href="\images\logo.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.css">
+  
+  <style>
+    :root {
+      --primary-color: #2B6CB0;
+      --secondary-color: #4A5568;
+      --accent-color: #38B2AC;
+      --accent-hover: #319795;
+      --background-light: #F7FAFC;
+      --background-dark: #1A202C;
+      --text-light: #718096;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      --card-bg: white;
+      --text-dark: #2D3748;
+      --border-color: #E2E8F0;
+      --card-radius: 16px;
+      --gradient-primary: linear-gradient(135deg, #38B2AC 0%, #3182CE 100%);
+      --gradient-secondary: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+      --gradient-dark: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+      --neumorphic-light: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+      --neumorphic-dark: 8px 8px 16px #151a23, -8px -8px 16px #1f2937;
+      --neumorphic-pressed-light: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+      --neumorphic-pressed-dark: inset 4px 4px 8px #151a23, inset -4px -4px 8px #1f2937;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Dark mode variables */
+    [data-theme="dark"] {
+      --primary-color: #4299E1;
+      --secondary-color: #A0AEC0;
+      --accent-color: #4FD1C5;
+      --accent-hover: #38B2AC;
+      --background-light: #1A202C;
+      --text-light: #A0AEC0;
+      --card-bg: #2D3748;
+      --text-dark: #E2E8F0;
+      --border-color: #4A5568;
+      --card-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Noise Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Layout */
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: margin-left var(--transition-speed) ease;
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    .sidebar-collapsed .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        margin-left: 0;
+      }
+      .sidebar-collapsed .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: var(--sidebar-width);
+      height: var(--header-height);
+      background: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      z-index: 100;
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .header {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .header {
+        left: 0;
+      }
+      .sidebar-collapsed .header {
+        left: 0;
+      }
+    }
+
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 0 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.2);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .notification-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .notification-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .notification-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #DC2626;
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .user-info {
+        display: block;
+      }
+    }
+
+    .user-info h6 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-info p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      z-index: 200;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-collapsed .sidebar {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      height: var(--header-height);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-container img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover img {
+      transform: rotate(10deg);
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .logo-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .toggle-sidebar-btn {
+      margin-left: auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .toggle-sidebar-btn {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .toggle-sidebar-btn:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .menu-label {
+      padding: 10px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-label {
+      opacity: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-collapsed .menu-item {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .menu-item.active {
+      color: var(--accent-color);
+      background: rgba(56, 178, 172, 0.1);
+      border-left-color: var(--accent-color);
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-text {
+      flex: 1;
+      white-space: nowrap;
+      transition: opacity var(--transition-speed) ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sidebar-collapsed .menu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-arrow {
+      transition: transform 0.3s ease, opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .menu-arrow {
+      opacity: 0;
+      width: 0;
+    }
+
+    .menu-item.active .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      padding-left: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sidebar-collapsed .submenu {
+      padding-left: 0;
+    }
+
+    .menu-item.active + .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dark);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sidebar-collapsed .submenu-item {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .submenu-item:hover {
+      color: var(--accent-color);
+    }
+
+    .submenu-item.active {
+      color: var(--accent-color);
+    }
+
+    .submenu-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .submenu-text {
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .sidebar-collapsed .submenu-text {
+      opacity: 0;
+      width: 0;
+    }
+
+    /* Tooltip for collapsed sidebar */
+    .menu-tooltip {
+      position: absolute;
+      left: 70px;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-collapsed .menu-item:hover .menu-tooltip,
+    .sidebar-collapsed .submenu-item:hover .menu-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile sidebar toggle */
+    .mobile-sidebar-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 992px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+    }
+
+    /* Notification Dropdown */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 300px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .notification-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .notification-title {
+      font-weight: 600;
+    }
+
+    .notification-clear {
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .notification-time {
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .notification-view-all {
+      text-align: center;
+      padding: 10px;
+      color: var(--accent-color);
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--border-color);
+      margin: 0 -15px -15px;
+    }
+
+    /* User Profile Dropdown */
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 200px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      padding: 15px;
+      z-index: 1000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .user-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      color: var(--text-dark);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .user-dropdown-item:hover {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 0;
+    }
+
+    /* Rain Animation for Dark Mode */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    [data-theme="dark"] .rain {
+      opacity: 0.3;
+    }
+
+    .rain-drop {
+      position: absolute;
+      width: 2px;
+      height: 15px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7));
+      border-radius: 0 0 5px 5px;
+      opacity: 0.6;
+      animation: rain-fall linear infinite;
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-100vh);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* E-Books Page Specific Styles */
+    .ebooks-content {
+      padding: 30px;
+    }
+
+    .ebooks-header {
+      background: var(--gradient-primary);
+      border-radius: var(--card-radius);
+      padding: 30px;
+      color: white;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ebooks-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+      opacity: 0.2;
+    }
+
+    .ebooks-title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .ebooks-subtitle {
+      opacity: 0.8;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .ebooks-search {
+      position: relative;
+      max-width: 500px;
+      margin-top: 20px;
+    }
+
+    .ebooks-search input {
+      width: 100%;
+      height: 50px;
+      border-radius: 25px;
+      border: none;
+      padding: 0 50px 0 25px;
+      font-size: 1rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .ebooks-search button {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .ebooks-search button:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
+    }
+
+    .category-tabs {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+
+    .category-tab {
+      padding: 10px 20px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      color: var(--text-dark);
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+    }
+
+    [data-theme="dark"] .category-tab {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .category-tab.active {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
+    .category-tab:hover:not(.active) {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .book-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    [data-theme="dark"] .book-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .book-image {
+      height: 250px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .book-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: all 0.3s ease;
+    }
+
+    .book-card:hover .book-image img {
+      transform: scale(1.05);
+    }
+
+    .book-premium {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #FFB100;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    .book-free {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #10B981;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    .book-info {
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .book-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .book-author {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .book-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+
+    .book-tag {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .book-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .book-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .book-btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .book-btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .book-btn-secondary {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+    }
+
+    .book-btn-secondary:hover {
+      background: rgba(56, 178, 172, 0.2);
+    }
+
+    .book-btn-amazon {
+      background: #FF9900;
+      color: white;
+    }
+
+    .book-btn-amazon:hover {
+      background: #E68A00;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .section-action {
+      color: var(--accent-color);
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .section-action:hover {
+      color: var(--accent-hover);
+    }
+
+    .recommendations-slider {
+      position: relative;
+      margin-bottom: 40px;
+    }
+
+    .swiper-container {
+      width: 100%;
+      padding: 10px 5px 30px;
+    }
+
+    .swiper-slide {
+      width: 220px;
+      height: auto;
+    }
+
+    .swiper-pagination {
+      bottom: 0;
+    }
+
+    .swiper-button-next, 
+    .swiper-button-prev {
+      color: var(--accent-color);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .swiper-button-next:after, 
+    .swiper-button-prev:after {
+      font-size: 18px;
+    }
+
+    /* PDF Viewer Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .pdf-modal {
+      width: 90%;
+      max-width: 1000px;
+      height: 90vh;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .pdf-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pdf-modal-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .pdf-modal-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .pdf-modal-action {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pdf-modal-action:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .pdf-modal-close {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+    }
+
+    .pdf-modal-close:hover {
+      background: #DC2626;
+      color: white;
+    }
+
+    .pdf-modal-body {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pdf-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .pdf-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 15px;
+      border-radius: 8px;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .pdf-control:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .pdf-page-info {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .pdf-zoom-controls {
+      display: flex;
+      gap: 5px;
+    }
+
+    .pdf-zoom-control {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pdf-zoom-control:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .pdf-canvas-container {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F0F0F0;
+    }
+
+    [data-theme="dark"] .pdf-canvas-container {
+      background: #1A1A1A;
+    }
+
+    .pdf-canvas {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Share Modal */
+    .share-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      z-index: 1100;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      display: none;
+    }
+
+    .share-modal.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .share-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .share-modal-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .share-modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .share-modal-close:hover {
+      background: #DC2626;
+      color: white;
+    }
+
+    .share-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .share-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: calc(25% - 15px);
+    }
+
+    .share-option:hover {
+      transform: translateY(-3px);
+    }
+
+    .share-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+    }
+
+    .share-icon-email {
+      background: #EA4335;
+    }
+
+    .share-icon-whatsapp {
+      background: #25D366;
+    }
+
+    .share-icon-telegram {
+      background: #0088CC;
+    }
+
+    .share-icon-copy {
+      background: #6B7280;
+    }
+
+    .share-icon-twitter {
+      background: #1DA1F2;
+    }
+
+    .share-icon-facebook {
+      background: #1877F2;
+    }
+
+    .share-icon-linkedin {
+      background: #0A66C2;
+    }
+
+    .share-icon-dashboard {
+      background: var(--accent-color);
+    }
+
+    .share-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .share-link-container {
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .share-link-input {
+      width: 100%;
+      padding: 10px 100px 10px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-dark);
+    }
+
+    .share-link-copy {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background: var(--accent-color);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .share-link-copy:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Recommendations Section */
+    .recommendations-section {
+      margin-bottom: 40px;
+    }
+
+    .recommendation-card {
+      display: flex;
+      gap: 15px;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .recommendation-card {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .recommendation-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .recommendation-image {
+      width: 80px;
+      height: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .recommendation-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .recommendation-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recommendation-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .recommendation-author {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    .recommendation-description {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      color: var(--text-light);
+    }
+
+    .recommendation-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .page-navigation {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    .page-item {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      background: var(--card-bg);
+      color: var(--text-dark);
+      box-shadow: var(--neumorphic-light);
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] .page-item {
+      box-shadow: var(--neumorphic-dark);
+    }
+
+    .page-item.active {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
+    .page-item:hover:not(.active) {
+      background: rgba(56, 178, 172, 0.1);
+    }
+
+    .page-item.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .page-item i {
+      font-size: 1.2rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+
+    @media (max-width: 992px) {
+      .ebooks-content {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+      }
+      
+      .ebooks-header {
+        padding: 20px;
+      }
+      
+      .ebooks-title {
+        font-size: 1.5rem;
+      }
+      
+      .pdf-controls {
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .ebooks-content {
+        padding: 15px;
+      }
+      
+      .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+      }
+      
+      .book-image {
+        height: 200px;
+      }
+      
+      .book-info {
+        padding: 10px;
+      }
+      
+      .book-title {
+        font-size: 0.9rem;
+      }
+      
+      .share-option {
+        width: calc(33.33% - 10px);
+      }
+    }
+
+    /* PDF Watermark */
+    .watermark {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.1;
+      transform: rotate(-45deg);
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      letter-spacing: 5px;
+    }
+
+    /* Encryption Notice */
+    .encryption-notice {
+      background: rgba(56, 178, 172, 0.1);
+      color: var(--accent-color);
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .encryption-notice i {
+      font-size: 1.5rem;
+    }
+
+    /* Book Preview */
+    .book-preview {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Rain Animation for Dark Mode -->
+  <div class="rain" id="rainAnimation"></div>
+
+  <div class="dashboard-container" id="dashboardContainer">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-container">
+          <img src="\images\logo.png" alt="OnlineJacademy Logo">
+          <span class="logo-text">OnlineJacademy</span>
+        </a>
+        <button class="toggle-sidebar-btn" id="toggleSidebar">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-label">Main</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-grid-1x2"></i>
+          </div>
+          <div class="menu-text">Dashboard</div>
+          <div class="menu-tooltip">Dashboard</div>
+        </div>
+        
+        <div class="menu-item active">
+          <div class="menu-icon">
+            <i class="bi bi-journal-bookmark"></i>
+          </div>
+          <div class="menu-text">Learning Resources</div>
+          <div class="menu-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+          <div class="menu-tooltip">Learning Resources</div>
+        </div>
+        
+        <div class="submenu">
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="submenu-text">Study Notes</div>
+            <div class="menu-tooltip">Study Notes</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-journal-check"></i>
+            </div>
+            <div class="submenu-text">Question Bank</div>
+            <div class="menu-tooltip">Question Bank</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="submenu-text">Video Lectures</div>
+            <div class="menu-tooltip">Video Lectures</div>
+          </div>
+          
+          <div class="submenu-item active">
+            <div class="submenu-icon">
+              <i class="bi bi-book"></i>
+            </div>
+            <div class="submenu-text">E-books</div>
+            <div class="menu-tooltip">E-books</div>
+          </div>
+          
+          <div class="submenu-item">
+            <div class="submenu-icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <div class="submenu-text">Flashcards</div>
+            <div class="menu-tooltip">Flashcards</div>
+          </div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-graph-up"></i>
+          </div>
+          <div class="menu-text">Performance Tracking</div>
+          <div class="menu-tooltip">Performance Tracking</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+          <div class="menu-text">Schedule Meeting</div>
+          <div class="menu-tooltip">Schedule Meeting</div>
+        </div>
+        
+        <div class="menu-label">Community</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-camera-video"></i>
+          </div>
+          <div class="menu-text">Live Sessions</div>
+          <div class="menu-tooltip">Live Sessions</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="menu-text">Study Groups</div>
+          <div class="menu-tooltip">Study Groups</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-broadcast"></i>
+          </div>
+          <div class="menu-text">Educational Podcasts</div>
+          <div class="menu-tooltip">Educational Podcasts</div>
+        </div>
+        
+        <div class="menu-label">Account</div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-gear"></i>
+          </div>
+          <div class="menu-text">Settings</div>
+          <div class="menu-tooltip">Settings</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          <div class="menu-text">Help & Support</div>
+          <div class="menu-tooltip">Help & Support</div>
+        </div>
+        
+        <div class="menu-item">
+          <div class="menu-icon">
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-tooltip">Logout</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <i class="bi bi-search"></i>
+      </div>
+      
+      <div class="header-right">
+        <div class="notification-btn" id="notificationBtn">
+          <i class="bi bi-bell"></i>
+          <span class="notification-badge">3</span>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <div class="notification-title">Notifications</div>
+              <div class="notification-clear">Clear All</div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #4F46E5;">
+                <i class="bi bi-book"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">New Anatomy e-book added to your library</div>
+                <div class="notification-time">Just now</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #059669;">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">Dr. Johnson shared "Clinical Procedures" with you</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-icon" style="background: #D97706;">
+                <i class="bi bi-star"></i>
+              </div>
+              <div class="notification-content">
+                <div class="notification-message">New recommended books based on your interests</div>
+                <div class="notification-time">Yesterday</div>
+              </div>
+            </div>
+            
+            <div class="notification-view-all">
+              View All Notifications
+            </div>
+          </div>
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar">
+            <img src="\images\logo.png" alt="User Avatar">
+          </div>
+          <div class="user-info">
+            <h6>Jedidiah Samson</h6>
+            <p>Medical Student</p>
+          </div>
+          
+          <!-- User Dropdown -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-gear"></i>
+              <span>Account Settings</span>
+            </div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-calendar-check"></i>
+              <span>My Schedule</span>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <div class="user-dropdown-item">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <div class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+      <i class="bi bi-list"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="ebooks-content">
+        <!-- E-Books Header -->
+        <div class="ebooks-header">
+          <div class="row align-items-center">
+            <div class="col-lg-8">
+              <h2 class="ebooks-title">Medical E-Books Library</h2>
+              <p class="ebooks-subtitle">Access a comprehensive collection of medical textbooks, journals, and reference materials.</p>
+              
+              <div class="ebooks-search">
+                <input type="text" placeholder="Search by title, author, or topic...">
+                <button type="submit">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-center">
+              <img src="https://picsum.photos/id/24/300/200" alt="E-Books Illustration" class="img-fluid rounded" style="max-height: 200px;">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Encryption Notice -->
+        <div class="encryption-notice">
+          <i class="bi bi-shield-lock"></i>
+          <div>
+            <strong>Content Protection:</strong> All e-books are encrypted to prevent unauthorized copying. You can safely share with peers through our secure sharing system.
+          </div>
+        </div>
+        
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+          <div class="category-tab active">All Categories</div>
+          <div class="category-tab">Basic Sciences</div>
+          <div class="category-tab">Clinical Medicine</div>
+          <div class="category-tab">Surgery</div>
+          <div class="category-tab">Pharmacology</div>
+          <div class="category-tab">Anatomy</div>
+          <div class="category-tab">Pathology</div>
+          <div class="category-tab">Radiology</div>
+          <div class="category-tab">Pediatrics</div>
+          <div class="category-tab">Obstetrics & Gynecology</div>
+        </div>
+        
+        <!-- Featured E-Books -->
+        <section>
+          <div class="section-header">
+            <h3 class="section-title">Featured E-Books</h3>
+            <a href="#" class="section-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="book-grid">
+            <!-- Book 1 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-free">FREE</span>
+                <img src="https://picsum.photos/id/24/400/600" alt="Gray's Anatomy">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Gray's Anatomy for Students</h4>
+                <p class="book-author">By Richard L. Drake, PhD, FAAA</p>
+                <div class="book-tags">
+                  <span class="book-tag">Anatomy</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-primary" onclick="openPdfViewer('Gray\'s Anatomy for Students')">Read Now</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Gray\'s Anatomy for Students')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 2 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-premium">PREMIUM</span>
+                <img src="https://picsum.photos/id/20/400/600" alt="Harrison's Principles of Internal Medicine">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Harrison's Principles of Internal Medicine</h4>
+                <p class="book-author">By J. Larry Jameson, MD, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Internal Medicine</span>
+                  <span class="book-tag">Clinical</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Harrison\'s Principles of Internal Medicine')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 3 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-free">FREE</span>
+                <img src="https://picsum.photos/id/16/400/600" alt="Netter's Atlas of Human Anatomy">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Netter's Atlas of Human Anatomy</h4>
+                <p class="book-author">By Frank H. Netter, MD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Anatomy</span>
+                  <span class="book-tag">Atlas</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-primary" onclick="openPdfViewer('Netter\'s Atlas of Human Anatomy')">Read Now</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Netter\'s Atlas of Human Anatomy')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 4 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-premium">PREMIUM</span>
+                <img src="https://picsum.photos/id/15/400/600" alt="Robbins Basic Pathology">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Robbins Basic Pathology</h4>
+                <p class="book-author">By Vinay Kumar, MBBS, MD, FRCPath</p>
+                <div class="book-tags">
+                  <span class="book-tag">Pathology</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Robbins Basic Pathology')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 5 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-free">FREE</span>
+                <img src="https://picsum.photos/id/28/400/600" alt="Guyton and Hall Textbook of Medical Physiology">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Guyton and Hall Textbook of Medical Physiology</h4>
+                <p class="book-author">By John E. Hall, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Physiology</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-primary" onclick="openPdfViewer('Guyton and Hall Textbook of Medical Physiology')">Read Now</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Guyton and Hall Textbook of Medical Physiology')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 6 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-premium">PREMIUM</span>
+                <img src="https://picsum.photos/id/26/400/600" alt="Katzung & Trevor's Pharmacology">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Katzung & Trevor's Pharmacology: Examination & Board Review</h4>
+                <p class="book-author">By Bertram G. Katzung, MD, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Pharmacology</span>
+                  <span class="book-tag">Review</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Katzung & Trevor\'s Pharmacology')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Recommended for You Section -->
+        <section class="recommendations-section">
+          <div class="section-header">
+            <h3 class="section-title">Recommended for You</h3>
+            <div class="dropdown">
+              <button class="section-action dropdown-toggle" type="button" id="recommendationsDropdown" data-bs-toggle="dropdown">
+                Based on Your Interests
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Based on Your Interests</a></li>
+                <li><a class="dropdown-item" href="#">Popular in Your Field</a></li>
+                <li><a class="dropdown-item" href="#">Recently Added</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="recommendations-slider">
+            <div class="swiper-container" id="recommendationsSlider">
+              <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                <div class="swiper-slide">
+                  <div class="book-card">
+                    <div class="book-image">
+                      <span class="book-free">FREE</span>
+                      <img src="https://picsum.photos/id/30/400/600" alt="Clinical Neuroanatomy">
+                    </div>
+                    <div class="book-info">
+                      <h4 class="book-title">Clinical Neuroanatomy</h4>
+                      <p class="book-author">By Stephen G. Waxman, MD, PhD</p>
+                      <div class="book-tags">
+                        <span class="book-tag">Neurology</span>
+                        <span class="book-tag">Clinical</span>
+                      </div>
+                      <div class="book-actions">
+                        <div class="book-btn book-btn-primary" onclick="openPdfViewer('Clinical Neuroanatomy')">Read Now</div>
+                        <div class="book-btn book-btn-secondary" onclick="openShareModal('Clinical Neuroanatomy')">
+                          <i class="bi bi-share"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="swiper-slide">
+                  <div class="book-card">
+                    <div class="book-image">
+                      <span class="book-premium">PREMIUM</span>
+                      <img src="https://picsum.photos/id/31/400/600" alt="First Aid for the USMLE Step 1">
+                    </div>
+                    <div class="book-info">
+                      <h4 class="book-title">First Aid for the USMLE Step 1</h4>
+                      <p class="book-author">By Tao Le, MD, MHS</p>
+                      <div class="book-tags">
+                        <span class="book-tag">USMLE</span>
+                        <span class="book-tag">Review</span>
+                      </div>
+                      <div class="book-actions">
+                        <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                        <div class="book-btn book-btn-secondary" onclick="openShareModal('First Aid for the USMLE Step 1')">
+                          <i class="bi bi-share"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="swiper-slide">
+                  <div class="book-card">
+                    <div class="book-image">
+                      <span class="book-free">FREE</span>
+                      <img src="https://picsum.photos/id/32/400/600" alt="Junqueira's Basic Histology">
+                    </div>
+                    <div class="book-info">
+                      <h4 class="book-title">Junqueira's Basic Histology</h4>
+                      <p class="book-author">By Anthony L. Mescher, PhD</p>
+                      <div class="book-tags">
+                        <span class="book-tag">Histology</span>
+                        <span class="book-tag">Basic Science</span>
+                      </div>
+                      <div class="book-actions">
+                        <div class="book-btn book-btn-primary" onclick="openPdfViewer('Junqueira\'s Basic Histology')">Read Now</div>
+                        <div class="book-btn book-btn-secondary" onclick="openShareModal('Junqueira\'s Basic Histology')">
+                          <i class="bi bi-share"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="swiper-slide">
+                  <div class="book-card">
+                    <div class="book-image">
+                      <span class="book-premium">PREMIUM</span>
+                      <img src="https://picsum.photos/id/33/400/600" alt="Sabiston Textbook of Surgery">
+                    </div>
+                    <div class="book-info">
+                      <h4 class="book-title">Sabiston Textbook of Surgery</h4>
+                      <p class="book-author">By Courtney M. Townsend Jr., MD</p>
+                      <div class="book-tags">
+                        <span class="book-tag">Surgery</span>
+                        <span class="book-tag">Clinical</span>
+                      </div>
+                      <div class="book-actions">
+                        <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                        <div class="book-btn book-btn-secondary" onclick="openShareModal('Sabiston Textbook of Surgery')">
+                          <i class="bi bi-share"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Slide 5 -->
+                <div class="swiper-slide">
+                  <div class="book-card">
+                    <div class="book-image">
+                      <span class="book-free">FREE</span>
+                      <img src="https://picsum.photos/id/34/400/600" alt="Medical Microbiology">
+                    </div>
+                    <div class="book-info">
+                      <h4 class="book-title">Medical Microbiology</h4>
+                      <p class="book-author">By Patrick R. Murray, PhD</p>
+                      <div class="book-tags">
+                        <span class="book-tag">Microbiology</span>
+                        <span class="book-tag">Basic Science</span>
+                      </div>
+                      <div class="book-actions">
+                        <div class="book-btn book-btn-primary" onclick="openPdfViewer('Medical Microbiology')">Read Now</div>
+                        <div class="book-btn book-btn-secondary" onclick="openShareModal('Medical Microbiology')">
+                          <i class="bi bi-share"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Basic Sciences Books -->
+        <section>
+          <div class="section-header">
+            <h3 class="section-title">Basic Sciences Books</h3>
+            <a href="#" class="section-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="book-grid">
+            <!-- Book 1 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-free">FREE</span>
+                <img src="https://picsum.photos/id/35/400/600" alt="Harper's Illustrated Biochemistry">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Harper's Illustrated Biochemistry</h4>
+                <p class="book-author">By Victor W. Rodwell, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Biochemistry</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-primary" onclick="openPdfViewer('Harper\'s Illustrated Biochemistry')">Read Now</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Harper\'s Illustrated Biochemistry')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 2 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-free">FREE</span>
+                <img src="https://picsum.photos/id/36/400/600" alt="Langman's Medical Embryology">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Langman's Medical Embryology</h4>
+                <p class="book-author">By T.W. Sadler, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Embryology</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-primary" onclick="openPdfViewer('Langman\'s Medical Embryology')">Read Now</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Langman\'s Medical Embryology')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 3 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-premium">PREMIUM</span>
+                <img src="https://picsum.photos/id/37/400/600" alt="Ganong's Review of Medical Physiology">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Ganong's Review of Medical Physiology</h4>
+                <p class="book-author">By Kim E. Barrett, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Physiology</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Ganong\'s Review of Medical Physiology')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Book 4 -->
+            <div class="book-card">
+              <div class="book-image">
+                <span class="book-free">FREE</span>
+                <img src="https://picsum.photos/id/38/400/600" alt="Immunology: A Short Course">
+              </div>
+              <div class="book-info">
+                <h4 class="book-title">Immunology: A Short Course</h4>
+                <p class="book-author">By Richard Coico, PhD</p>
+                <div class="book-tags">
+                  <span class="book-tag">Immunology</span>
+                  <span class="book-tag">Basic Science</span>
+                </div>
+                <div class="book-actions">
+                  <div class="book-btn book-btn-primary" onclick="openPdfViewer('Immunology: A Short Course')">Read Now</div>
+                  <div class="book-btn book-btn-secondary" onclick="openShareModal('Immunology: A Short Course')">
+                    <i class="bi bi-share"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Subject-Specific Recommendations -->
+        <section>
+          <div class="section-header">
+            <h3 class="section-title">Recommended for Cardiology</h3>
+            <a href="#" class="section-action">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="recommendation-card">
+                <div class="recommendation-image">
+                  <img src="https://picsum.photos/id/40/200/300" alt="Braunwald's Heart Disease">
+                </div>
+                <div class="recommendation-info">
+                  <h4 class="recommendation-title">Braunwald's Heart Disease: A Textbook of Cardiovascular Medicine</h4>
+                  <p class="recommendation-author">By Douglas P. Zipes, MD</p>
+                  <p class="recommendation-description">The definitive reference for cardiovascular medicine, offering comprehensive coverage of the field with the most up-to-date clinical information.</p>
+                  <div class="recommendation-actions">
+                    <div class="book-btn book-btn-amazon">Buy on Amazon</div>
+                    <div class="book-btn book-btn-secondary" onclick="openShareModal('Braunwald\'s Heart Disease')">
+                      <i class="bi bi-share"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-lg-6">
+              <div class="recommendation-card">
+                <div class="recommendation-image">
+                  <img src="https://picsum.photos/id/41/200/300" alt="Hurst's The Heart">
+                </div>
+                <div class="recommendation-info">
+                  <h4 class="recommendation-title">Hurst's The Heart</h4>
+                  <p class="recommendation-author">By Valentin Fuster, MD, PhD</p>
+                  <p class="recommendation-description">A comprehensive and unparalleled resource on all aspects of cardiovascular medicine, featuring the most recent clinical trials and research.</p>
+                  <div class="recommendation-actions">
+                    <div class="book-btn book-btn-primary" onclick="openPdfViewer('Hurst\'s The Heart')">Read Now</div>
+                    <div class="book-btn book-btn-secondary" onclick="openShareModal('Hurst\'s The Heart')">
+                      <i class="bi bi-share"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Pagination -->
+        <div class="page-navigation">
+          <div class="page-item disabled">
+            <i class="bi bi-chevron-left"></i>
+          </div>
+          <div class="page-item active">1</div>
+          <div class="page-item">2</div>
+          <div class="page-item">3</div>
+          <div class="page-item">4</div>
+          <div class="page-item">5</div>
+          <div class="page-item">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- PDF Viewer Modal -->
+  <div class="modal-backdrop" id="pdfModal">
+    <div class="pdf-modal">
+      <div class="pdf-modal-header">
+        <div class="pdf-modal-title" id="pdfTitle">Loading...</div>
+        <div class="pdf-modal-actions">
+          <div class="pdf-modal-action" onclick="openShareModal(document.getElementById('pdfTitle').textContent)">
+            <i class="bi bi-share"></i>
+          </div>
+          <div class="pdf-modal-action" id="downloadBtn">
+            <i class="bi bi-download"></i>
+          </div>
+          <div class="pdf-modal-action pdf-modal-close" onclick="closePdfViewer()">
+            <i class="bi bi-x-lg"></i>
+          </div>
+        </div>
+      </div>
+      <div class="pdf-modal-body">
+        <div class="watermark" id="watermark">ONLINEJACADEMY</div>
+        <div class="pdf-canvas-container" id="pdfContainer">
+          <canvas id="pdfCanvas"></canvas>
+        </div>
+      </div>
+      <div class="pdf-controls">
+        <div class="pdf-control" id="prevPage">
+          <i class="bi bi-chevron-left"></i> Previous
+        </div>
+        <div class="pdf-page-info">
+          Page <span id="currentPage">0</span> of <span id="totalPages">0</span>
+        </div>
+        <div class="pdf-control" id="nextPage">
+          Next <i class="bi bi-chevron-right"></i>
+        </div>
+        <div class="pdf-zoom-controls">
+          <div class="pdf-zoom-control" id="zoomOut">
+            <i class="bi bi-dash"></i>
+          </div>
+          <div class="pdf-zoom-control" id="zoomIn">
+            <i class="bi bi-plus"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Share Modal -->
+  <div class="modal-backdrop" id="shareModalBackdrop">
+    <div class="share-modal" id="shareModal">
+      <div class="share-modal-header">
+        <div class="share-modal-title">Share "<span id="shareTitle"></span>"</div>
+        <div class="share-modal-close" onclick="closeShareModal()">
+          <i class="bi bi-x"></i>
+        </div>
+      </div>
+      
+      <div class="share-options">
+        <div class="share-option" onclick="shareBook('email')">
+          <div class="share-icon share-icon-email">
+            <i class="bi bi-envelope"></i>
+          </div>
+          <div class="share-label">Email</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('whatsapp')">
+          <div class="share-icon share-icon-whatsapp">
+            <i class="bi bi-whatsapp"></i>
+          </div>
+          <div class="share-label">WhatsApp</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('telegram')">
+          <div class="share-icon share-icon-telegram">
+            <i class="bi bi-telegram"></i>
+          </div>
+          <div class="share-label">Telegram</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('twitter')">
+          <div class="share-icon share-icon-twitter">
+            <i class="bi bi-twitter"></i>
+          </div>
+          <div class="share-label">Twitter</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('facebook')">
+          <div class="share-icon share-icon-facebook">
+            <i class="bi bi-facebook"></i>
+          </div>
+          <div class="share-label">Facebook</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('linkedin')">
+          <div class="share-icon share-icon-linkedin">
+            <i class="bi bi-linkedin"></i>
+          </div>
+          <div class="share-label">LinkedIn</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('dashboard')">
+          <div class="share-icon share-icon-dashboard">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="share-label">Dashboard</div>
+        </div>
+        
+        <div class="share-option" onclick="shareBook('copy')">
+          <div class="share-icon share-icon-copy">
+            <i class="bi bi-clipboard"></i>
+          </div>
+          <div class="share-label">Copy Link</div>
+        </div>
+      </div>
+      
+      <div class="share-link-container">
+        <input type="text" class="share-link-input" id="shareLink" value="https://onlinejacademy.com/ebooks/share/id12345" readonly>
+        <button class="share-link-copy" onclick="copyShareLink()">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Create rain animation for dark mode
+    function createRain() {
+      const container = document.getElementById('rainAnimation');
+      const dropCount = 100;
+
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        
+        // Random position
+        drop.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        const duration = Math.random() * 1 + 0.5;
+        const delay = Math.random() * 5;
+        drop.style.animation = `rain-fall ${duration}s ${delay}s infinite linear`;
+        
+        container.appendChild(drop);
+      }
+    }
+
+    // Initialize rain
+    createRain();
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      themeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+      
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+      
+      // Update watermark color
+      updateWatermarkColor();
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'dark' ? 
+        '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>';
+    }
+
+    // Update watermark color based on theme
+    function updateWatermarkColor() {
+      const watermark = document.getElementById('watermark');
+      if (watermark) {
+        watermark.style.color = document.body.getAttribute('data-theme') === 'dark' ? 
+          'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+      }
+    }
+
+    // Sidebar Toggle
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    
+    toggleSidebar.addEventListener('click', () => {
+      dashboardContainer.classList.toggle('sidebar-collapsed');
+      
+      // Update toggle icon
+      const icon = toggleSidebar.querySelector('i');
+      if (dashboardContainer.classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('bi-chevron-left');
+        icon.classList.add('bi-chevron-right');
+      } else {
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-left');
+      }
+    });
+
+    // Mobile Sidebar Toggle
+    const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileSidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992) {
+        if (!sidebar.contains(e.target) && !mobileSidebarToggle.contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+
+    // Menu Item Click (for submenu toggle)
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      if (item.querySelector('.menu-arrow')) {
+        item.addEventListener('click', () => {
+          // If sidebar is collapsed, don't toggle active state
+          if (!dashboardContainer.classList.contains('sidebar-collapsed')) {
+            item.classList.toggle('active');
+          }
+        });
+      }
+    });
+
+    // Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationDropdown.classList.toggle('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // User Dropdown Toggle
+    const userProfile = document.getElementById('userProfile');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userProfile.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+      notificationDropdown.classList.remove('show');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      notificationDropdown.classList.remove('show');
+      userDropdown.classList.remove('show');
+    });
+
+    // Initialize Swiper
+    const recommendationsSlider = new Swiper('#recommendationsSlider', {
+      slidesPerView: 'auto',
+      spaceBetween: 20,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+      breakpoints: {
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 10
+        },
+        576: {
+          slidesPerView: 2,
+          spaceBetween: 15
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 15
+        },
+        992: {
+          slidesPerView: 4,
+          spaceBetween: 20
+        }
+      }
+    });
+
+    // Category Tabs
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    
+    categoryTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        categoryTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // PDF.js initialization
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+    
+    let pdfDoc = null;
+    let pageNum = 1;
+    let pageRendering = false;
+    let pageNumPending = null;
+    let scale = 1.5;
+    const canvas = document.getElementById('pdfCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // PDF Viewer Open
+    function openPdfViewer(bookTitle) {
+      const pdfModal = document.getElementById('pdfModal');
+      const pdfTitle = document.getElementById('pdfTitle');
+      
+      pdfTitle.textContent = bookTitle;
+      pdfModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      
+      // Update watermark color
+      updateWatermarkColor();
+      
+      // Add user identifier to watermark for tracking
+      const watermark = document.getElementById('watermark');
+      watermark.textContent = `ONLINEJACADEMY • JEDIDIAH SAMSON`;
+      
+      // Load a sample PDF (in a real app, you'd load the actual book PDF)
+      const url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+      loadPdf(url);
+    }
+    
+    // Close PDF Viewer
+    function closePdfViewer() {
+      const pdfModal = document.getElementById('pdfModal');
+      pdfModal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    // Load PDF
+    function loadPdf(url) {
+      // Show loading state
+      document.getElementById('currentPage').textContent = '...';
+      document.getElementById('totalPages').textContent = '...';
+      
+      pdfjsLib.getDocument(url).promise.then(function(pdf) {
+        pdfDoc = pdf;
+        document.getElementById('totalPages').textContent = pdf.numPages;
+        
+        // Initial/first page rendering
+        renderPage(pageNum);
+      }).catch(function(error) {
+        console.error('Error loading PDF:', error);
+      });
+    }
+    
+    // Render the page
+    function renderPage(num) {
+      pageRendering = true;
+      
+      // Update page counters
+      document.getElementById('currentPage').textContent = num;
+      
+      // Get page
+      pdfDoc.getPage(num).then(function(page) {
+        const viewport = page.getViewport({ scale: scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        // Render PDF page into canvas context
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+        
+        const renderTask = page.render(renderContext);
+        
+        // Wait for rendering to finish
+        renderTask.promise.then(function() {
+          pageRendering = false;
+          
+          if (pageNumPending !== null) {
+            // New page rendering is pending
+            renderPage(pageNumPending);
+            pageNumPending = null;
+          }
+          
+          // Apply encryption by adding a transparent layer that prevents selection
+          canvas.style.userSelect = 'none';
+          canvas.style.webkitUserSelect = 'none';
+          canvas.style.msUserSelect = 'none';
+          canvas.style.mozUserSelect = 'none';
+          
+          // Disable right-click
+          canvas.oncontextmenu = function() { return false; };
+        });
+      });
+    }
+    
+    // Go to previous page
+    function prevPage() {
+      if (pageNum <= 1) {
+        return;
+      }
+      pageNum--;
+      queueRenderPage(pageNum);
+    }
+    
+    // Go to next page
+    function nextPage() {
+      if (pageNum >= pdfDoc.numPages) {
+        return;
+      }
+      pageNum++;
+      queueRenderPage(pageNum);
+    }
+    
+    // Queue page rendering to prevent multiple renders
+    function queueRenderPage(num) {
+      if (pageRendering) {
+        pageNumPending = num;
+      } else {
+        renderPage(num);
+      }
+    }
+    
+    // Zoom in
+    function zoomIn() {
+      scale += 0.25;
+      renderPage(pageNum);
+    }
+    
+    // Zoom out
+    function zoomOut() {
+      if (scale <= 0.5) return;
+      scale -= 0.25;
+      renderPage(pageNum);
+    }
+    
+    // PDF controls event listeners
+    document.getElementById('prevPage').addEventListener('click', prevPage);
+    document.getElementById('nextPage').addEventListener('click', nextPage);
+    document.getElementById('zoomIn').addEventListener('click', zoomIn);
+    document.getElementById('zoomOut').addEventListener('click', zoomOut);
+    
+    // Prevent download (this would be connected to your access control in a real app)
+    document.getElementById('downloadBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('Download is restricted for this encrypted document to protect copyright.');
+    });
+    
+    // Share Modal
+    function openShareModal(bookTitle) {
+      const shareModal = document.getElementById('shareModal');
+      const shareModalBackdrop = document.getElementById('shareModalBackdrop');
+      const shareTitle = document.getElementById('shareTitle');
+      const shareLink = document.getElementById('shareLink');
+      
+      shareTitle.textContent = bookTitle;
+      // Generate a unique encrypted link for this share
+      shareLink.value = `https://onlinejacademy.com/ebooks/share/${btoa(bookTitle.replace(/\s+/g, '-').toLowerCase())}`;
+      
+      shareModalBackdrop.classList.add('show');
+      shareModal.classList.add('show');
+    }
+    
+    function closeShareModal() {
+      const shareModal = document.getElementById('shareModal');
+      const shareModalBackdrop = document.getElementById('shareModalBackdrop');
+      
+      shareModalBackdrop.classList.remove('show');
+      shareModal.classList.remove('show');
+    }
+    
+    // Copy share link
+    function copyShareLink() {
+      const shareLink = document.getElementById('shareLink');
+      shareLink.select();
+      document.execCommand('copy');
+      
+      // Show feedback
+      const copyBtn = document.querySelector('.share-link-copy');
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+      }, 2000);
+    }
+    
+    // Share book function (in a real app, these would connect to actual sharing APIs)
+    function shareBook(method) {
+      const bookTitle = document.getElementById('shareTitle').textContent;
+      const shareLink = document.getElementById('shareLink').value;
+      
+      switch(method) {
+        case 'email':
+          window.location.href = `mailto:?subject=Check out this medical e-book: ${bookTitle}&body=I thought you might be interested in this medical e-book: ${bookTitle}. You can access it here: ${shareLink}`;
+          break;
+        case 'whatsapp':
+          window.open(`https://wa.me/?text=Check out this medical e-book: ${bookTitle} ${shareLink}`);
+          break;
+        case 'telegram':
+          window.open(`https://t.me/share/url?url=${encodeURIComponent(shareLink)}&text=Check out this medical e-book: ${bookTitle}`);
+          break;
+        case 'twitter':
+          window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareLink)}&text=Check out this medical e-book: ${bookTitle}`);
+          break;
+        case 'facebook':
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`);
+          break;
+        case 'linkedin':
+          window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareLink)}`);
+          break;
+        case 'dashboard':
+          // In a real app, this would open a modal to select dashboard peers
+          alert(`You can share "${bookTitle}" with your dashboard peers. This feature allows secure sharing with other OnlineJacademy users.`);
+          break;
+        case 'copy':
+          copyShareLink();
+          break;
+      }
+    }
+    
+    // Close modals when clicking outside
+    document.getElementById('pdfModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closePdfViewer();
+      }
+    });
+    
+    document.getElementById('shareModalBackdrop').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeShareModal();
+      }
+    });
+    
+    // Keyboard navigation for PDF viewer
+    document.addEventListener('keydown', function(e) {
+      if (document.getElementById('pdfModal').classList.contains('show')) {
+        if (e.key === 'ArrowRight') {
+          nextPage();
+        } else if (e.key === 'ArrowLeft') {
+          prevPage();
+        } else if (e.key === 'Escape') {
+          closePdfViewer();
+        }
+      }
+      
+      if (document.getElementById('shareModal').classList.contains('show') && e.key === 'Escape') {
+        closeShareModal();
+      }
+    });
+    
+    // Prevent text selection in PDF viewer to enhance encryption
+    document.getElementById('pdfContainer').addEventListener('selectstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    
+    // Add canvas protection against screenshots (not foolproof but adds a layer of protection)
+    function addCanvasProtection() {
+      const canvas = document.getElementById('pdfCanvas');
+      
+      // Add visual noise that's barely visible but disrupts OCR
+      const ctx = canvas.getContext('2d');
+      const originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < originalData.data.length; i += 4) {
+        // Add slight noise to each pixel (very subtle)
+        if (Math.random() > 0.995) {
+          originalData.data[i] = originalData.data[i] + (Math.random() > 0.5 ? 1 : -1);
+          originalData.data[i+1] = originalData.data[i+1] + (Math.random() > 0.5 ? 1 : -1);
+          originalData.data[i+2] = originalData.data[i+2] + (Math.random() > 0.5 ? 1 : -1);
+        }
+      }
+      
+      ctx.putImageData(originalData, 0, 0);
+    }
+    
+    // Run protection after rendering (would be called in the renderPage promise)
+    // This is commented out as it's just a demonstration of the concept
+    // In a real app, you'd implement more robust protection
+    // addCanvasProtection();
+  </script>
+</body>
+</html>
